@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.0.1
+ * Version:           1.0.2
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -44,6 +44,18 @@ add_shortcode( 'month' , 'rmd_current_month' );
     function rmd_current_month() {
     $month = date("F");
     return "$month";
+}
+add_shortcode( 'nyear' , 'rmd_next_year' );
+    function rmd_next_year() {
+    $currentyear1 = date("Y");
+    $nyear = $currentyear1 + 1;
+    return "$nyear";
+}
+add_shortcode( 'pyear' , 'rmd_previous_year' );
+    function rmd_previous_year() {
+    $currentyear2 = date("Y");
+    $pyear = $currentyear2 - 1;
+    return "$pyear";
 }
 add_filter( 'the_title', 'do_shortcode' );
 add_filter( 'single_post_title', 'do_shortcode' );

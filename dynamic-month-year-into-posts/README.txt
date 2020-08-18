@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode
 Requires at least: 3.0.1
-Tested up to: 5.3.2
-Stable tag: 5.1
+Tested up to: 5.5
+Stable tag: 5.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -17,7 +17,7 @@ Add current year by [year] and current month by [month] shortcodes anywhere, inc
 Supports even the Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
 *How to use?*
-Just install the plugin (see Installation tab) and activate it. Add [year] to render current year and [month] to render current month automatically. As the months & years change, they get updated into the content and title automatically.
+Just install the plugin (see Installation tab) and activate it. Add [year] to render current year, [nyear] to render next year, [pyear] to render previous year and [month] to render current month automatically. As the months & years change, they get updated into the content and title automatically on the shortcode locations.
 
 **Rankmath** SEO plugin is (very) recommended but not required.
 [More details](https://gauravtiwari.org/snippet/dynamic-month-year/) | [Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) | [More WordPress Plugins](https://gauravtiwari.org/code/)
@@ -37,6 +37,9 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 
 
 == Changelog ==
+= 1.0.2 =
+* [pyear] yields previous year (e.g., 2019)
+* [nyear] yields next year (e.g., 2021)
 
 = 1.0.1 =
 * Fixed Name Conflicts
