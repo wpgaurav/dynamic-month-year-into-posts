@@ -1,10 +1,13 @@
-Add current year by [year] and current month by [month] shortcodes anywhere, including content and title. Use this plugin to boost your site’s SEO by using the variables anywhere. By Gaurav from https://gauravtiwari.org
+Add today’s date by [date], current year by [year], previous year by [pyear], next year by [nyear] and current month by [month] shortcodes anywhere, including content and title. Use this plugin to boost your site’s SEO by using the variables anywhere. Supports RankMath and [year] works as a replacement to %currentyear%, [month] as a replacement to %currentmonth% already.
 
 ## Description
 
-Add current year by [year] and current month by [month] shortcodes anywhere, including content and title. Use this plugin to boost your site's SEO by using the variables anywhere. Supports RankMath and [year] works as a replacement to %currentyear%, [month] as a replacement to %currentmonth% already.
+Add today’s date by [date], current year by [year], previous year by [pyear], next year by [nyear] and current month by [month] shortcodes anywhere, including content and title. Use this plugin to boost your site’s SEO by using the variables anywhere. Supports RankMath and [year] works as a replacement to %currentyear%, [month] as a replacement to %currentmonth% already.
 
-Supports even the Rank Math's breadcrumbs, custom meta titles, excerpt etc.
+Use various combinations to make your articles even more dynamic.
+
+Supports both Rank Math and Yoast SEO. Tested to be working with Yoast SEO and Rank Math’s breadcrumbs, custom meta titles, excerpt etc.
+
 
 ## How to use?
 
@@ -18,3 +21,6 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 1. Upload the plugin folder to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress
 3. There is no additional configuration required.
+
+
+[WordPress Plugin Page](https://wordpress.org/plugins/dynamic-month-year-into-posts/)
