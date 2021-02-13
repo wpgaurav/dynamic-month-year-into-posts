@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.0.6
+ * Version:           1.0.7
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -33,7 +33,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Currently plugin version.
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.0.6' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.0.7' );
 add_shortcode( 'year' , 'rmd_current_year' );
     function rmd_current_year() {
     $year = date_i18n("Y");
@@ -71,4 +71,6 @@ add_filter( 'rank_math/paper/auto_generated_description/apply_shortcode', '__ret
 add_filter( 'rank_math/frontend/breadcrumb/html', 'do_shortcode' );
 add_filter( 'wpseo_title', 'do_shortcode' ); // Yoast SEO Title Support Beta
 add_filter( 'wpseo_metadesc', 'do_shortcode' ); // Yoast Meta Description SUpport
+add_filter( 'seopress_titles_title', 'do_shortcode'); // SEOPress Support
+add_filter( 'seopress_titles_desc', 'do_shortcode'); // SEOPress Support
 // add_filter( 'rank_math/snippet/breadcrumb', 'do_shortcode' ); @TODO
