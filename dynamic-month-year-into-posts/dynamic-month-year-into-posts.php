@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.0.7
+ * Version:           1.1.5
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -26,14 +26,11 @@
 
 // If this file is called directly, abort.
 if ( ! defined( 'WPINC' ) ) {
-	die;
+    die;
 }
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.1.5' );
 
-/**
- * Currently plugin version.
- * Rename this for your plugin and update it as you release new versions.
- */
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.0.7' );
+// Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
     function rmd_current_year() {
     $year = date_i18n("Y");
@@ -43,6 +40,11 @@ add_shortcode( 'month' , 'rmd_current_month' );
     function rmd_current_month() {
     $month = date_i18n("F");
     return "$month";
+}
+add_shortcode( 'mon' , 'rmd_current_mon' );
+    function rmd_current_mon() {
+    $mon = date_i18n("M");
+    return "$mon";
 }
 add_shortcode( 'date' , 'rmd_current_date' );
     function rmd_current_date() {
@@ -61,16 +63,48 @@ add_shortcode( 'pyear' , 'rmd_previous_year' );
     $pyear = $currentyear2 - 1;
     return "$pyear";
 }
+
+// Adding support to native WP elements
+
 add_filter( 'the_title', 'do_shortcode' );
 add_filter( 'single_post_title', 'do_shortcode' );
+add_filter( 'wp_title', 'do_shortcode' );
 add_filter('the_excerpt', 'do_shortcode');
+
+// Rank Math Support
 add_filter( 'rank_math/frontend/title', function( $title ) {
     return do_shortcode( $title );
 });
+add_filter( 'rank_math/frontend/description', function( $description ) {
+    return do_shortcode( $description );
+});
 add_filter( 'rank_math/paper/auto_generated_description/apply_shortcode', '__return_true' );
 add_filter( 'rank_math/frontend/breadcrumb/html', 'do_shortcode' );
-add_filter( 'wpseo_title', 'do_shortcode' ); // Yoast SEO Title Support Beta
-add_filter( 'wpseo_metadesc', 'do_shortcode' ); // Yoast Meta Description SUpport
+/* In Beta — Open Graph Testing for Rank Math */
+add_filter( 'rank_math/opengraph/facebook/og_title', function( $fbog ) {
+    return do_shortcode( $fbog );
+});
+add_filter( 'rrank_math/opengraph/facebook/og_description', function( $fbogdesc ) {
+    return do_shortcode( $fbogdesc );
+});
+add_filter( 'rank_math/opengraph/twitter/title', function( $twtitle ) {
+    return do_shortcode( $twtitle );
+});
+add_filter( 'rank_math/opengraph/twitter/description', function( $twdesc ) {
+    return do_shortcode( $twdesc );
+});
+// Yoast SEO Support
+add_filter( 'wpseo_title', 'do_shortcode' );
+add_filter( 'wpseo_metadesc', 'do_shortcode' );
+add_filter( 'wpseo_opengraph_title', 'do_shortcode' );
+add_filter( 'wpseo_opengraph_desc', 'do_shortcode' );
+// add_filter( 'wpseo_json_ld_output', 'do_shortcode' );
+
+// SEOPress Support
+
 add_filter( 'seopress_titles_title', 'do_shortcode'); // SEOPress Support
 add_filter( 'seopress_titles_desc', 'do_shortcode'); // SEOPress Support
+
+// Miscellaneous
+add_filter( 'crp_title', 'do_shortcode'); // CRP Support
 // add_filter( 'rank_math/snippet/breadcrumb', 'do_shortcode' ); @TODO
