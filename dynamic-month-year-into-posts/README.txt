@@ -46,7 +46,7 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 
 Zero bloat. No CSS/JS files loaded.
 
-[More details](https://gauravtiwari.org/snippet/dynamic-month-year/) | [24X7 Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) | [More WordPress Plugins](https://gauravtiwari.org/code/) | [Request a Feature](https://gauravtiwari.org/contact/)
+[More details](https://gauravtiwari.org/snippet/dynamic-month-year/) | [24X7 Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) | [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/) | [Request a Feature](https://gauravtiwari.org/contact/)
 
 ### Privacy
 
@@ -91,6 +91,21 @@ You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[m
 
 
 == Changelog ==
+
+= 1.1.9 =
+* IMPROVED! Performance by removing `rank_math/paper/auto_generated_description/apply_shortcode` filter that causes more load on sites, specially where `wp_qeury` is used.
+* This is first of many attempts to remove unnecessary elements.
+
+= 1.1.8 =
+* Revert back some of the changes in 1.1.6
+
+= 1.1.7 =
+* Bug fix
+
+= 1.1.6 =
+* NEW! `[dt]` shortcode to render only the day of the month (like 1, 2, 3, 17, 28). Combine this with other shortcodes to create date formats you desire.
+* Added support for shortcodes in Rank Math's Product schema description
+* IMPROVED! `[date]` shortcode renders date as set by Dashboard -> Settings -> General -> Date.
 
 = 1.1.5 =
 * NEW! `[mon]` shortcode to render only the first three-letters of Month, like Jan, Feb, Mar, Apr etc.

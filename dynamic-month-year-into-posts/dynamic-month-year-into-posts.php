@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.1.5
+ * Version:           1.1.9
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.1.5' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.1.9' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -48,7 +48,7 @@ add_shortcode( 'mon' , 'rmd_current_mon' );
 }
 add_shortcode( 'date' , 'rmd_current_date' );
     function rmd_current_date() {
-    $date = date_i18n("d F Y");
+    $date = date_i18n("F j, Y");
     return "$date";
 }
 add_shortcode( 'nyear' , 'rmd_next_year' );
@@ -62,6 +62,11 @@ add_shortcode( 'pyear' , 'rmd_previous_year' );
     $currentyear2 = date_i18n("Y");
     $pyear = $currentyear2 - 1;
     return "$pyear";
+}
+add_shortcode( 'dt' , 'rmd_current_dt' );
+    function rmd_current_dt() {
+    $dt = date_i18n("j");
+    return "$dt";
 }
 
 // Adding support to native WP elements
@@ -78,13 +83,14 @@ add_filter( 'rank_math/frontend/title', function( $title ) {
 add_filter( 'rank_math/frontend/description', function( $description ) {
     return do_shortcode( $description );
 });
-add_filter( 'rank_math/paper/auto_generated_description/apply_shortcode', '__return_true' );
+// add_filter( 'rank_math/paper/auto_generated_description/apply_shortcode', '__return_true' );
+add_filter( 'rank_math/product_description/apply_shortcode', '__return_true' );
 add_filter( 'rank_math/frontend/breadcrumb/html', 'do_shortcode' );
 /* In Beta — Open Graph Testing for Rank Math */
 add_filter( 'rank_math/opengraph/facebook/og_title', function( $fbog ) {
     return do_shortcode( $fbog );
 });
-add_filter( 'rrank_math/opengraph/facebook/og_description', function( $fbogdesc ) {
+add_filter( 'rank_math/opengraph/facebook/og_description', function( $fbogdesc ) {
     return do_shortcode( $fbogdesc );
 });
 add_filter( 'rank_math/opengraph/twitter/title', function( $twtitle ) {
