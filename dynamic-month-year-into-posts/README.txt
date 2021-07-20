@@ -4,23 +4,26 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
 Requires at least: 3.0.1
 Tested up to: 5.8
-Stable tag: 5.4
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and current month by [month] shortcodes anywhere, including content, title, meta title, excerpt and Rank Math Breadcrumbs.
+Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and months by [month] [nmonth] [pmonth] shortcodes anywhere, including content, title, meta title, widget, excerpt and Breadcrumbs.
 
 == Description ==
 
 ### Automate your SEO
 
-Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear]`, next year by `[nyear]`, current month (like January) by `[month]` and current month shortname (like Jan) by `[mon]` shortcodes anywhere, including content and title. Use this plugin to boost your site's SEO by using the variables anywhere.
+Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear]`, next year by `[nyear]`, current month (like January) by `[month]`, next month (like February) by `[nmonth]`, previous month (like December) by `[pmonth] and current month shortname (like Jan, Feb and Dec) by `[mon]`, `[nmon]` & `[pmon]` shortcodes anywhere, including content and title. Uses your default WordPress language. Use this plugin to boost your site's SEO, automate your affiliate marketing, offer dynamic coupon expiries and more, just by using these variables anywhere.
+
+[See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
 
 ### Works with popular SEO Plugins
 
 * Supports RankMath, Yoast and SEOPress plugins and can be used to replace all their date based variables.
 * `[year]` works as a replacement to `%currentyear%` , `[month]` as a replacement to `%currentmonth%` already.
 * Use various combinations to make your articles even more dynamic and make your content always SEO ready — no matter the date or year.
+* Extremely useful for Affiliate Marketers, Amazon Affiliates and Copywriters.
 
 = Supports =
 * Rank Math
@@ -29,6 +32,7 @@ Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear
 * SEOPress Premium
 * Yoast SEO
 * Yoast SEO Premium
+* Gutenberg and Block Editor Content, Headings and Buttons
 
 Tested to be working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
@@ -42,11 +46,17 @@ Tested to be working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custo
 
 ### Easy to use
 
-Just install the plugin (see Installation tab) and activate it. Add [year] to render current year, [nyear] to render next year, [pyear] to render previous year, [month] to render current month (full name) and [mon] to render first three letters of months automatically. As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
+Just install the plugin (see Installation tab) and activate it. Add [year] to render current year, [nyear] to render next year, [pyear] to render previous year, [month] to render current month (full name) and [mon] to render first three letters of months automatically. [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
+
+As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
 
 Zero bloat. No CSS/JS files loaded.
 
-[More details](https://gauravtiwari.org/snippet/dynamic-month-year/) | [24X7 Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) | [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/) | [Request a Feature](https://gauravtiwari.org/contact/)
+* [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
+* [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
+* [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/)
+* [Request a Feature](https://gauravtiwari.org/contact/)
+* [Follow Development on Github](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ### Privacy
 
@@ -91,6 +101,13 @@ You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[m
 
 
 == Changelog ==
+
+= 1.2.0 =
+* WordPress 5.8 Support
+* New Shortcode: [nmonth] renders next month (full name)
+* New Shortcode: [pmonth] renders previous month (full name)
+* New Shortcode: [nmon] renders next month (short name, like Jan, Feb)
+* New Shortcode: [pmon] renders previous month (short name, like Dec, Nov)
 
 = 1.1.9 =
 * IMPROVED! Performance by removing `rank_math/paper/auto_generated_description/apply_shortcode` filter that causes more load on sites, specially where `wp_qeury` is used.

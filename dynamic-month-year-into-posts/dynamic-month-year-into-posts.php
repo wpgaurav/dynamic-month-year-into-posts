@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.1.9
+ * Version:           1.2.0
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.1.9' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.0' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -45,6 +45,30 @@ add_shortcode( 'mon' , 'rmd_current_mon' );
     function rmd_current_mon() {
     $mon = date_i18n("M");
     return "$mon";
+}
+add_shortcode( 'nmonth' , 'rmd_next_month' );
+    function rmd_next_month() {
+    $nxtm = strtotime("next month");
+    $nmonth = date_i18n("F",$nxtm);
+    return "$nmonth";
+}
+add_shortcode( 'pmonth' , 'rmd_prev_month' );
+    function rmd_prev_month() {
+    $pvsm = strtotime("previous month");
+    $pmonth = date_i18n("F",$pvsm);
+    return "$pmonth";
+}
+add_shortcode( 'nmon' , 'rmd_next_month_short' );
+    function rmd_next_month_short() {
+    $nxtm1 = strtotime("next month");
+    $nmon = date_i18n("M",$nxtm1);
+    return "$nmon";
+}
+add_shortcode( 'pmon' , 'rmd_prev_month_short' );
+    function rmd_prev_month_short() {
+    $pvsm1 = strtotime("previous month");
+    $pmon = date_i18n("M",$pvsm1);
+    return "$pmon";
 }
 add_shortcode( 'date' , 'rmd_current_date' );
     function rmd_current_date() {
