@@ -1,4 +1,4 @@
-## Plugin Name
+# Dynamic Month & Year into Posts
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
