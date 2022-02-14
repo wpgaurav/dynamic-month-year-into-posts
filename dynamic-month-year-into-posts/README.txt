@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
 Requires at least: 3.0.1
-Tested up to: 5.8.1
-Stable tag: 1.2.1
+Tested up to: 5.9
+Stable tag: 1.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,6 +33,7 @@ Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear
 * Yoast SEO
 * Yoast SEO Premium
 * Gutenberg and Block Editor Content, Headings and Buttons
+* Elementor Page Builder
 
 Tested to be working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
@@ -104,6 +105,16 @@ You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[m
 
 
 == Changelog ==
+
+= 1.2.3 =
+* Improved: `[monthyear]` shortcode renders next month if the current month is about to end, after 28th every month.
+
+= 1.2.2 =
+* New: Capitalize Month Names. Add `c` before any month based shortcode to render it capitalized. Useful in various languages where Month names are generally in small letters, like French, Swedish etc.
+* Example shortcodes: `[cmonth]`, `[cmon]`, `[cnmonth]`, `[cpmonth]`, `[cnmon]`, `[cpmon]` etc.
+* New Shortcodes: `[nnyear]` and `[ppyear]` show 2 years next and previous years, like 2023 and 2019 respectively.
+* New Shortcode: `[monthyear]` shows current month and year together for specific purposes.
+* Better compatibility with Rank Math Pro and Elementor.
 
 = 1.2.1 =
 * New Shortcodes: `[mm]` renders month number including trailing zero (01-12)

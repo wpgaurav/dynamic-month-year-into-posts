@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.2.1
+ * Version:           1.2.3
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.1' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.3' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -41,10 +41,22 @@ add_shortcode( 'month' , 'rmd_current_month' );
     $month = date_i18n("F");
     return "$month";
 }
+add_shortcode( 'cmonth' , 'rmd_current_caps_month' );
+    function rmd_current_caps_month() {
+    $ucmonth = date_i18n("F");
+    $cmonth = ucfirst($ucmonth);
+    return "$cmonth";
+}
 add_shortcode( 'mon' , 'rmd_current_mon' );
     function rmd_current_mon() {
     $mon = date_i18n("M");
     return "$mon";
+}
+add_shortcode( 'cmon' , 'rmd_current_caps_mon' );
+    function rmd_current_caps_mon() {
+    $ucmon = date_i18n("M");
+    $cmon = ucfirst($ucmon);
+    return "$cmon";
 }
 add_shortcode( 'mm' , 'rmd_current_mm' );
     function rmd_current_mm() {
@@ -62,11 +74,25 @@ add_shortcode( 'nmonth' , 'rmd_next_month' );
     $nmonth = date_i18n("F",$nxtm);
     return "$nmonth";
 }
+add_shortcode( 'cnmonth' , 'rmd_next_caps_month' );
+    function rmd_next_caps_month() {
+    $nxtm11 = strtotime("next month");
+    $nmonth11 = date_i18n("F",$nxtm11);
+    $cnmonth = ucfirst($nmonth11);
+    return "$cnmonth";
+}
 add_shortcode( 'pmonth' , 'rmd_prev_month' );
     function rmd_prev_month() {
     $pvsm = strtotime("previous month");
     $pmonth = date_i18n("F",$pvsm);
     return "$pmonth";
+}
+add_shortcode( 'cpmonth' , 'rmd_prev_caps_month' );
+    function rmd_prev_caps_month() {
+    $pvsm11 = strtotime("previous month");
+    $pmonth11 = date_i18n("F",$pvsm11);
+    $cpmonth = ucfirst($pmonth11);
+    return "$cpmonth";
 }
 add_shortcode( 'nmon' , 'rmd_next_month_short' );
     function rmd_next_month_short() {
@@ -74,16 +100,44 @@ add_shortcode( 'nmon' , 'rmd_next_month_short' );
     $nmon = date_i18n("M",$nxtm1);
     return "$nmon";
 }
+add_shortcode( 'cnmon' , 'rmd_next_month_short_caps' );
+    function rmd_next_month_short_caps() {
+    $nxtm13 = strtotime("next month");
+    $nmon13 = date_i18n("M",$nxtm13);
+    $cnmon = ucfirst($nmon13);
+    return "$cnmon";
+}
 add_shortcode( 'pmon' , 'rmd_prev_month_short' );
     function rmd_prev_month_short() {
     $pvsm1 = strtotime("previous month");
     $pmon = date_i18n("M",$pvsm1);
     return "$pmon";
 }
+add_shortcode( 'cpmon' , 'rmd_prev_month_short_caps' );
+    function rmd_prev_month_short_caps() {
+    $pvsm13 = strtotime("previous month");
+    $pmon13 = date_i18n("M",$pvsm13);
+    $cpmon = ucfirst($pmon13);
+    return "$cpmon";
+}
 add_shortcode( 'date' , 'rmd_current_date' );
     function rmd_current_date() {
     $date = date_i18n("F j, Y");
     return "$date";
+}
+add_shortcode( 'monthyear' , 'rmd_monthyear' );
+    function rmd_monthyear() {
+    $monthyear1 = date_i18n("F Y");
+    $dateseo = date("F Y");
+    $monthyear101 = date("F Y", strtotime ( '+1 month' , strtotime ( $dateseo ) )) ;
+    $monthyear = ucfirst($monthyear1);
+    $monthyearseo = ucfirst($monthyear101);
+    $dtseo = date("j");
+    if($dtseo > 28){
+        return "$monthyearseo"; 
+        } else{
+        return "$monthyear";
+    }
 }
 add_shortcode( 'nyear' , 'rmd_next_year' );
     function rmd_next_year() {
@@ -91,11 +145,23 @@ add_shortcode( 'nyear' , 'rmd_next_year' );
     $nyear = $currentyear1 + 1;
     return "$nyear";
 }
+add_shortcode( 'nnyear' , 'rmd_next_next_year' );
+    function rmd_next_next_year() {
+    $currentyear11 = date_i18n("Y");
+    $nnyear = $currentyear11 + 2;
+    return "$nnyear";
+}
 add_shortcode( 'pyear' , 'rmd_previous_year' );
     function rmd_previous_year() {
     $currentyear2 = date_i18n("Y");
     $pyear = $currentyear2 - 1;
     return "$pyear";
+}
+add_shortcode( 'ppyear' , 'rmd_previous_previous_year' );
+    function rmd_previous_previous_year() {
+    $currentyear22 = date_i18n("Y");
+    $ppyear = $currentyear22 - 2;
+    return "$ppyear";
 }
 add_shortcode( 'dt' , 'rmd_current_dt' );
     function rmd_current_dt() {
