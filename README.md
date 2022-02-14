@@ -1,4 +1,4 @@
-=== Plugin Name ===
+## Plugin Name
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
@@ -10,7 +10,7 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and months by [month] [nmonth] [pmonth] etc., shortcodes anywhere, including content, title, meta title, widget, excerpt and Breadcrumbs.
 
-== Description ==
+## Description
 
 ### Automate your SEO
 
@@ -72,39 +72,31 @@ I will provide instant support for all your queries or feature requests. Use [su
 
 I will try my best to ensure that this plugin is compatible with every functionality plugin you use.
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
-= Why would I need this? =
+### Why would I need this?
 If you are an affiliate marketer or blogger who uses month, years and dates in your posts. If you use these dynamic month, year, date, next year, previous year shortcodes you won't have to update those posts again and again as the time passes.
 
-= How can I access settings? =
+### How can I access settings?
 You can not. There is no options panel because there is no need to have one.
 
-= Can I use it in Block Editor or Classic Editor? =
+### Can I use it in Block Editor or Classic Editor?
 You can use the shortcodes in both Block Editor and Classic Editor like running text. You can also the shortcodes in widget areas including footer (use-case: Autoupdating Copyright Year) and headers (use-case: Today's Date).
 
-= Will this plugin work in my language? =
+### Will this plugin work in my language?
 Yes. The shortcode outputs are WPML ready. Since there is no settings page, you don't have to translate this plugin.
 
-= How can I use these shortcodes in my theme/PHP code? =
+### How can I use these shortcodes in my theme/PHP code?
 You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[month]');?>` etc. in themes or in functionality plugins to use these shortcodes.
 
-== Installation ==
+## Installation
 
 1. Upload the plugin folder to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
 1. Activate the plugin through the 'Plugins' screen in WordPress
 1. There is no additional configuration required. There will not be any menus or settings for this plugin.
 
-== Screenshots ==
 
-1. Backend Editing
-2. Front end preview (without Rank Math)
-3. With RM Breadcrumb
-4. Admin Post list demo
-5. Multi Language Support
-
-
-== Changelog ==
+## Changelog
 
 = 1.2.3 =
 * Improved: `[monthyear]` shortcode renders next month if the current month is about to end, after 28th every month.
