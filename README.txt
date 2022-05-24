@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
 Requires at least: 3.0.1
-Tested up to: 5.9
-Stable tag: 1.2.3
+Tested up to: 6.0.0
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -34,18 +34,23 @@ Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear
 * Yoast SEO Premium
 * Gutenberg and Block Editor Content, Headings and Buttons
 * Elementor Page Builder
+* WP Bakery Page Builder
+* Beaver Builder
+* Brizy Builder
+* Oxygen Builder
+* All major themes
 
-Tested to be working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
+Tested to be totally working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
 Note: Since August 2021, Google has started showing h1 titles in search results, this plugin becomes even more useful as no other SEO plugins adds Current Month, Current Year or Today's Date in h1 titles except this; keeping the same in SEO meta as well.
 
 ### More features
 
 * Full Rank Math OpenGraph Support.
-* Schema and OpenGraph support in YoastSEO.
+* Full Schema and OpenGraph support in YoastSEO.
 * Multiple Langauge (WPML) Support: Shortcode renders your site's defined language.
-* Contextual Related Posts Support
-* Jetpack Related Posts Support
+* Contextual Related Posts Support.
+* Jetpack Related Posts Support.
 * Totally native. No configuration required.
 
 ### Easy to use
@@ -54,7 +59,7 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 
 As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
 
-Zero bloat. No CSS/JS files loaded.
+Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek myself, so I understand what you need.
 
 * [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
 * [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
@@ -70,7 +75,9 @@ Dynamic Month & Year into Posts is a completely native shortcode plugin. It has 
 
 I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken.
 
-I will try my best to ensure that this plugin is compatible with every functionality plugin you use.
+I will try my best to ensure that this plugin is compatible with every functionality plugin you use. Please create a support request and allow me some time.
+
+Please help me with a [donation](https://gauravtiwari.org/donate/) or a positive review to keep the development going.
 
 == Frequently Asked Questions ==
 
@@ -89,6 +96,15 @@ Yes. The shortcode outputs are WPML ready. Since there is no settings page, you 
 = How can I use these shortcodes in my theme/PHP code? =
 You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[month]');?>` etc. in themes or in functionality plugins to use these shortcodes.
 
+= How can render shortcodes in ACF fields? =
+This plugin doesn't render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you need to render [year] etc. shortcodes to render, you can enable those field typewise or even field-namewise. Just add this code in your theme's functions.php file or in Code Snippets plugin:
+
+ACF field type => text
+`add_filter('acf/format_value/type=text', 'do_shortcode');`
+
+ACF field name => headline
+`add_filter('acf/format_value/name=headline', 'do_shortcode');`
+
 == Installation ==
 
 1. Upload the plugin folder to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
@@ -105,6 +121,8 @@ You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[m
 
 
 == Changelog ==
+= 1.2.4 =
+* Added: JSON-LD support for Yoast SEO Schema. Props to [@sathoro](https://wordpress.org/support/topic/works-great-8169/)
 
 = 1.2.3 =
 * Improved: `[monthyear]` shortcode renders next month if the current month is about to end, after 28th every month.
@@ -183,8 +201,8 @@ You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[m
 * Updated Readme.txt file
 
 = 1.0.2 =
-* [pyear] yields previous year (e.g., 2020)
-* [nyear] yields next year (e.g., 2022)
+* [pyear] yields previous year (e.g., 2021)
+* [nyear] yields next year (e.g., 2023)
 
 = 1.0.1 =
 * Fixed Name Conflicts
