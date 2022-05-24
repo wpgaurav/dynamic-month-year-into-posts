@@ -1,11 +1,18 @@
 # Dynamic Month & Year into Posts
 Contributors: gauravtiwari
+
 Donate link: https://gauravtiwari.org/donate/
+
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
+
 Requires at least: 3.0.1
+
 Tested up to: 6.0.0
+
 Stable tag: 1.2.4
+
 License: GPLv2 or later
+
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and months by [month] [nmonth] [pmonth] etc., shortcodes anywhere, including content, title, meta title, widget, excerpt and Breadcrumbs.
