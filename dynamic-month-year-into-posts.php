@@ -15,8 +15,8 @@
  * @wordpress-plugin
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
- * Description:       Insert Dynamic Year and Month into content and meta using shortcodes.
- * Version:           1.2.4
+ * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
+ * Version:           1.2.5
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.4' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.5' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -168,6 +168,16 @@ add_shortcode( 'dt' , 'rmd_current_dt' );
     $dt = date_i18n("j");
     return "$dt";
 }
+add_shortcode( 'weekday' , 'rmd_current_weekday' );
+    function rmd_current_weekday() {
+    $weekday = date_i18n("l");
+    return "$weekday";
+}
+add_shortcode( 'wd' , 'rmd_current_wd' );
+    function rmd_current_wd() {
+    $wd = date_i18n("D");
+    return "$wd";
+}
 
 // Adding support to native WP elements
 
@@ -207,7 +217,6 @@ add_filter( 'wpseo_opengraph_desc', 'do_shortcode' );
 // add_filter( 'wpseo_json_ld_output', 'do_shortcode' );
 add_filter('wpseo_schema_webpage', function($data) {
     $data['name'] = do_shortcode($data['name']);
-
     return $data;
 });
 
@@ -219,3 +228,16 @@ add_filter( 'seopress_titles_desc', 'do_shortcode'); // SEOPress Support
 // Miscellaneous
 add_filter( 'crp_title', 'do_shortcode'); // CRP Support
 // add_filter( 'rank_math/snippet/breadcrumb', 'do_shortcode' ); @TODO
+
+// Add Shortcodes
+add_filter( 'plugin_action_links_dynamic-month-year-into-posts/dynamic-month-year-into-posts.php', 'dmyip_settings_link' );
+function dmyip_settings_link( $links ) {
+    // Create the link.
+    $settings_link = "<a href='https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes'>" . __( 'List of Shortcodes' ) . '</a>';
+    // Adds the link to the end of the array.
+    array_push(
+        $links,
+        $settings_link
+    );
+    return $links;
+}
