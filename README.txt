@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content, writing
 Requires at least: 3.0.1
-Tested up to: 6.0.1
-Stable tag: 1.2.5
+Tested up to: 6.0.2
+Stable tag: 1.2.9
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,14 +36,14 @@ But that's not it.
 * Yoast SEO Premium (limited due to their recent changes)
 * Gutenberg and Block Editor Content, Headings and Buttons
 * GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks
-* Elementor Page Builder
+* Elementor Page Builder (100%)
 * WP Bakery Page Builder
 * Visual Composer
 * Beaver Builder
 * Brizy Builder
 * Oxygen Builder
 * Jetpack
-* Advanced Custom Fields (please see the FAQs)
+* Advanced Custom Fields (Manual: please see the FAQs)
 * Lightweight Accordion (including Schema)
 * All major themes like default WordPress themes, Astra, Neve, Kadence
 
@@ -84,33 +84,36 @@ I will provide instant support for all your queries or feature requests. Use [su
 
 I will try my best to ensure that this plugin is compatible with every functionality plugin you use. Please create a support request and allow me some time.
 
-Please help me with a positive review to keep the development going.
+Please note that many plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
+
+Help me with a positive review to keep the development going.
 
 == Frequently Asked Questions ==
 
 = Why would I need this? =
-If you are an affiliate marketer or blogger who uses month, years and dates in your posts. If you use these dynamic month, year, date, next year, previous year shortcodes you won't have to update those posts again and again as the time passes.
+If you are an affiliate marketer or blogger who uses months, years and dates in your posts. If you use this plugin to render dynamic month, year, date, next year, and previous year shortcodes, you won’t have to update those posts again and again as time passes.
 
 = How can I access settings? =
-You cannot. There is no options panel because there is no need to have one. Why bloat WordPress dashboard with more options?
+You cannot. There is no options panel because there is no need to have one. Why bloat the WordPress dashboard with more options?
 
 = Can I use it in Block Editor or Classic Editor? =
-You can use the shortcodes in both Block Editor and Classic Editor like running text. You can also the shortcodes in widget areas including footer (use-case: Autoupdating Copyright Year) and headers (use-case: Today's Date).
+Like running text, you can use the shortcodes in both Block Editor and Classic Editor. You can also use the shortcodes in widget areas, including the footer (use-case: Autoupdating Copyright Year) and headers (use-case: Today’s Date).
 
 = Will this plugin work in my language? =
-Yes. The shortcode outputs are WPML ready. Since there is no settings page, you don't have to translate this plugin.
+Yes. The shortcode outputs are WPML ready and render as per the language set in your WordPress dashboard. Since there is no settings page, you don’t have to translate this plugin.
 
 = How can I use these shortcodes in my theme/PHP code? =
 You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[month]');?>` etc. in themes or in functionality plugins to use these shortcodes.
 
-= How can render shortcodes in ACF fields? =
-This plugin doesn't render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you need to render [year] etc. shortcodes to render, you can enable those field typewise or even field-namewise. Just add this code in your theme's functions.php file or in Code Snippets plugin:
+= How can I render shortcodes in ACF fields? =
+This plugin doesn’t render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you really need to render [year] etc., shortcodes, you can enable selective rendering.
+Just add this code in your theme’s functions.php file or in the Code Snippets plugin:
 
 ACF field type => text
-`add_filter('acf/format_value/type=text', 'do_shortcode');`
+	`add_filter('acf/format_value/type=text', 'do_shortcode');`
 
 ACF field name => headline
-`add_filter('acf/format_value/name=headline', 'do_shortcode');`
+	`add_filter('acf/format_value/name=headline', 'do_shortcode');`
 
 == Installation ==
 
@@ -128,6 +131,19 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.2.9 =
+* Readme update.
+
+= 1.2.8 =
+* Fixed some issues related to rendering of next month.
+* `[monthyear]` no longer prints next month after 28th. Reason: User experience, as the user may be tricked to thinking the wrong current month and year names.
+
+= 1.2.7 =
+* Fix rendering of [monthyear] shortcode in languages other than English.
+
+= 1.2.6 =
+* New: Full Elementor Support. Now the shortcodes should render in all core and Elementor Pro widgets
 
 = 1.2.5 =
 * Added: `[weekday]` shortcode renders day of the week like Sunday, Monday, …

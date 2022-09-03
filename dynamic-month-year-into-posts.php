@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.2.5
+ * Version:           1.2.9
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.5' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.2.9' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -70,14 +70,14 @@ add_shortcode( 'mn' , 'rmd_current_mn' );
 }
 add_shortcode( 'nmonth' , 'rmd_next_month' );
     function rmd_next_month() {
-    $nxtm = strtotime("next month");
-    $nmonth = date_i18n("F",$nxtm);
+    // $nxtm = strtotime("next month");
+    $nmonth = date_i18n('F', mktime(0, 0, 0, date('n') + 1, 1));
     return "$nmonth";
 }
 add_shortcode( 'cnmonth' , 'rmd_next_caps_month' );
     function rmd_next_caps_month() {
-    $nxtm11 = strtotime("next month");
-    $nmonth11 = date_i18n("F",$nxtm11);
+    // $nxtm11 = strtotime("next month");
+    $nmonth11 = date_i18n('F', mktime(0, 0, 0, date('n') + 1, 1));
     $cnmonth = ucfirst($nmonth11);
     return "$cnmonth";
 }
@@ -96,14 +96,14 @@ add_shortcode( 'cpmonth' , 'rmd_prev_caps_month' );
 }
 add_shortcode( 'nmon' , 'rmd_next_month_short' );
     function rmd_next_month_short() {
-    $nxtm1 = strtotime("next month");
-    $nmon = date_i18n("M",$nxtm1);
+    // $nxtm1 = strtotime("next month");
+    $nmon = date_i18n('M', mktime(0, 0, 0, date('n') + 1, 1));
     return "$nmon";
 }
 add_shortcode( 'cnmon' , 'rmd_next_month_short_caps' );
     function rmd_next_month_short_caps() {
-    $nxtm13 = strtotime("next month");
-    $nmon13 = date_i18n("M",$nxtm13);
+    // $nxtm13 = strtotime("next month");
+    $nmon13 = date_i18n('M', mktime(0, 0, 0, date('n') + 1, 1));
     $cnmon = ucfirst($nmon13);
     return "$cnmon";
 }
@@ -128,16 +128,8 @@ add_shortcode( 'date' , 'rmd_current_date' );
 add_shortcode( 'monthyear' , 'rmd_monthyear' );
     function rmd_monthyear() {
     $monthyear1 = date_i18n("F Y");
-    $dateseo = date("F Y");
-    $monthyear101 = date("F Y", strtotime ( '+1 month' , strtotime ( $dateseo ) )) ;
     $monthyear = ucfirst($monthyear1);
-    $monthyearseo = ucfirst($monthyear101);
-    $dtseo = date("j");
-    if($dtseo > 28){
-        return "$monthyearseo"; 
-        } else{
-        return "$monthyear";
-    }
+    return "$monthyear";
 }
 add_shortcode( 'nyear' , 'rmd_next_year' );
     function rmd_next_year() {
@@ -209,7 +201,7 @@ add_filter( 'rank_math/opengraph/twitter/title', function( $twtitle ) {
 add_filter( 'rank_math/opengraph/twitter/description', function( $twdesc ) {
     return do_shortcode( $twdesc );
 });
-// Yoast SEO Support
+// Yoast SEO Support - not complete
 add_filter( 'wpseo_title', 'do_shortcode' );
 add_filter( 'wpseo_metadesc', 'do_shortcode' );
 add_filter( 'wpseo_opengraph_title', 'do_shortcode' );
@@ -224,6 +216,9 @@ add_filter('wpseo_schema_webpage', function($data) {
 
 add_filter( 'seopress_titles_title', 'do_shortcode'); // SEOPress Support
 add_filter( 'seopress_titles_desc', 'do_shortcode'); // SEOPress Support
+
+// Elementor Support - Should fix all rendering issues.
+add_filter( 'elementor/widget/render_content', 'do_shortcode');
 
 // Miscellaneous
 add_filter( 'crp_title', 'do_shortcode'); // CRP Support
