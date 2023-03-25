@@ -1,10 +1,10 @@
 === Plugin Name ===
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
-Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content, writing
+Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content, writing, editor, elementor, shortcodes
 Requires at least: 3.0.1
-Tested up to: 6.1
-Stable tag: 1.3.0
+Tested up to: 6.1.1
+Stable tag: 1.3.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -89,7 +89,7 @@ I will provide instant support for all your queries or feature requests. Use [su
 
 ### Compatibility
 
-I use the plugin myself on [my primary website](https://gauravtiwari.org) and I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please it isn't compatible with your stack, create a support request and allow me some time.
+I use the plugin myself on [my primary website](https://gauravtiwari.org) and I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please let me know if this plugin isn't compatible with your stack, create a support request and allow me some time.
 
 Please note that some plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
 
@@ -119,10 +119,14 @@ This plugin doesn’t render shortcodes in ACF fields by default (due to various
 Just add this code in your theme’s functions.php file or in the Code Snippets plugin:
 
 ACF field type => text
-	`add_filter('acf/format_value/type=text', 'do_shortcode');`
+	```
+	add_filter('acf/format_value/type=text', 'do_shortcode');
+	```
 
 ACF field name => headline
-	`add_filter('acf/format_value/name=headline', 'do_shortcode');`
+	```
+	add_filter('acf/format_value/name=headline', 'do_shortcode');
+	```
 
 == Installation ==
 
@@ -140,6 +144,9 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.3.1 =
+* Date change for Black Friday and Cyber Monday dates
 
 = 1.3.0 =
 * New: `[blackfriday]` and `[cybermonday]` shortcodes render this years Black Fridy and Cyber Monday dates like November 25 and November 28. Couple these with `[year]` to make the dates complete. [See this example](https://gauravtiwari.org/wp-content/uploads/2022/10/black-friday-date.jpg)

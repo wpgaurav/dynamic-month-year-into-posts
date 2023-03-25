@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.3.0
+ * Version:           1.3.1
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.0' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.1' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -172,12 +172,12 @@ add_shortcode( 'wd' , 'rmd_current_wd' );
 }
 add_shortcode( 'blackfriday' , 'rmd_blackfriday' );
     function rmd_blackfriday() {
-    $bfdate = date_i18n("F j", strtotime( '2022-11-25 00:00:00' ));
+    $bfdate = date_i18n("F j", strtotime( '2022-11-24 00:00:00' ));
     return "$bfdate";
 }
 add_shortcode( 'cybermonday' , 'rmd_cybermonday' );
     function rmd_cybermonday() {
-    $cmdate = date_i18n("F j", strtotime( '2022-11-28 00:00:00' ));
+    $cmdate = date_i18n("F j", strtotime( '2022-11-27 00:00:00' ));
     return "$cmdate";
 }
 // Adding support to native WP elements
