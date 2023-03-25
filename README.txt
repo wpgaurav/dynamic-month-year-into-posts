@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content, writing
 Requires at least: 3.0.1
-Tested up to: 6.0.2
-Stable tag: 1.2.9
+Tested up to: 6.1
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -19,6 +19,8 @@ Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear
 But that's not it.
 
 [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
+
+* New: Ace Black Friday with new dynamic shortcodes. Black Friday and Cyber Monday dates can be inserted anywhere by using `[blackfriday]` and `[cybermonday]`.
 
 ### Works with popular SEO Plugins
 
@@ -43,9 +45,10 @@ But that's not it.
 * Brizy Builder
 * Oxygen Builder
 * Jetpack
+* Intelly Related Posts a.k.a. Inline Related Posts (IRP)
 * Advanced Custom Fields (Manual: please see the FAQs)
 * Lightweight Accordion (including Schema)
-* All major themes like default WordPress themes, Astra, Neve, Kadence
+* All major themes like default WordPress themes, Astra, Neve, Kadence, GeneratePress and Blocksy.
 
 Tested to be totally working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
@@ -59,6 +62,7 @@ Note: Since August 2021, Google has started showing h1 titles in search results,
 * Contextual Related Posts Support.
 * Jetpack Related Posts Support.
 * Totally native. No configuration required.
+* Cache friendly.
 
 ### Easy to use
 
@@ -71,6 +75,7 @@ Zero bloat. No CSS/JS files loaded. No database queries are made and the content
 * [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
 * [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
 * [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/)
+* [WordPress Deals](https://gauravtiwari.org/wordpress-deals/)
 * [Request a Feature](https://gauravtiwari.org/contact/)
 * [Follow Development on Github](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
@@ -82,9 +87,13 @@ Dynamic Month & Year into Posts is a completely native shortcode plugin. It has 
 
 I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken.
 
-I will try my best to ensure that this plugin is compatible with every functionality plugin you use. Please create a support request and allow me some time.
+### Compatibility
 
-Please note that many plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
+I use the plugin myself on [my primary website](https://gauravtiwari.org) and I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please it isn't compatible with your stack, create a support request and allow me some time.
+
+Please note that some plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
+
+If you are using TablePress along with a cache plugin, like [WP Rocket](https://gauravtiwari.org/wp-rocket-review/), please clear transients regularly or disable table cache to see updated shortcode data.
 
 Help me with a positive review to keep the development going.
 
@@ -131,6 +140,10 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.3.0 =
+* New: `[blackfriday]` and `[cybermonday]` shortcodes render this years Black Fridy and Cyber Monday dates like November 25 and November 28. Couple these with `[year]` to make the dates complete. [See this example](https://gauravtiwari.org/wp-content/uploads/2022/10/black-friday-date.jpg)
+* Intelly Related Posts a.k.a. IRP support.
 
 = 1.2.9 =
 * Readme update.
