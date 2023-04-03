@@ -34,8 +34,8 @@ But that's not it.
 * Rank Math Pro (100%)
 * SEOPress
 * SEOPress Premium
-* Yoast SEO (limited due to their recent changes)
-* Yoast SEO Premium (limited due to their recent changes)
+* Yoast SEO
+* Yoast SEO Premium
 * Gutenberg and Block Editor Content, Headings and Buttons
 * GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks
 * Elementor Page Builder (100%)
@@ -144,6 +144,9 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.3.2 =
+* Full Yoast SEO Support. Finally.
 
 = 1.3.1 =
 * Date change for Black Friday and Cyber Monday dates
