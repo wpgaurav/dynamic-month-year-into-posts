@@ -5,8 +5,8 @@ Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, cu
 Requires at least: 3.0.1
 Tested up to: 6.1.1
 Stable tag: 1.3.2
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+License: GPLv3 or later
+License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
 Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and months by [month] [nmonth] [pmonth] etc., shortcodes anywhere, including content, title, meta title, widget, excerpt and Breadcrumbs.
 
