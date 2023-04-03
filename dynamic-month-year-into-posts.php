@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.3.1
+ * Version:           1.3.2
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-2.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.1' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.2' );
 
 // Registering shortcodes
 add_shortcode( 'year' , 'rmd_current_year' );
@@ -215,7 +215,16 @@ add_filter( 'wpseo_title', 'do_shortcode' );
 add_filter( 'wpseo_metadesc', 'do_shortcode' );
 add_filter( 'wpseo_opengraph_title', 'do_shortcode' );
 add_filter( 'wpseo_opengraph_desc', 'do_shortcode' );
-// add_filter( 'wpseo_json_ld_output', 'do_shortcode' );
+function dmyip_process_shortcodes_in_jsonld($data) {
+    // Modify the necessary Schema properties to support shortcodes.
+    // For example, let's modify the 'description' property of an Article type.
+    if (isset($data['@type']) && $data['@type'] === 'Article' && isset($data['description'])) {
+        $data['description'] = do_shortcode($data['description']);
+    }
+
+    return $data;
+}
+add_filter('wpseo_json_ld_output', 'dmyip_process_shortcodes_in_jsonld', 10, 1);
 add_filter('wpseo_schema_webpage', function($data) {
     $data['name'] = do_shortcode($data['name']);
     return $data;
