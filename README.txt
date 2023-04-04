@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content, writing, editor, elementor, shortcodes
 Requires at least: 3.0.1
 Tested up to: 6.1.1
-Stable tag: 1.3.2
+Stable tag: 1.3.3
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -144,6 +144,10 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.3.3 =
+* Optimized Code
+* SEOPress Support complete
 
 = 1.3.2 =
 * Full Yoast SEO Support. Finally.

@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.3.2
+ * Version:           1.3.3
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-3.0+
@@ -28,157 +28,157 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.2' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.3' );
 
 // Registering shortcodes
-add_shortcode( 'year' , 'rmd_current_year' );
-    function rmd_current_year() {
-    $year = date_i18n("Y");
-    return "$year";
+add_shortcode( 'year' , 'dmyip_rmd_current_year' );
+    function dmyip_rmd_current_year() {
+    $year = date_i18n('Y');
+    return esc_html($year);
 }
-add_shortcode( 'month' , 'rmd_current_month' );
-    function rmd_current_month() {
-    $month = date_i18n("F");
-    return "$month";
+add_shortcode( 'month' , 'dmyip_rmd_current_month' );
+    function dmyip_rmd_current_month() {
+    $month = date_i18n('F');
+    return esc_html($month);
 }
-add_shortcode( 'cmonth' , 'rmd_current_caps_month' );
-    function rmd_current_caps_month() {
-    $ucmonth = date_i18n("F");
+add_shortcode( 'cmonth' , 'dmyip_rmd_current_caps_month' );
+    function dmyip_rmd_current_caps_month() {
+    $ucmonth = date_i18n('F');
     $cmonth = ucfirst($ucmonth);
-    return "$cmonth";
+    return esc_html($cmonth);
 }
-add_shortcode( 'mon' , 'rmd_current_mon' );
-    function rmd_current_mon() {
-    $mon = date_i18n("M");
-    return "$mon";
+add_shortcode( 'mon' , 'dmyip_rmd_current_mon' );
+    function dmyip_rmd_current_mon() {
+    $mon = date_i18n('M');
+    return esc_html($mon);
 }
-add_shortcode( 'cmon' , 'rmd_current_caps_mon' );
-    function rmd_current_caps_mon() {
-    $ucmon = date_i18n("M");
+add_shortcode( 'cmon' , 'dmyip_rmd_current_caps_mon' );
+    function dmyip_rmd_current_caps_mon() {
+    $ucmon = date_i18n('M');
     $cmon = ucfirst($ucmon);
-    return "$cmon";
+    return esc_html($cmon);
 }
-add_shortcode( 'mm' , 'rmd_current_mm' );
-    function rmd_current_mm() {
-    $mm = date_i18n("m");
-    return "$mm";
+add_shortcode( 'mm' , 'dmyip_rmd_current_mm' );
+    function dmyip_rmd_current_mm() {
+    $mm = date_i18n('m');
+    return esc_html($mm);
 }
-add_shortcode( 'mn' , 'rmd_current_mn' );
-    function rmd_current_mn() {
-    $mn = date_i18n("n");
-    return "$mn";
+add_shortcode( 'mn' , 'dmyip_rmd_current_mn' );
+    function dmyip_rmd_current_mn() {
+    $mn = date_i18n('n');
+    return esc_html($mn);
 }
-add_shortcode( 'nmonth' , 'rmd_next_month' );
-    function rmd_next_month() {
-    // $nxtm = strtotime("next month");
+add_shortcode( 'nmonth' , 'dmyip_rmd_next_month' );
+    function dmyip_rmd_next_month() {
+    // $nxtm = strtotime('next month');
     $nmonth = date_i18n('F', mktime(0, 0, 0, date('n') + 1, 1));
-    return "$nmonth";
+    return esc_html($nmonth);
 }
-add_shortcode( 'cnmonth' , 'rmd_next_caps_month' );
-    function rmd_next_caps_month() {
-    // $nxtm11 = strtotime("next month");
+add_shortcode( 'cnmonth' , 'dmyip_rmd_next_caps_month' );
+    function dmyip_rmd_next_caps_month() {
+    // $nxtm11 = strtotime('next month');
     $nmonth11 = date_i18n('F', mktime(0, 0, 0, date('n') + 1, 1));
     $cnmonth = ucfirst($nmonth11);
-    return "$cnmonth";
+    return esc_html($cnmonth);
 }
-add_shortcode( 'pmonth' , 'rmd_prev_month' );
-    function rmd_prev_month() {
-    $pvsm = strtotime("previous month");
-    $pmonth = date_i18n("F",$pvsm);
-    return "$pmonth";
+add_shortcode( 'pmonth' , 'dmyip_rmd_prev_month' );
+    function dmyip_rmd_prev_month() {
+    $pvsm = strtotime('previous month');
+    $pmonth = date_i18n('F',$pvsm);
+    return esc_html($pmonth);
 }
-add_shortcode( 'cpmonth' , 'rmd_prev_caps_month' );
-    function rmd_prev_caps_month() {
-    $pvsm11 = strtotime("previous month");
-    $pmonth11 = date_i18n("F",$pvsm11);
+add_shortcode( 'cpmonth' , 'dmyip_rmd_prev_caps_month' );
+    function dmyip_rmd_prev_caps_month() {
+    $pvsm11 = strtotime('previous month');
+    $pmonth11 = date_i18n('F',$pvsm11);
     $cpmonth = ucfirst($pmonth11);
-    return "$cpmonth";
+    return esc_html($cpmonth);
 }
-add_shortcode( 'nmon' , 'rmd_next_month_short' );
-    function rmd_next_month_short() {
-    // $nxtm1 = strtotime("next month");
+add_shortcode( 'nmon' , 'dmyip_rmd_next_month_short' );
+    function dmyip_rmd_next_month_short() {
+    // $nxtm1 = strtotime('next month');
     $nmon = date_i18n('M', mktime(0, 0, 0, date('n') + 1, 1));
-    return "$nmon";
+    return esc_html($nmon);
 }
-add_shortcode( 'cnmon' , 'rmd_next_month_short_caps' );
-    function rmd_next_month_short_caps() {
-    // $nxtm13 = strtotime("next month");
+add_shortcode( 'cnmon' , 'dmyip_rmd_next_month_short_caps' );
+    function dmyip_rmd_next_month_short_caps() {
+    // $nxtm13 = strtotime('next month');
     $nmon13 = date_i18n('M', mktime(0, 0, 0, date('n') + 1, 1));
     $cnmon = ucfirst($nmon13);
-    return "$cnmon";
+    return esc_html($cnmon);
 }
-add_shortcode( 'pmon' , 'rmd_prev_month_short' );
-    function rmd_prev_month_short() {
-    $pvsm1 = strtotime("previous month");
-    $pmon = date_i18n("M",$pvsm1);
-    return "$pmon";
+add_shortcode( 'pmon' , 'dmyip_rmd_prev_month_short' );
+    function dmyip_rmd_prev_month_short() {
+    $pvsm1 = strtotime('previous month');
+    $pmon = date_i18n('M',$pvsm1);
+    return esc_html($pmon);
 }
-add_shortcode( 'cpmon' , 'rmd_prev_month_short_caps' );
-    function rmd_prev_month_short_caps() {
-    $pvsm13 = strtotime("previous month");
-    $pmon13 = date_i18n("M",$pvsm13);
+add_shortcode( 'cpmon' , 'dmyip_rmd_prev_month_short_caps' );
+    function dmyip_rmd_prev_month_short_caps() {
+    $pvsm13 = strtotime('previous month');
+    $pmon13 = date_i18n('M',$pvsm13);
     $cpmon = ucfirst($pmon13);
-    return "$cpmon";
+    return esc_html($cpmon);
 }
-add_shortcode( 'date' , 'rmd_current_date' );
-    function rmd_current_date() {
-    $date = date_i18n("F j, Y");
-    return "$date";
+add_shortcode( 'date' , 'dmyip_rmd_current_date' );
+    function dmyip_rmd_current_date() {
+    $date = date_i18n('F j, Y');
+    return esc_html($date);
 }
-add_shortcode( 'monthyear' , 'rmd_monthyear' );
-    function rmd_monthyear() {
-    $monthyear1 = date_i18n("F Y");
+add_shortcode( 'monthyear' , 'dmyip_rmd_monthyear' );
+    function dmyip_rmd_monthyear() {
+    $monthyear1 = date_i18n('F Y');
     $monthyear = ucfirst($monthyear1);
-    return "$monthyear";
+    return esc_html($monthyear);
 }
-add_shortcode( 'nyear' , 'rmd_next_year' );
-    function rmd_next_year() {
-    $currentyear1 = date_i18n("Y");
+add_shortcode( 'nyear' , 'dmyip_rmd_next_year' );
+    function dmyip_rmd_next_year() {
+    $currentyear1 = date_i18n('Y');
     $nyear = $currentyear1 + 1;
-    return "$nyear";
+    return esc_html($nyear);
 }
-add_shortcode( 'nnyear' , 'rmd_next_next_year' );
-    function rmd_next_next_year() {
-    $currentyear11 = date_i18n("Y");
+add_shortcode( 'nnyear' , 'dmyip_rmd_next_next_year' );
+    function dmyip_rmd_next_next_year() {
+    $currentyear11 = date_i18n('Y');
     $nnyear = $currentyear11 + 2;
-    return "$nnyear";
+    return esc_html($nnyear);
 }
-add_shortcode( 'pyear' , 'rmd_previous_year' );
-    function rmd_previous_year() {
-    $currentyear2 = date_i18n("Y");
+add_shortcode( 'pyear' , 'dmyip_rmd_previous_year' );
+    function dmyip_rmd_previous_year() {
+    $currentyear2 = date_i18n('Y');
     $pyear = $currentyear2 - 1;
-    return "$pyear";
+    return esc_html($pyear);
 }
-add_shortcode( 'ppyear' , 'rmd_previous_previous_year' );
-    function rmd_previous_previous_year() {
-    $currentyear22 = date_i18n("Y");
+add_shortcode( 'ppyear' , 'dmyip_rmd_previous_previous_year' );
+    function dmyip_rmd_previous_previous_year() {
+    $currentyear22 = date_i18n('Y');
     $ppyear = $currentyear22 - 2;
-    return "$ppyear";
+    return esc_html($ppyear);
 }
-add_shortcode( 'dt' , 'rmd_current_dt' );
-    function rmd_current_dt() {
-    $dt = date_i18n("j");
-    return "$dt";
+add_shortcode( 'dt' , 'dmyip_rmd_current_dt' );
+    function dmyip_rmd_current_dt() {
+    $dt = date_i18n('j');
+    return esc_html($dt);
 }
-add_shortcode( 'weekday' , 'rmd_current_weekday' );
-    function rmd_current_weekday() {
-    $weekday = date_i18n("l");
-    return "$weekday";
+add_shortcode( 'weekday' , 'dmyip_rmd_current_weekday' );
+    function dmyip_rmd_current_weekday() {
+    $weekday = date_i18n('l');
+    return esc_html($weekday);
 }
-add_shortcode( 'wd' , 'rmd_current_wd' );
-    function rmd_current_wd() {
-    $wd = date_i18n("D");
-    return "$wd";
+add_shortcode( 'wd' , 'dmyip_rmd_current_wd' );
+    function dmyip_rmd_current_wd() {
+    $wd = date_i18n('D');
+    return esc_html($wd);
 }
-add_shortcode( 'blackfriday' , 'rmd_blackfriday' );
-    function rmd_blackfriday() {
-    $bfdate = date_i18n("F j", strtotime( '2022-11-24 00:00:00' ));
-    return "$bfdate";
+add_shortcode( 'blackfriday' , 'dmyip_rmd_blackfriday' );
+    function dmyip_rmd_blackfriday() {
+    $bfdate = date_i18n('F j', strtotime( '2023-11-24 00:00:00' ));
+    return esc_html($bfdate);
 }
-add_shortcode( 'cybermonday' , 'rmd_cybermonday' );
-    function rmd_cybermonday() {
-    $cmdate = date_i18n("F j", strtotime( '2022-11-27 00:00:00' ));
-    return "$cmdate";
+add_shortcode( 'cybermonday' , 'dmyip_rmd_cybermonday' );
+    function dmyip_rmd_cybermonday() {
+    $cmdate = date_i18n('F j', strtotime( '2023-11-27 00:00:00' ));
+    return esc_html($cmdate);
 }
 // Adding support to native WP elements
 
@@ -275,7 +275,7 @@ add_filter( 'crp_title', 'do_shortcode'); // CRP Support
 add_filter( 'plugin_action_links_dynamic-month-year-into-posts/dynamic-month-year-into-posts.php', 'dmyip_settings_link' );
 function dmyip_settings_link( $links ) {
     // Create the link.
-    $settings_link = "<a href='https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes'>" . __( 'List of Shortcodes' ) . '</a>';
+    $settings_link = '<a href="https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes">' . __( 'List of Shortcodes' ) . '</a>';
     // Adds the link to the end of the array.
     array_push(
         $links,
