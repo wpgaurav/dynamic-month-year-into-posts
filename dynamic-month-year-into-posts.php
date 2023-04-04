@@ -198,6 +198,11 @@ add_filter( 'rank_math/frontend/description', function( $description ) {
 add_filter( 'rank_math/product_description/apply_shortcode', '__return_true' );
 add_filter( 'rank_math/frontend/breadcrumb/html', 'do_shortcode' );
 /* In Beta — Open Graph Testing for Rank Math */
+// Add Shortcode support in Rankmath Schema
+add_filter( 'rank_math/opengraph/facebook/og_title', 'do_shortcode' );
+add_filter( 'rank_math/opengraph/facebook/og_description', 'do_shortcode' );
+add_filter( 'rank_math/opengraph/twitter/title', 'do_shortcode' );
+add_filter( 'rank_math/opengraph/twitter/description', 'do_shortcode' );
 add_filter( 'rank_math/opengraph/facebook/og_title', function( $fbog ) {
     return do_shortcode( $fbog );
 });
@@ -213,8 +218,18 @@ add_filter( 'rank_math/opengraph/twitter/description', function( $twdesc ) {
 // Yoast SEO Support - not complete
 add_filter( 'wpseo_title', 'do_shortcode' );
 add_filter( 'wpseo_metadesc', 'do_shortcode' );
+add_filter( 'wpseo_breadcrumb_output', 'do_shortcode' );
 add_filter( 'wpseo_opengraph_title', 'do_shortcode' );
 add_filter( 'wpseo_opengraph_desc', 'do_shortcode' );
+add_filter( 'wpseo_opengraph_image', 'do_shortcode' );
+add_filter( 'wpseo_twitter_title', 'do_shortcode' );
+add_filter( 'wpseo_twitter_description', 'do_shortcode' );
+add_filter( 'wpseo_twitter_image', 'do_shortcode' );
+add_filter( 'wpseo_schema_webpage', 'do_shortcode' );
+add_filter( 'wpseo_schema_article', 'do_shortcode' );
+add_filter( 'wpseo_schema_organization', 'do_shortcode' );
+add_filter( 'wpseo_schema_person', 'do_shortcode' );
+add_filter( 'wpseo_schema_website', 'do_shortcode' );
 function dmyip_process_shortcodes_in_jsonld($data) {
     // Modify the necessary Schema properties to support shortcodes.
     // For example, let's modify the 'description' property of an Article type.
@@ -234,6 +249,20 @@ add_filter('wpseo_schema_webpage', function($data) {
 
 add_filter( 'seopress_titles_title', 'do_shortcode'); // SEOPress Support
 add_filter( 'seopress_titles_desc', 'do_shortcode'); // SEOPress Support
+// Add Shortcode support in SEOPress Schema
+add_filter( 'seopress_schemas_title', 'do_shortcode' );
+add_filter( 'seopress_schemas_desc', 'do_shortcode' );
+add_filter( 'seopress_schemas_img', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_width', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_height', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_alt', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_caption', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_title', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_content', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_content_alt', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_content_caption', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_content_title', 'do_shortcode' );
+add_filter( 'seopress_schemas_img_content_content', 'do_shortcode' );
 
 // Elementor Support - Should fix all rendering issues.
 add_filter( 'elementor/widget/render_content', 'do_shortcode');
