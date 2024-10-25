@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: content, marketing, seo, shortcode, writing
 Requires at least: 3.0.1
-Tested up to: 6.7
-Stable tag: 1.3.8
+Tested up to: 6.4.3
+Stable tag: 1.3.6
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -73,9 +73,7 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 
 As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
 
-Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need.
-
-Also, Dynamic Month & Year into Posts is a totally free plugin. There are no upsells and will never be.
+Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need. Also, there are no upsells and will never be.
 
 * [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
 * [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
@@ -85,7 +83,7 @@ Also, Dynamic Month & Year into Posts is a totally free plugin. There are no ups
 
 ### Privacy
 
-Dynamic Month & Year into Posts by [Gaurav Tiwari](https://gauravtiwari.org) is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free. No notifications. No upgrade notices. Nothing.
+Dynamic Month & Year into Posts is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free. No notifications. No upgrade notices. Nothing.
 
 ### Fast Support and Feature Implementation
 
@@ -148,12 +146,6 @@ ACF field name => headline
 
 
 == Changelog ==
-= 1.3.8 =
-* New: [nd] and [pd] display next and previous dates (number only).
-
-= 1.3.7 =
-* New: [nmonthyear] and [pmonthyear] display next and previous month and years together. Useful in many cases.
-
 = 1.3.6 =
 * Shortcode support in Archive Titles.
 

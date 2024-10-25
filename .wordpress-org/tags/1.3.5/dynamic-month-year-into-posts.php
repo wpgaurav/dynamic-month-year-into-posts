@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.3.8
+ * Version:           1.3.5
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-3.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.8' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.5' );
 
 // Registering shortcodes
 add_shortcode('year', 'dmyip_rmd_current_year');
@@ -144,23 +144,6 @@ add_shortcode( 'monthyear' , 'dmyip_rmd_monthyear' );
     $monthyear = ucfirst($monthyear1);
     return esc_html($monthyear);
 }
-// Function to display the next month and year.
-function dmyip_nmonthyear() {
-    $nextMonthnmy = strtotime("+1 month");
-    $monthyearnmy = date_i18n('F Y', $nextMonthnmy);
-    return esc_html(ucfirst($monthyearnmy));
-}
-// Registering the [nmonthyear] shortcode.
-add_shortcode('nmonthyear', 'dmyip_nmonthyear');
-
-// Function to display the previous month and year.
-function dmyip_pmonthyear() {
-    $prevMonthpmy = strtotime("-1 month");
-    $monthyearpmy = date_i18n('F Y', $prevMonthpmy);
-    return esc_html(ucfirst($monthyearpmy));
-}
-// Registering the [pmonthyear] shortcode.
-add_shortcode('pmonthyear', 'dmyip_pmonthyear');
 add_shortcode( 'nyear' , 'dmyip_rmd_next_year' );
     function dmyip_rmd_next_year() {
     $currentyear1 = date_i18n('Y');
@@ -185,24 +168,11 @@ add_shortcode( 'ppyear' , 'dmyip_rmd_previous_previous_year' );
     $ppyear = $currentyear22 - 2;
     return esc_html($ppyear);
 }
-add_shortcode('dt', 'dmyip_rmd_current_dt');
-function dmyip_rmd_current_dt() {
+add_shortcode( 'dt' , 'dmyip_rmd_current_dt' );
+    function dmyip_rmd_current_dt() {
     $dt = date_i18n('j');
     return esc_html($dt);
 }
-
-add_shortcode('nd', 'dmyip_rmd_next_date');
-function dmyip_rmd_next_date() {
-    $dt = date_i18n('j', strtotime('+1 day'));
-    return esc_html($dt);
-}
-
-add_shortcode('pd', 'dmyip_rmd_prev_date');
-function dmyip_rmd_prev_date() {
-    $dt = date_i18n('j', strtotime('-1 day'));
-    return esc_html($dt);
-}
-
 add_shortcode( 'weekday' , 'dmyip_rmd_current_weekday' );
     function dmyip_rmd_current_weekday() {
     $weekday = date_i18n('l');
@@ -270,14 +240,6 @@ add_filter( 'the_title', 'do_shortcode' );
 add_filter( 'single_post_title', 'do_shortcode' );
 add_filter( 'wp_title', 'do_shortcode' );
 add_filter('the_excerpt', 'do_shortcode');
-function dmyip_enable_shortcode_in_archive_titles( $title ) {
-    if ( is_archive() ) {
-        return do_shortcode( $title );
-    }
-    return $title;
-}
-add_filter( 'get_the_archive_title', 'dmyip_enable_shortcode_in_archive_titles' );
-
 
 // Rank Math Support
 add_filter( 'rank_math/frontend/title', function( $title ) {

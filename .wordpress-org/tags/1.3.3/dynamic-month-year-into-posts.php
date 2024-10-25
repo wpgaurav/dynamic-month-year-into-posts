@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.3.8
+ * Version:           1.3.3
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-3.0+
@@ -28,27 +28,14 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.8' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.3' );
 
 // Registering shortcodes
-add_shortcode('year', 'dmyip_rmd_current_year');
-function dmyip_rmd_current_year($atts) {
-    // Set default attributes and merge with user input
-    $attributes = shortcode_atts(array('n' => 0), $atts);
-
-    // Get the current year as an integer
-    $current_year = intval(date_i18n('Y'));
-
-    // Calculate the new year based on the user input
-    $modified_year = $current_year + intval($attributes['n']);
-
-    // Format the new year with date_i18n to respect the WordPress site's locale settings
-    $new_year = date_i18n('Y', strtotime($modified_year . '-01-01'));
-
-    // Return the calculated year, escaping it for security
-    return esc_html($new_year);
+add_shortcode( 'year' , 'dmyip_rmd_current_year' );
+    function dmyip_rmd_current_year() {
+    $year = date_i18n('Y');
+    return esc_html($year);
 }
-
 add_shortcode( 'month' , 'dmyip_rmd_current_month' );
     function dmyip_rmd_current_month() {
     $month = date_i18n('F');
@@ -144,23 +131,6 @@ add_shortcode( 'monthyear' , 'dmyip_rmd_monthyear' );
     $monthyear = ucfirst($monthyear1);
     return esc_html($monthyear);
 }
-// Function to display the next month and year.
-function dmyip_nmonthyear() {
-    $nextMonthnmy = strtotime("+1 month");
-    $monthyearnmy = date_i18n('F Y', $nextMonthnmy);
-    return esc_html(ucfirst($monthyearnmy));
-}
-// Registering the [nmonthyear] shortcode.
-add_shortcode('nmonthyear', 'dmyip_nmonthyear');
-
-// Function to display the previous month and year.
-function dmyip_pmonthyear() {
-    $prevMonthpmy = strtotime("-1 month");
-    $monthyearpmy = date_i18n('F Y', $prevMonthpmy);
-    return esc_html(ucfirst($monthyearpmy));
-}
-// Registering the [pmonthyear] shortcode.
-add_shortcode('pmonthyear', 'dmyip_pmonthyear');
 add_shortcode( 'nyear' , 'dmyip_rmd_next_year' );
     function dmyip_rmd_next_year() {
     $currentyear1 = date_i18n('Y');
@@ -185,24 +155,11 @@ add_shortcode( 'ppyear' , 'dmyip_rmd_previous_previous_year' );
     $ppyear = $currentyear22 - 2;
     return esc_html($ppyear);
 }
-add_shortcode('dt', 'dmyip_rmd_current_dt');
-function dmyip_rmd_current_dt() {
+add_shortcode( 'dt' , 'dmyip_rmd_current_dt' );
+    function dmyip_rmd_current_dt() {
     $dt = date_i18n('j');
     return esc_html($dt);
 }
-
-add_shortcode('nd', 'dmyip_rmd_next_date');
-function dmyip_rmd_next_date() {
-    $dt = date_i18n('j', strtotime('+1 day'));
-    return esc_html($dt);
-}
-
-add_shortcode('pd', 'dmyip_rmd_prev_date');
-function dmyip_rmd_prev_date() {
-    $dt = date_i18n('j', strtotime('-1 day'));
-    return esc_html($dt);
-}
-
 add_shortcode( 'weekday' , 'dmyip_rmd_current_weekday' );
     function dmyip_rmd_current_weekday() {
     $weekday = date_i18n('l');
@@ -213,71 +170,22 @@ add_shortcode( 'wd' , 'dmyip_rmd_current_wd' );
     $wd = date_i18n('D');
     return esc_html($wd);
 }
-add_shortcode('blackfriday', 'dmyip_rmd_blackfriday');
-function dmyip_rmd_blackfriday() {
-    $year = date("Y"); // Current year
-    $thanksgiving = strtotime("fourth thursday of november $year"); // Thanksgiving date
-    $black_friday = strtotime("+1 day", $thanksgiving); // Black Friday date
-    $bfdate = date_i18n('F j', $black_friday); // Format the date
+add_shortcode( 'blackfriday' , 'dmyip_rmd_blackfriday' );
+    function dmyip_rmd_blackfriday() {
+    $bfdate = date_i18n('F j', strtotime( '2023-11-24 00:00:00' ));
     return esc_html($bfdate);
 }
-
-add_shortcode('cybermonday', 'dmyip_rmd_cybermonday');
-function dmyip_rmd_cybermonday() {
-    $year = date("Y"); // Current year
-    $thanksgiving = strtotime("fourth thursday of november $year"); // Thanksgiving date
-    $cyber_monday = strtotime("+4 day", $thanksgiving); // Cyber Monday date
-    $cmdate = date_i18n('F j', $cyber_monday); // Format the date
+add_shortcode( 'cybermonday' , 'dmyip_rmd_cybermonday' );
+    function dmyip_rmd_cybermonday() {
+    $cmdate = date_i18n('F j', strtotime( '2023-11-27 00:00:00' ));
     return esc_html($cmdate);
 }
-
-function dmyip_rmd_published() {
-    // Get the timestamp of the published date
-    $published_timestamp = get_the_time('U');
-    
-    // Get the date format set in WordPress settings
-    $date_format = get_option('date_format');
-    
-    // Get the published date in the language set in WordPress, formatted as per settings
-    $published_date = date_i18n($date_format, $published_timestamp);
-    
-    // Return the published date
-    return $published_date;
-}
-
-// Register the shortcode [datepublished]
-add_shortcode( 'datepublished', 'dmyip_rmd_published' );
-function dmyip_rmd_modified() {
-    // Get the timestamp of the last modified date
-    $last_modified_timestamp = get_the_modified_time('U');
-    
-    // Get the date format set in WordPress settings
-    $date_format = get_option('date_format');
-    
-    // Get the last modified date in the language set in WordPress, formatted as per settings
-    $last_modified = date_i18n($date_format, $last_modified_timestamp);
-    
-    // Return the last modified date
-    return $last_modified;
-}
-
-// Register the shortcode [datemodified]
-add_shortcode( 'datemodified', 'dmyip_rmd_modified' );
-
 // Adding support to native WP elements
 
 add_filter( 'the_title', 'do_shortcode' );
 add_filter( 'single_post_title', 'do_shortcode' );
 add_filter( 'wp_title', 'do_shortcode' );
 add_filter('the_excerpt', 'do_shortcode');
-function dmyip_enable_shortcode_in_archive_titles( $title ) {
-    if ( is_archive() ) {
-        return do_shortcode( $title );
-    }
-    return $title;
-}
-add_filter( 'get_the_archive_title', 'dmyip_enable_shortcode_in_archive_titles' );
-
 
 // Rank Math Support
 add_filter( 'rank_math/frontend/title', function( $title ) {

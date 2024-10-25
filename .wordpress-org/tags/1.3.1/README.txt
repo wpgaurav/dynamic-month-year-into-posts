@@ -1,14 +1,14 @@
-=== Dynamic Month & Year into Posts ===
+=== Plugin Name ===
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
-Tags: content, marketing, seo, shortcode, writing
+Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content, writing, editor, elementor, shortcodes
 Requires at least: 3.0.1
-Tested up to: 6.7
-Stable tag: 1.3.8
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Tested up to: 6.2
+Stable tag: 1.3.1
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automate SEO and content with dynamic shortcodes for dates, years, months in content, titles and more.
+Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and months by [month] [nmonth] [pmonth] etc., shortcodes anywhere, including content, title, meta title, widget, excerpt and Breadcrumbs.
 
 == Description ==
 
@@ -20,7 +20,6 @@ But that's not it.
 
 [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
 
-* New: Add post modified date by using `[datemodified]` and post publication date by using `[datepublished]` shortcodes.
 * New: Ace Black Friday with new dynamic shortcodes. Black Friday and Cyber Monday dates can be inserted anywhere by using `[blackfriday]` and `[cybermonday]`.
 
 ### Works with popular SEO Plugins
@@ -35,22 +34,21 @@ But that's not it.
 * Rank Math Pro (100%)
 * SEOPress
 * SEOPress Premium
-* Yoast SEO
-* Yoast SEO Premium
+* Yoast SEO (limited due to their recent changes)
+* Yoast SEO Premium (limited due to their recent changes)
 * Gutenberg and Block Editor Content, Headings and Buttons
-* [All popular Block Editor Addons](https://gauravtiwari.org/best-gutenberg-blocks-plugins-for-wordpress/), including Greenshift, GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks.
+* GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks
 * Elementor Page Builder (100%)
 * WP Bakery Page Builder
 * Visual Composer
 * Beaver Builder
 * Brizy Builder
 * Oxygen Builder
-* Bricks Builder
 * Jetpack
 * Intelly Related Posts a.k.a. Inline Related Posts (IRP)
 * Advanced Custom Fields (Manual: please see the FAQs)
 * Lightweight Accordion (including Schema)
-* All major themes like default WordPress themes, Astra, Neve, Hello, Kadence, GeneratePress and Blocksy.
+* All major themes like default WordPress themes, Astra, Neve, Kadence, GeneratePress and Blocksy.
 
 Tested to be totally working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
@@ -63,8 +61,7 @@ Note: Since August 2021, Google has started showing h1 titles in search results,
 * Multiple Langauge (WPML) Support: Shortcode renders your site's defined language.
 * Contextual Related Posts Support.
 * Jetpack Related Posts Support.
-* Totally native. Doesn't write anything to the database.
-* No configuration required.
+* Totally native. No configuration required.
 * Cache friendly.
 
 ### Easy to use
@@ -75,29 +72,28 @@ As the months & years change, these shortcodes get updated into the content and 
 
 Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need.
 
-Also, Dynamic Month & Year into Posts is a totally free plugin. There are no upsells and will never be.
-
 * [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
 * [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
 * [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/)
 * [WordPress Deals](https://gauravtiwari.org/wordpress-deals/)
 * [Request a Feature](https://gauravtiwari.org/contact/)
+* [Follow Development on Github](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ### Privacy
 
-Dynamic Month & Year into Posts by [Gaurav Tiwari](https://gauravtiwari.org) is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free. No notifications. No upgrade notices. Nothing.
+Dynamic Month & Year into Posts is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free. No notifications. No upgrade notices. Nothing.
 
 ### Fast Support and Feature Implementation
 
-I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken. I will also update the plugin for every major and minor WordPress version.
+I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken.
 
 ### Compatibility
 
-I use the plugin myself on [my primary website](https://gauravtiwari.org) and other client sites that I run. I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please let me know if this plugin isn't compatible with your stack, create a support request and allow me some time.
+I use the plugin myself on [my primary website](https://gauravtiwari.org) and I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please let me know if this plugin isn't compatible with your stack, create a support request and allow me some time.
 
 Please note that some plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
 
-If you are using TablePress along with a cache plugin, like WP Rocket, please clear transients regularly or disable table cache to see updated shortcode data.
+If you are using TablePress along with a cache plugin, like [WP Rocket](https://gauravtiwari.org/wp-rocket-review/), please clear transients regularly or disable table cache to see updated shortcode data.
 
 Help me with a positive review to keep the development going.
 
@@ -148,31 +144,6 @@ ACF field name => headline
 
 
 == Changelog ==
-= 1.3.8 =
-* New: [nd] and [pd] display next and previous dates (number only).
-
-= 1.3.7 =
-* New: [nmonthyear] and [pmonthyear] display next and previous month and years together. Useful in many cases.
-
-= 1.3.6 =
-* Shortcode support in Archive Titles.
-
-= 1.3.5 =
-* Made Black Friday and Cyber Monday dates totally dynamic and auto-updating.
-* Use [year n=number] to display any year next or previous to this year. For example [year n=5] renders 5th year from now and [year n=-5] renders 5th year back from today.
-
-= 1.3.4 =
-* Two new useful shortcodes. Post modified/updated date: `[datemodified]` and post publication date: `[datepublished]`. Use these anywhere you want to make your site more dynamic and SEO friendly.
-
-
-= 1.3.3 =
-* Revert some changes
-
-
-= 1.3.2 =
-* Full Yoast SEO Support. Finally.
-* Optimized Code
-* SEOPress Support complete
 
 = 1.3.1 =
 * Date change for Black Friday and Cyber Monday dates

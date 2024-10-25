@@ -1,14 +1,14 @@
-=== Dynamic Month & Year into Posts ===
+=== Plugin Name ===
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
-Tags: content, marketing, seo, shortcode, writing
+Tags: seo, year, automatic, add-on, hooks, dynamic-content, admin, shortcode, current date, month, yoast, gutenberg, widget, content
 Requires at least: 3.0.1
-Tested up to: 6.7
-Stable tag: 1.3.8
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
+Tested up to: 6.0.0
+Stable tag: 1.2.4
+License: GPLv2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Automate SEO and content with dynamic shortcodes for dates, years, months in content, titles and more.
+Automate your SEO: add today's date by [date], current year by [year], previous year by [pyear], next year by [nyear] and months by [month] [nmonth] [pmonth] etc., shortcodes anywhere, including content, title, meta title, widget, excerpt and Breadcrumbs.
 
 == Description ==
 
@@ -16,12 +16,7 @@ Automate SEO and content with dynamic shortcodes for dates, years, months in con
 
 Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear]`, next year by `[nyear]`, current month (like January) by `[month]`, next month (like February) by `[nmonth]`, previous month (like December) by `[pmonth]`, current/next/previous month shortname (like Jan, Feb and Dec) by `[mon]`, `[nmon]` & `[pmon]` shortcodes anywhere, including content and title. Uses your default WordPress language. Use this plugin to boost your site's SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
 
-But that's not it.
-
 [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
-
-* New: Add post modified date by using `[datemodified]` and post publication date by using `[datepublished]` shortcodes.
-* New: Ace Black Friday with new dynamic shortcodes. Black Friday and Cyber Monday dates can be inserted anywhere by using `[blackfriday]` and `[cybermonday]`.
 
 ### Works with popular SEO Plugins
 
@@ -30,27 +25,20 @@ But that's not it.
 * Use various combinations to make your articles even more dynamic and make your content always SEO ready — no matter the date or year.
 * Extremely useful for Affiliate Marketers, Amazon Affiliates and Copywriters.
 
-= Tested Support With =
-* Rank Math (100%)
-* Rank Math Pro (100%)
+= Supports =
+* Rank Math
+* Rank Math Pro
 * SEOPress
 * SEOPress Premium
 * Yoast SEO
 * Yoast SEO Premium
 * Gutenberg and Block Editor Content, Headings and Buttons
-* [All popular Block Editor Addons](https://gauravtiwari.org/best-gutenberg-blocks-plugins-for-wordpress/), including Greenshift, GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks.
-* Elementor Page Builder (100%)
+* Elementor Page Builder
 * WP Bakery Page Builder
-* Visual Composer
 * Beaver Builder
 * Brizy Builder
 * Oxygen Builder
-* Bricks Builder
-* Jetpack
-* Intelly Related Posts a.k.a. Inline Related Posts (IRP)
-* Advanced Custom Fields (Manual: please see the FAQs)
-* Lightweight Accordion (including Schema)
-* All major themes like default WordPress themes, Astra, Neve, Hello, Kadence, GeneratePress and Blocksy.
+* All major themes
 
 Tested to be totally working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 
@@ -63,9 +51,7 @@ Note: Since August 2021, Google has started showing h1 titles in search results,
 * Multiple Langauge (WPML) Support: Shortcode renders your site's defined language.
 * Contextual Related Posts Support.
 * Jetpack Related Posts Support.
-* Totally native. Doesn't write anything to the database.
-* No configuration required.
-* Cache friendly.
+* Totally native. No configuration required.
 
 ### Easy to use
 
@@ -73,64 +59,51 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 
 As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
 
-Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need.
-
-Also, Dynamic Month & Year into Posts is a totally free plugin. There are no upsells and will never be.
+Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek myself, so I understand what you need.
 
 * [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
 * [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
 * [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/)
-* [WordPress Deals](https://gauravtiwari.org/wordpress-deals/)
 * [Request a Feature](https://gauravtiwari.org/contact/)
+* [Follow Development on Github](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ### Privacy
 
-Dynamic Month & Year into Posts by [Gaurav Tiwari](https://gauravtiwari.org) is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free. No notifications. No upgrade notices. Nothing.
+Dynamic Month & Year into Posts is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free.
 
 ### Fast Support and Feature Implementation
 
-I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken. I will also update the plugin for every major and minor WordPress version.
+I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken.
 
-### Compatibility
+I will try my best to ensure that this plugin is compatible with every functionality plugin you use. Please create a support request and allow me some time.
 
-I use the plugin myself on [my primary website](https://gauravtiwari.org) and other client sites that I run. I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please let me know if this plugin isn't compatible with your stack, create a support request and allow me some time.
-
-Please note that some plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
-
-If you are using TablePress along with a cache plugin, like WP Rocket, please clear transients regularly or disable table cache to see updated shortcode data.
-
-Help me with a positive review to keep the development going.
+Please help me with a [donation](https://gauravtiwari.org/donate/) or a positive review to keep the development going.
 
 == Frequently Asked Questions ==
 
 = Why would I need this? =
-If you are an affiliate marketer or blogger who uses months, years and dates in your posts. If you use this plugin to render dynamic month, year, date, next year, and previous year shortcodes, you won’t have to update those posts again and again as time passes.
+If you are an affiliate marketer or blogger who uses month, years and dates in your posts. If you use these dynamic month, year, date, next year, previous year shortcodes you won't have to update those posts again and again as the time passes.
 
 = How can I access settings? =
-You cannot. There is no options panel because there is no need to have one. Why bloat the WordPress dashboard with more options?
+You can not. There is no options panel because there is no need to have one.
 
 = Can I use it in Block Editor or Classic Editor? =
-Like running text, you can use the shortcodes in both Block Editor and Classic Editor. You can also use the shortcodes in widget areas, including the footer (use-case: Autoupdating Copyright Year) and headers (use-case: Today’s Date).
+You can use the shortcodes in both Block Editor and Classic Editor like running text. You can also the shortcodes in widget areas including footer (use-case: Autoupdating Copyright Year) and headers (use-case: Today's Date).
 
 = Will this plugin work in my language? =
-Yes. The shortcode outputs are WPML ready and render as per the language set in your WordPress dashboard. Since there is no settings page, you don’t have to translate this plugin.
+Yes. The shortcode outputs are WPML ready. Since there is no settings page, you don't have to translate this plugin.
 
 = How can I use these shortcodes in my theme/PHP code? =
 You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[month]');?>` etc. in themes or in functionality plugins to use these shortcodes.
 
-= How can I render shortcodes in ACF fields? =
-This plugin doesn’t render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you really need to render [year] etc., shortcodes, you can enable selective rendering.
-Just add this code in your theme’s functions.php file or in the Code Snippets plugin:
+= How can render shortcodes in ACF fields? =
+This plugin doesn't render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you need to render [year] etc. shortcodes to render, you can enable those field typewise or even field-namewise. Just add this code in your theme's functions.php file or in Code Snippets plugin:
 
 ACF field type => text
-	```
-	add_filter('acf/format_value/type=text', 'do_shortcode');
-	```
+`add_filter('acf/format_value/type=text', 'do_shortcode');`
 
 ACF field name => headline
-	```
-	add_filter('acf/format_value/name=headline', 'do_shortcode');
-	```
+`add_filter('acf/format_value/name=headline', 'do_shortcode');`
 
 == Installation ==
 
@@ -148,57 +121,6 @@ ACF field name => headline
 
 
 == Changelog ==
-= 1.3.8 =
-* New: [nd] and [pd] display next and previous dates (number only).
-
-= 1.3.7 =
-* New: [nmonthyear] and [pmonthyear] display next and previous month and years together. Useful in many cases.
-
-= 1.3.6 =
-* Shortcode support in Archive Titles.
-
-= 1.3.5 =
-* Made Black Friday and Cyber Monday dates totally dynamic and auto-updating.
-* Use [year n=number] to display any year next or previous to this year. For example [year n=5] renders 5th year from now and [year n=-5] renders 5th year back from today.
-
-= 1.3.4 =
-* Two new useful shortcodes. Post modified/updated date: `[datemodified]` and post publication date: `[datepublished]`. Use these anywhere you want to make your site more dynamic and SEO friendly.
-
-
-= 1.3.3 =
-* Revert some changes
-
-
-= 1.3.2 =
-* Full Yoast SEO Support. Finally.
-* Optimized Code
-* SEOPress Support complete
-
-= 1.3.1 =
-* Date change for Black Friday and Cyber Monday dates
-
-= 1.3.0 =
-* New: `[blackfriday]` and `[cybermonday]` shortcodes render this years Black Fridy and Cyber Monday dates like November 25 and November 28. Couple these with `[year]` to make the dates complete. [See this example](https://gauravtiwari.org/wp-content/uploads/2022/10/black-friday-date.jpg)
-* Intelly Related Posts a.k.a. IRP support.
-
-= 1.2.9 =
-* Readme update.
-
-= 1.2.8 =
-* Fixed some issues related to rendering of next month.
-* `[monthyear]` no longer prints next month after 28th. Reason: User experience, as the user may be tricked to thinking the wrong current month and year names.
-
-= 1.2.7 =
-* Fix rendering of [monthyear] shortcode in languages other than English.
-
-= 1.2.6 =
-* New: Full Elementor Support. Now the shortcodes should render in all core and Elementor Pro widgets
-
-= 1.2.5 =
-* Added: `[weekday]` shortcode renders day of the week like Sunday, Monday, …
-* Added: `[wd]` shortcode renders shortnames for days of the week like Sun, Mon,…
-* Compatibility with 6.0.1 tested.
-
 = 1.2.4 =
 * Added: JSON-LD support for Yoast SEO Schema. Props to [@sathoro](https://wordpress.org/support/topic/works-great-8169/)
 

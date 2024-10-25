@@ -16,7 +16,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes. Use this plugin to boost your site’s SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
- * Version:           1.3.8
+ * Version:           1.3.7
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-3.0+
@@ -28,7 +28,7 @@
 if ( ! defined( 'WPINC' ) ) {
     die;
 }
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.8' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.3.7' );
 
 // Registering shortcodes
 add_shortcode('year', 'dmyip_rmd_current_year');
@@ -185,24 +185,11 @@ add_shortcode( 'ppyear' , 'dmyip_rmd_previous_previous_year' );
     $ppyear = $currentyear22 - 2;
     return esc_html($ppyear);
 }
-add_shortcode('dt', 'dmyip_rmd_current_dt');
-function dmyip_rmd_current_dt() {
+add_shortcode( 'dt' , 'dmyip_rmd_current_dt' );
+    function dmyip_rmd_current_dt() {
     $dt = date_i18n('j');
     return esc_html($dt);
 }
-
-add_shortcode('nd', 'dmyip_rmd_next_date');
-function dmyip_rmd_next_date() {
-    $dt = date_i18n('j', strtotime('+1 day'));
-    return esc_html($dt);
-}
-
-add_shortcode('pd', 'dmyip_rmd_prev_date');
-function dmyip_rmd_prev_date() {
-    $dt = date_i18n('j', strtotime('-1 day'));
-    return esc_html($dt);
-}
-
 add_shortcode( 'weekday' , 'dmyip_rmd_current_weekday' );
     function dmyip_rmd_current_weekday() {
     $weekday = date_i18n('l');
