@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: content, marketing, seo, shortcode, writing
 Requires at least: 3.0.1
-Tested up to: 6.7
-Stable tag: 1.3.8
+Tested up to: 6.8
+Stable tag: 1.3.9
 License: GPLv3 or later
 License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -69,11 +69,11 @@ Note: Since August 2021, Google has started showing h1 titles in search results,
 
 ### Easy to use
 
-Just install the plugin (see Installation tab) and activate it. Add [year] to render current year, [nyear] to render next year, [pyear] to render previous year, [month] to render current month (full name) and [mon] to render first three letters of months automatically. [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
+Just install the plugin (see Installation tab) and activate it. Add [year] to render current year, [nyear] to render next year, [pyear] to render previous year, [month] to render current month (full name) and [mon] to render first three letters of months automatically. [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes) (You can also see this link in *Plugins* page in your WordPress dashboard).
 
 As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
 
-Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need.
+Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need. Please use a [WordPress cache plugin](https://gauravtiwari.org/best-wordpress-caching-plugin/) to cache the rendered content.
 
 Also, Dynamic Month & Year into Posts is a totally free plugin. There are no upsells and will never be.
 
@@ -96,8 +96,6 @@ I will provide instant support for all your queries or feature requests. Use [su
 I use the plugin myself on [my primary website](https://gauravtiwari.org) and other client sites that I run. I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please let me know if this plugin isn't compatible with your stack, create a support request and allow me some time.
 
 Please note that some plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
-
-If you are using TablePress along with a cache plugin, like WP Rocket, please clear transients regularly or disable table cache to see updated shortcode data.
 
 Help me with a positive review to keep the development going.
 
@@ -148,6 +146,10 @@ ACF field name => headline
 
 
 == Changelog ==
+= 1.3.9 =
+* Refactor code.
+* Attempted a fix for Rank Math SEO JSON and Excerpts.
+
 = 1.3.8 =
 * New: [nd] and [pd] display next and previous dates (number only).
 
