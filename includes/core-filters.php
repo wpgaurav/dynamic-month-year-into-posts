@@ -19,21 +19,45 @@ function dmyip_render_shortcodes_in_excerpt( $excerpt ) {
 }
 add_filter( 'get_the_excerpt', 'dmyip_render_shortcodes_in_excerpt' );
 
-// Exclude shortcode tags from being stripped.
-add_filter( 'strip_shortcodes_tagnames', function( $tagnames ) {
-    $exclude = array( 
-        'year', 'month', 'cmonth', 'mon', 'cmon', 'mm', 'mn', 
-        'nmonth', 'cnmonth', 'pmonth', 'cpmonth', 'nmon', 'cnmon', 
-        'pmon', 'cpmon', 'date', 'monthyear', 'nmonthyear', 'pmonthyear', 
-        'nyear', 'nnyear', 'pyear', 'ppyear', 'dt', 'nd', 'pd', 
-        'weekday', 'wd', 'blackfriday', 'cybermonday', 'datepublished', 'datemodified'
+// Avoid shortcodes being stripped + thanks @meteorlxy
+add_filter( 'strip_shortcodes_tagnames', function ( $tags_to_remove ) {
+    return array_diff(
+        $tags_to_remove,
+        array(
+            'year',
+            'month',
+            'cmonth',
+            'mon',
+            'cmon',
+            'mm',
+            'mn',
+            'nmonth',
+            'cnmonth',
+            'pmonth',
+            'cpmonth',
+            'nmon',
+            'cnmon',
+            'pmon',
+            'cpmon',
+            'date',
+            'monthyear',
+            'nmonthyear',
+            'pmonthyear',
+            'nyear',
+            'nnyear',
+            'pyear',
+            'ppyear',
+            'dt',
+            'nd',
+            'pd',
+            'weekday',
+            'wd',
+            'blackfriday',
+            'cybermonday',
+            'datepublished',
+            'datemodified',
+        )
     );
-    foreach ( $exclude as $tag ) {
-        if ( false !== ( $key = array_search( $tag, $tagnames ) ) ) {
-            unset( $tagnames[ $key ] );
-        }
-    }
-    return $tagnames;
 });
 
 // Enable shortcodes in archive titles.
