@@ -129,25 +129,25 @@ add_shortcode( 'pmonthyear', 'dmyip_pmonthyear' );
 // [nyear] shortcode.
 add_shortcode( 'nyear', 'dmyip_rmd_next_year' );
 function dmyip_rmd_next_year() {
-    return esc_html( date_i18n( 'Y' ) + 1 );
+    return esc_html( (int) date_i18n( 'Y' ) + 1 );
 }
 
 // [nnyear] shortcode.
 add_shortcode( 'nnyear', 'dmyip_rmd_next_next_year' );
 function dmyip_rmd_next_next_year() {
-    return esc_html( date_i18n( 'Y' ) + 2 );
+    return esc_html( (int) date_i18n( 'Y' ) + 2 );
 }
 
 // [pyear] shortcode.
 add_shortcode( 'pyear', 'dmyip_rmd_previous_year' );
 function dmyip_rmd_previous_year() {
-    return esc_html( date_i18n( 'Y' ) - 1 );
+    return esc_html( (int) date_i18n( 'Y' ) - 1 );
 }
 
 // [ppyear] shortcode.
 add_shortcode( 'ppyear', 'dmyip_rmd_previous_previous_year' );
 function dmyip_rmd_previous_previous_year() {
-    return esc_html( date_i18n( 'Y' ) - 2 );
+    return esc_html( (int) date_i18n( 'Y' ) - 2 );
 }
 
 // Day shortcodes.
