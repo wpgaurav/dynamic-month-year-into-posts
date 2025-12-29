@@ -11,7 +11,7 @@ Automate SEO and content with dynamic shortcodes for dates, years, months in con
 **Tags:** content, marketing, seo, shortcode, writing, dates, dynamic content
 **Requires at least:** 3.0.1
 **Tested up to:** 6.8
-**Stable tag:** 1.5.0
+**Stable tag:** 1.5.1
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -230,6 +230,9 @@ This plugin:
 - [Request a Feature](https://gauravtiwari.org/contact/)
 
 ## Changelog
+
+### 1.5.1
+- Fix: Block Editor toolbar button display and shortcode insertion
 
 ### 1.5.0
 - New: `[daysuntil]` and `[dayssince]` countdown shortcodes
