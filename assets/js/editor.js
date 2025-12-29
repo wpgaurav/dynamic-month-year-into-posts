@@ -6,18 +6,19 @@
  * - Sidebar panel with shortcode reference
  */
 
-( function( wp ) {
+( function() {
     const { registerFormatType, insert, create } = wp.richText;
-    const { RichTextToolbarButton, BlockControls } = wp.blockEditor;
-    const { Popover, MenuGroup, MenuItem, PanelBody, PanelRow, Button, Dropdown, ToolbarButton } = wp.components;
-    const { Fragment, useState, useCallback } = wp.element;
-    const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editor;
+    const { RichTextToolbarButton } = wp.blockEditor;
+    const { Popover, Button, MenuGroup, MenuItem, PanelBody, PanelRow } = wp.components;
+    const { useState, useCallback, Fragment } = wp.element;
+    const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editor || wp.editPost;
     const { registerPlugin } = wp.plugins;
     const { __ } = wp.i18n;
 
     // All available shortcodes organized by category
-    const shortcodeCategories = {
-        year: {
+    const shortcodeCategories = [
+        {
+            key: 'year',
             label: __( 'Year', 'dynamic-month-year-into-posts' ),
             shortcodes: [
                 { code: '[year]', desc: __( 'Current year', 'dynamic-month-year-into-posts' ) },
@@ -27,239 +28,239 @@
                 { code: '[ppyear]', desc: __( 'Year before previous', 'dynamic-month-year-into-posts' ) },
             ]
         },
-        month: {
+        {
+            key: 'month',
             label: __( 'Month', 'dynamic-month-year-into-posts' ),
             shortcodes: [
                 { code: '[month]', desc: __( 'Current month (full)', 'dynamic-month-year-into-posts' ) },
                 { code: '[mon]', desc: __( 'Current month (short)', 'dynamic-month-year-into-posts' ) },
                 { code: '[mm]', desc: __( 'Month number (01-12)', 'dynamic-month-year-into-posts' ) },
-                { code: '[mn]', desc: __( 'Month number (1-12)', 'dynamic-month-year-into-posts' ) },
-                { code: '[nmonth]', desc: __( 'Next month (full)', 'dynamic-month-year-into-posts' ) },
-                { code: '[pmonth]', desc: __( 'Previous month (full)', 'dynamic-month-year-into-posts' ) },
-                { code: '[nmon]', desc: __( 'Next month (short)', 'dynamic-month-year-into-posts' ) },
-                { code: '[pmon]', desc: __( 'Previous month (short)', 'dynamic-month-year-into-posts' ) },
+                { code: '[nmonth]', desc: __( 'Next month', 'dynamic-month-year-into-posts' ) },
+                { code: '[pmonth]', desc: __( 'Previous month', 'dynamic-month-year-into-posts' ) },
             ]
         },
-        date: {
+        {
+            key: 'date',
             label: __( 'Date', 'dynamic-month-year-into-posts' ),
             shortcodes: [
                 { code: '[date]', desc: __( 'Today\'s date', 'dynamic-month-year-into-posts' ) },
                 { code: '[monthyear]', desc: __( 'Month and year', 'dynamic-month-year-into-posts' ) },
-                { code: '[nmonthyear]', desc: __( 'Next month and year', 'dynamic-month-year-into-posts' ) },
-                { code: '[pmonthyear]', desc: __( 'Previous month and year', 'dynamic-month-year-into-posts' ) },
                 { code: '[dt]', desc: __( 'Day of month', 'dynamic-month-year-into-posts' ) },
-                { code: '[nd]', desc: __( 'Tomorrow\'s day', 'dynamic-month-year-into-posts' ) },
-                { code: '[pd]', desc: __( 'Yesterday\'s day', 'dynamic-month-year-into-posts' ) },
+                { code: '[weekday]', desc: __( 'Day of week', 'dynamic-month-year-into-posts' ) },
             ]
         },
-        weekday: {
-            label: __( 'Weekday', 'dynamic-month-year-into-posts' ),
-            shortcodes: [
-                { code: '[weekday]', desc: __( 'Day of week (full)', 'dynamic-month-year-into-posts' ) },
-                { code: '[wd]', desc: __( 'Day of week (short)', 'dynamic-month-year-into-posts' ) },
-            ]
-        },
-        post: {
+        {
+            key: 'post',
             label: __( 'Post Dates', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[datepublished]', desc: __( 'Post publication date', 'dynamic-month-year-into-posts' ) },
-                { code: '[datemodified]', desc: __( 'Post modified date', 'dynamic-month-year-into-posts' ) },
+                { code: '[datepublished]', desc: __( 'Publication date', 'dynamic-month-year-into-posts' ) },
+                { code: '[datemodified]', desc: __( 'Modified date', 'dynamic-month-year-into-posts' ) },
             ]
         },
-        events: {
+        {
+            key: 'events',
             label: __( 'Events', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[blackfriday]', desc: __( 'Black Friday date', 'dynamic-month-year-into-posts' ) },
-                { code: '[cybermonday]', desc: __( 'Cyber Monday date', 'dynamic-month-year-into-posts' ) },
+                { code: '[blackfriday]', desc: __( 'Black Friday', 'dynamic-month-year-into-posts' ) },
+                { code: '[cybermonday]', desc: __( 'Cyber Monday', 'dynamic-month-year-into-posts' ) },
             ]
         },
-        countdown: {
+        {
+            key: 'countdown',
             label: __( 'Countdown', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[daysuntil date="YYYY-MM-DD"]', desc: __( 'Days until date', 'dynamic-month-year-into-posts' ) },
-                { code: '[dayssince date="YYYY-MM-DD"]', desc: __( 'Days since date', 'dynamic-month-year-into-posts' ) },
+                { code: '[daysuntil date=""]', desc: __( 'Days until date', 'dynamic-month-year-into-posts' ) },
+                { code: '[dayssince date=""]', desc: __( 'Days since date', 'dynamic-month-year-into-posts' ) },
             ]
         }
-    };
+    ];
 
-    // Calendar icon SVG
-    const CalendarIcon = function() {
-        return wp.element.createElement(
-            'svg',
-            {
-                xmlns: 'http://www.w3.org/2000/svg',
-                viewBox: '0 0 24 24',
-                width: '24',
-                height: '24',
-                fill: 'currentColor'
-            },
-            wp.element.createElement( 'path', {
-                d: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7v-5z'
-            } )
-        );
-    };
+    // Calendar SVG icon
+    const calendarIcon = wp.element.createElement( 'svg', {
+        xmlns: 'http://www.w3.org/2000/svg',
+        viewBox: '0 0 24 24',
+        width: 24,
+        height: 24
+    }, wp.element.createElement( 'path', {
+        fill: 'currentColor',
+        d: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7v-5z'
+    } ) );
 
     /**
-     * Copy shortcode to clipboard
+     * Toolbar Button Component for RichText
      */
-    function copyToClipboard( text, setCopied ) {
-        navigator.clipboard.writeText( text ).then( function() {
-            setCopied( text );
-            setTimeout( function() {
-                setCopied( '' );
-            }, 2000 );
-        } );
-    }
+    const DynamicDateButton = function( { isActive, value, onChange } ) {
+        const [ isOpen, setIsOpen ] = useState( false );
 
-    /**
-     * Shortcode Menu Content Component
-     */
-    const ShortcodeMenuContent = function( { onInsert, onClose } ) {
-        return wp.element.createElement(
-            'div',
-            {
-                className: 'dmyip-shortcode-menu',
-                style: {
-                    padding: '8px 0',
-                    minWidth: '280px',
-                    maxHeight: '400px',
-                    overflowY: 'auto'
-                }
-            },
-            Object.keys( shortcodeCategories ).map( function( categoryKey ) {
-                const category = shortcodeCategories[ categoryKey ];
-                return wp.element.createElement(
-                    MenuGroup,
-                    {
-                        key: categoryKey,
-                        label: category.label
-                    },
-                    category.shortcodes.map( function( item ) {
-                        return wp.element.createElement(
-                            MenuItem,
-                            {
-                                key: item.code,
-                                onClick: function() {
-                                    onInsert( item.code );
-                                    onClose();
-                                },
-                                info: item.desc
-                            },
-                            wp.element.createElement( 'code', null, item.code )
-                        );
-                    } )
-                );
-            } )
-        );
-    };
-
-    /**
-     * Toolbar Button with Dropdown
-     */
-    const DynamicDateToolbarButton = function( { isActive, value, onChange, contentRef } ) {
-        const onInsertShortcode = useCallback( function( shortcode ) {
-            // Insert the shortcode text at the current cursor position
-            const newValue = insert( value, create( { text: shortcode } ) );
+        const insertShortcode = useCallback( function( shortcode ) {
+            // Create a new value with the shortcode text inserted
+            const toInsert = create( { text: shortcode } );
+            const newValue = insert( value, toInsert );
             onChange( newValue );
+            setIsOpen( false );
         }, [ value, onChange ] );
-
-        return wp.element.createElement(
-            Dropdown,
-            {
-                className: 'dmyip-toolbar-dropdown',
-                contentClassName: 'dmyip-toolbar-dropdown-content',
-                popoverProps: {
-                    placement: 'bottom-start'
-                },
-                renderToggle: function( { isOpen, onToggle } ) {
-                    return wp.element.createElement(
-                        RichTextToolbarButton,
-                        {
-                            icon: CalendarIcon,
-                            title: __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ),
-                            onClick: onToggle,
-                            isActive: isOpen
-                        }
-                    );
-                },
-                renderContent: function( { onClose } ) {
-                    return wp.element.createElement(
-                        ShortcodeMenuContent,
-                        {
-                            onInsert: onInsertShortcode,
-                            onClose: onClose
-                        }
-                    );
-                }
-            }
-        );
-    };
-
-    // Register the format type for the toolbar button
-    registerFormatType( 'dmyip/dynamic-date', {
-        title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
-        tagName: 'span',
-        className: null,
-        edit: DynamicDateToolbarButton
-    } );
-
-    /**
-     * Sidebar Panel Component
-     */
-    const DynamicDateSidebar = function() {
-        const [ copied, setCopied ] = useState( '' );
 
         return wp.element.createElement(
             Fragment,
             null,
             wp.element.createElement(
-                PluginSidebarMoreMenuItem,
+                RichTextToolbarButton,
+                {
+                    icon: calendarIcon,
+                    title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
+                    onClick: function() {
+                        setIsOpen( ! isOpen );
+                    },
+                    isActive: isOpen
+                }
+            ),
+            isOpen && wp.element.createElement(
+                Popover,
+                {
+                    position: 'bottom center',
+                    onClose: function() {
+                        setIsOpen( false );
+                    },
+                    focusOnMount: 'container'
+                },
+                wp.element.createElement(
+                    'div',
+                    {
+                        style: {
+                            padding: '8px',
+                            minWidth: '220px',
+                            maxHeight: '350px',
+                            overflowY: 'auto'
+                        }
+                    },
+                    shortcodeCategories.map( function( category ) {
+                        return wp.element.createElement(
+                            'div',
+                            { key: category.key, style: { marginBottom: '12px' } },
+                            wp.element.createElement(
+                                'div',
+                                {
+                                    style: {
+                                        fontSize: '11px',
+                                        fontWeight: '600',
+                                        textTransform: 'uppercase',
+                                        color: '#757575',
+                                        marginBottom: '6px',
+                                        paddingLeft: '4px'
+                                    }
+                                },
+                                category.label
+                            ),
+                            category.shortcodes.map( function( item ) {
+                                return wp.element.createElement(
+                                    Button,
+                                    {
+                                        key: item.code,
+                                        variant: 'tertiary',
+                                        onClick: function() {
+                                            insertShortcode( item.code );
+                                        },
+                                        style: {
+                                            display: 'block',
+                                            width: '100%',
+                                            textAlign: 'left',
+                                            padding: '6px 8px',
+                                            height: 'auto'
+                                        }
+                                    },
+                                    wp.element.createElement( 'code', { style: { fontSize: '12px' } }, item.code ),
+                                    wp.element.createElement(
+                                        'span',
+                                        { style: { fontSize: '11px', color: '#757575', marginLeft: '8px' } },
+                                        item.desc
+                                    )
+                                );
+                            } )
+                        );
+                    } )
+                )
+            )
+        );
+    };
+
+    // Register format type for the toolbar button
+    registerFormatType( 'dmyip/dynamic-date', {
+        title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
+        tagName: 'span',
+        className: null,
+        edit: DynamicDateButton
+    } );
+
+    /**
+     * Sidebar Panel Component
+     */
+    var DynamicDateSidebar = function() {
+        var copiedState = useState( '' );
+        var copied = copiedState[0];
+        var setCopied = copiedState[1];
+
+        var copyToClipboard = function( text ) {
+            navigator.clipboard.writeText( text ).then( function() {
+                setCopied( text );
+                setTimeout( function() {
+                    setCopied( '' );
+                }, 2000 );
+            } );
+        };
+
+        // Check if PluginSidebar is available
+        var SidebarComponent = wp.editor && wp.editor.PluginSidebar ? wp.editor.PluginSidebar : ( wp.editPost ? wp.editPost.PluginSidebar : null );
+        var SidebarMenuItem = wp.editor && wp.editor.PluginSidebarMoreMenuItem ? wp.editor.PluginSidebarMoreMenuItem : ( wp.editPost ? wp.editPost.PluginSidebarMoreMenuItem : null );
+
+        if ( ! SidebarComponent || ! SidebarMenuItem ) {
+            return null;
+        }
+
+        return wp.element.createElement(
+            Fragment,
+            null,
+            wp.element.createElement(
+                SidebarMenuItem,
                 {
                     target: 'dmyip-sidebar',
-                    icon: CalendarIcon
+                    icon: calendarIcon
                 },
                 __( 'Dynamic Dates', 'dynamic-month-year-into-posts' )
             ),
             wp.element.createElement(
-                PluginSidebar,
+                SidebarComponent,
                 {
                     name: 'dmyip-sidebar',
-                    icon: CalendarIcon,
+                    icon: calendarIcon,
                     title: __( 'Dynamic Date Shortcodes', 'dynamic-month-year-into-posts' )
                 },
-                Object.keys( shortcodeCategories ).map( function( categoryKey ) {
-                    const category = shortcodeCategories[ categoryKey ];
+                shortcodeCategories.map( function( category ) {
                     return wp.element.createElement(
                         PanelBody,
                         {
-                            key: categoryKey,
+                            key: category.key,
                             title: category.label,
-                            initialOpen: categoryKey === 'year'
+                            initialOpen: category.key === 'year'
                         },
                         category.shortcodes.map( function( item ) {
                             return wp.element.createElement(
                                 PanelRow,
-                                {
-                                    key: item.code,
-                                    className: 'dmyip-shortcode-row'
-                                },
+                                { key: item.code },
                                 wp.element.createElement(
                                     'div',
                                     { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '8px' } },
                                     wp.element.createElement(
                                         'div',
-                                        { style: { flex: 1, minWidth: 0 } },
-                                        wp.element.createElement( 'code', { style: { fontSize: '11px', wordBreak: 'break-all' } }, item.code ),
-                                        wp.element.createElement( 'div', { style: { fontSize: '11px', opacity: 0.7, marginTop: '2px' } }, item.desc )
+                                        { style: { flex: 1 } },
+                                        wp.element.createElement( 'code', { style: { fontSize: '11px' } }, item.code ),
+                                        wp.element.createElement( 'div', { style: { fontSize: '10px', color: '#757575' } }, item.desc )
                                     ),
                                     wp.element.createElement(
                                         Button,
                                         {
                                             variant: 'secondary',
                                             size: 'small',
-                                            onClick: function() {
-                                                copyToClipboard( item.code, setCopied );
-                                            }
+                                            onClick: function() { copyToClipboard( item.code ); }
                                         },
                                         copied === item.code ? __( 'Copied!', 'dynamic-month-year-into-posts' ) : __( 'Copy', 'dynamic-month-year-into-posts' )
                                     )
@@ -270,29 +271,19 @@
                 } ),
                 wp.element.createElement(
                     PanelBody,
-                    {
-                        title: __( 'Usage Tips', 'dynamic-month-year-into-posts' ),
-                        initialOpen: false
-                    },
-                    wp.element.createElement(
-                        'p',
-                        { style: { fontSize: '12px', margin: '0 0 8px' } },
-                        __( 'Use [year n=5] for offset years. Example: [year n=-2] shows 2 years ago.', 'dynamic-month-year-into-posts' )
-                    ),
-                    wp.element.createElement(
-                        'p',
-                        { style: { fontSize: '12px', margin: 0 } },
-                        __( 'Capitalize shortcodes: [cmonth], [cmon], [cnmonth], [cpmonth]', 'dynamic-month-year-into-posts' )
+                    { title: __( 'Tips', 'dynamic-month-year-into-posts' ), initialOpen: false },
+                    wp.element.createElement( 'p', { style: { fontSize: '12px', margin: 0 } },
+                        __( 'Use [year n=5] for year offset. Capitalize with [cmonth], [cmon].', 'dynamic-month-year-into-posts' )
                     )
                 )
             )
         );
     };
 
-    // Register the sidebar plugin
+    // Register sidebar plugin
     registerPlugin( 'dmyip-sidebar', {
         render: DynamicDateSidebar,
-        icon: CalendarIcon
+        icon: calendarIcon
     } );
 
-} )( window.wp );
+} )();
