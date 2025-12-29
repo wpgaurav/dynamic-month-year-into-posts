@@ -2,101 +2,132 @@
  * Dynamic Month & Year into Posts - Block Editor Integration
  *
  * Adds a toolbar button to insert dynamic date shortcodes.
+ * Based on WordPress Format API pattern.
  */
 
 ( function() {
-    // Check if required dependencies exist
-    if ( ! wp || ! wp.richText || ! wp.blockEditor || ! wp.components || ! wp.element ) {
-        return;
-    }
+    'use strict';
 
+    var __ = wp.i18n.__;
     var registerFormatType = wp.richText.registerFormatType;
     var insert = wp.richText.insert;
     var create = wp.richText.create;
-    var RichTextToolbarButton = wp.blockEditor.RichTextToolbarButton;
-    var Popover = wp.components.Popover;
-    var Button = wp.components.Button;
-    var useState = wp.element.useState;
-    var useCallback = wp.element.useCallback;
     var Fragment = wp.element.Fragment;
     var createElement = wp.element.createElement;
-    var __ = wp.i18n.__;
+    var Component = wp.element.Component;
+    var BlockControls = wp.blockEditor.BlockControls;
+    var Toolbar = wp.components.Toolbar;
+    var ToolbarButton = wp.components.ToolbarButton;
+    var Popover = wp.components.Popover;
+    var Button = wp.components.Button;
 
-    // All available shortcodes organized by category
+    // Shortcode categories with all available shortcodes
     var shortcodeCategories = [
         {
             key: 'year',
-            label: 'Year',
+            label: __( 'Year', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[year]', desc: 'Current year' },
-                { code: '[nyear]', desc: 'Next year' },
-                { code: '[pyear]', desc: 'Previous year' },
+                { code: '[year]', desc: __( 'Current year', 'dynamic-month-year-into-posts' ) },
+                { code: '[nyear]', desc: __( 'Next year', 'dynamic-month-year-into-posts' ) },
+                { code: '[pyear]', desc: __( 'Previous year', 'dynamic-month-year-into-posts' ) }
             ]
         },
         {
             key: 'month',
-            label: 'Month',
+            label: __( 'Month', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[month]', desc: 'Current month' },
-                { code: '[mon]', desc: 'Month (short)' },
-                { code: '[nmonth]', desc: 'Next month' },
-                { code: '[pmonth]', desc: 'Previous month' },
+                { code: '[month]', desc: __( 'Current month', 'dynamic-month-year-into-posts' ) },
+                { code: '[mon]', desc: __( 'Month (short)', 'dynamic-month-year-into-posts' ) },
+                { code: '[nmonth]', desc: __( 'Next month', 'dynamic-month-year-into-posts' ) },
+                { code: '[pmonth]', desc: __( 'Previous month', 'dynamic-month-year-into-posts' ) }
             ]
         },
         {
             key: 'date',
-            label: 'Date',
+            label: __( 'Date', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[date]', desc: 'Today\'s date' },
-                { code: '[monthyear]', desc: 'Month and year' },
-                { code: '[dt]', desc: 'Day of month' },
-                { code: '[weekday]', desc: 'Day of week' },
+                { code: '[date]', desc: __( "Today's date", 'dynamic-month-year-into-posts' ) },
+                { code: '[monthyear]', desc: __( 'Month and year', 'dynamic-month-year-into-posts' ) },
+                { code: '[dt]', desc: __( 'Day of month', 'dynamic-month-year-into-posts' ) },
+                { code: '[weekday]', desc: __( 'Day of week', 'dynamic-month-year-into-posts' ) }
             ]
         },
         {
             key: 'post',
-            label: 'Post Dates',
+            label: __( 'Post Dates', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[datepublished]', desc: 'Publication date' },
-                { code: '[datemodified]', desc: 'Modified date' },
+                { code: '[datepublished]', desc: __( 'Publication date', 'dynamic-month-year-into-posts' ) },
+                { code: '[datemodified]', desc: __( 'Modified date', 'dynamic-month-year-into-posts' ) }
             ]
         },
         {
             key: 'events',
-            label: 'Events',
+            label: __( 'Events', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[blackfriday]', desc: 'Black Friday' },
-                { code: '[cybermonday]', desc: 'Cyber Monday' },
+                { code: '[blackfriday]', desc: __( 'Black Friday', 'dynamic-month-year-into-posts' ) },
+                { code: '[cybermonday]', desc: __( 'Cyber Monday', 'dynamic-month-year-into-posts' ) }
             ]
         },
         {
             key: 'countdown',
-            label: 'Countdown',
+            label: __( 'Countdown', 'dynamic-month-year-into-posts' ),
             shortcodes: [
-                { code: '[daysuntil date=""]', desc: 'Days until date' },
-                { code: '[dayssince date=""]', desc: 'Days since date' },
+                { code: '[daysuntil date=""]', desc: __( 'Days until date', 'dynamic-month-year-into-posts' ) },
+                { code: '[dayssince date=""]', desc: __( 'Days since date', 'dynamic-month-year-into-posts' ) }
             ]
         }
     ];
 
-    // Calendar icon as a string identifier (WordPress dashicon)
-    var calendarIcon = 'calendar-alt';
+    /**
+     * Calendar SVG Icon
+     */
+    var CalendarIcon = createElement(
+        'svg',
+        {
+            xmlns: 'http://www.w3.org/2000/svg',
+            viewBox: '0 0 24 24',
+            width: '24',
+            height: '24'
+        },
+        createElement( 'path', {
+            d: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm-8 4H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z'
+        } )
+    );
 
     /**
-     * Toolbar Button Component for RichText
+     * Dynamic Date Toolbar Button Component
      */
-    var DynamicDateButton = function( props ) {
+    var DynamicDateToolbarButton = function( props ) {
         var value = props.value;
         var onChange = props.onChange;
-        var isOpenState = useState( false );
-        var isOpen = isOpenState[0];
-        var setIsOpen = isOpenState[1];
+        var isActive = props.isActive;
 
+        // Use React's useState through wp.element
+        var stateArray = wp.element.useState( false );
+        var isOpen = stateArray[0];
+        var setIsOpen = stateArray[1];
+
+        /**
+         * Insert shortcode into the editor
+         */
         var insertShortcode = function( shortcode ) {
-            // Create a new value with the shortcode text inserted
             var toInsert = create( { text: shortcode } );
             var newValue = insert( value, toInsert );
             onChange( newValue );
+            setIsOpen( false );
+        };
+
+        /**
+         * Toggle popover visibility
+         */
+        var togglePopover = function() {
+            setIsOpen( ! isOpen );
+        };
+
+        /**
+         * Close popover
+         */
+        var closePopover = function() {
             setIsOpen( false );
         };
 
@@ -104,38 +135,60 @@
             Fragment,
             null,
             createElement(
-                RichTextToolbarButton,
-                {
-                    icon: calendarIcon,
-                    title: 'Dynamic Date',
-                    onClick: function() {
-                        setIsOpen( ! isOpen );
-                    },
-                    isActive: isOpen
-                }
+                BlockControls,
+                { group: 'other' },
+                createElement(
+                    Toolbar,
+                    null,
+                    createElement(
+                        ToolbarButton,
+                        {
+                            icon: CalendarIcon,
+                            label: __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ),
+                            onClick: togglePopover,
+                            isPressed: isOpen
+                        }
+                    )
+                )
             ),
             isOpen && createElement(
                 Popover,
                 {
                     position: 'bottom center',
-                    onClose: function() {
-                        setIsOpen( false );
-                    }
+                    onClose: closePopover,
+                    focusOnMount: 'container'
                 },
                 createElement(
                     'div',
                     {
+                        className: 'dmyip-shortcode-picker',
                         style: {
                             padding: '12px',
-                            minWidth: '240px',
+                            minWidth: '260px',
                             maxHeight: '400px',
                             overflowY: 'auto'
                         }
                     },
+                    createElement(
+                        'div',
+                        {
+                            style: {
+                                fontSize: '13px',
+                                fontWeight: '600',
+                                marginBottom: '12px',
+                                paddingBottom: '8px',
+                                borderBottom: '1px solid #ddd'
+                            }
+                        },
+                        __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' )
+                    ),
                     shortcodeCategories.map( function( category ) {
                         return createElement(
                             'div',
-                            { key: category.key, style: { marginBottom: '16px' } },
+                            {
+                                key: category.key,
+                                style: { marginBottom: '12px' }
+                            },
                             createElement(
                                 'div',
                                 {
@@ -144,7 +197,7 @@
                                         fontWeight: '600',
                                         textTransform: 'uppercase',
                                         color: '#757575',
-                                        marginBottom: '8px'
+                                        marginBottom: '6px'
                                     }
                                 },
                                 category.label
@@ -163,13 +216,36 @@
                                             width: '100%',
                                             justifyContent: 'space-between',
                                             alignItems: 'center',
-                                            padding: '8px',
+                                            padding: '6px 8px',
                                             height: 'auto',
-                                            marginBottom: '4px'
+                                            marginBottom: '2px',
+                                            textAlign: 'left'
                                         }
                                     },
-                                    createElement( 'code', { style: { fontSize: '12px', background: '#f0f0f0', padding: '2px 6px', borderRadius: '3px' } }, item.code ),
-                                    createElement( 'span', { style: { fontSize: '11px', color: '#757575' } }, item.desc )
+                                    createElement(
+                                        'code',
+                                        {
+                                            style: {
+                                                fontSize: '11px',
+                                                background: '#f0f0f0',
+                                                padding: '2px 6px',
+                                                borderRadius: '3px',
+                                                fontFamily: 'monospace'
+                                            }
+                                        },
+                                        item.code
+                                    ),
+                                    createElement(
+                                        'span',
+                                        {
+                                            style: {
+                                                fontSize: '11px',
+                                                color: '#757575',
+                                                marginLeft: '8px'
+                                            }
+                                        },
+                                        item.desc
+                                    )
                                 );
                             } )
                         );
@@ -179,12 +255,16 @@
         );
     };
 
-    // Register format type for the toolbar button
-    registerFormatType( 'dmyip/dynamic-date', {
-        title: 'Dynamic Date',
-        tagName: 'span',
-        className: null,
-        edit: DynamicDateButton
+    /**
+     * Register format type when DOM is ready
+     */
+    wp.domReady( function() {
+        registerFormatType( 'dmyip/dynamic-date', {
+            title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
+            tagName: 'span',
+            className: null,
+            edit: DynamicDateToolbarButton
+        } );
     } );
 
 } )();
