@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: content, marketing, seo, shortcode, writing, dates, dynamic content
 Requires at least: 3.0.1
 Tested up to: 6.8
-Stable tag: 1.5.1
+Stable tag: 1.5.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -146,6 +146,9 @@ ACF field name => headline
 
 
 == Changelog ==
+= 1.5.3 =
+* Fix: Block Editor crash when opening options menu.
+
 = 1.5.1 =
 * Fix: Block Editor toolbar button display and shortcode insertion.
 
