@@ -3,7 +3,7 @@
  * Plugin Name:       Dynamic Month & Year into Posts
  * Plugin URI:        https://gauravtiwari.org/snippet/dynamic-month-year/
  * Description:       Insert dynamic year, month, dates, days, next and previous dates into content and meta using shortcodes.
- * Version:           1.4.0
+ * Version:           1.5.0
  * Author:            Gaurav Tiwari
  * Author URI:        https://gauravtiwari.org
  * License:           GPL-3.0+
@@ -16,7 +16,7 @@ if ( ! defined( 'WPINC' ) ) {
     die;
 }
 
-define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.4.0' );
+define( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '1.5.0' );
 
 // Load plugin components.
 require_once plugin_dir_path( __FILE__ ) . 'includes/shortcodes.php';
@@ -25,3 +25,4 @@ require_once plugin_dir_path( __FILE__ ) . 'includes/rank-math-support.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/seopress-support.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/yoast-seo-support.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/others.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/block-editor.php';

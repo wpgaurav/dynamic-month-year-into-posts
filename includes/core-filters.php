@@ -54,6 +54,8 @@ add_filter( 'strip_shortcodes_tagnames', function ( $tags_to_remove ) {
             'wd',
             'blackfriday',
             'cybermonday',
+            'daysuntil',
+            'dayssince',
             'datepublished',
             'datemodified',
         )

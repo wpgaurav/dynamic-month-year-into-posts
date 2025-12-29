@@ -1,0 +1,82 @@
+name: Build and Release Plugin
+
+on:
+  push:
+    tags:
+      # Match version tags like 1.4.1, 1.5.0, 2.0.0 (without v prefix)
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+jobs:
+  build:
+    name: Build Plugin ZIP
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get version from tag
+        id: get_version
+        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+
+      - name: Create plugin directory
+        run: |
+          mkdir -p build/dynamic-month-year-into-posts
+
+      - name: Copy plugin files
+        run: |
+          # Copy all plugin files except dev/build files
+          rsync -av --progress . build/dynamic-month-year-into-posts/ \
+            --exclude='.git' \
+            --exclude='.github' \
+            --exclude='.gitignore' \
+            --exclude='.DS_Store' \
+            --exclude='node_modules' \
+            --exclude='vendor' \
+            --exclude='build' \
+            --exclude='tests' \
+            --exclude='phpcs.xml' \
+            --exclude='phpunit.xml' \
+            --exclude='composer.json' \
+            --exclude='composer.lock' \
+            --exclude='package.json' \
+            --exclude='package-lock.json' \
+            --exclude='webpack.config.js' \
+            --exclude='*.log' \
+            --exclude='*.map' \
+            --exclude='.editorconfig' \
+            --exclude='.eslintrc' \
+            --exclude='.prettierrc' \
+            --exclude='CONTRIBUTING.md' \
+            --exclude='CODE_OF_CONDUCT.md'
+
+      - name: Create ZIP archive
+        run: |
+          cd build
+          zip -r dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}.zip dynamic-month-year-into-posts
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}.zip
+          name: Version ${{ steps.get_version.outputs.VERSION }}
+          body: |
+            ## Dynamic Month & Year into Posts v${{ steps.get_version.outputs.VERSION }}
+
+            ### Installation
+            1. Download the ZIP file below
+            2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
+            3. Upload the ZIP file and activate
+
+            ### What's New
+            See the [changelog](https://github.com/${{ github.repository }}/blob/main/README.md#changelog) for details.
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}
+          path: build/dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}.zip

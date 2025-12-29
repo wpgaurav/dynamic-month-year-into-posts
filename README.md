@@ -11,7 +11,7 @@ Automate SEO and content with dynamic shortcodes for dates, years, months in con
 **Tags:** content, marketing, seo, shortcode, writing, dates, dynamic content
 **Requires at least:** 3.0.1
 **Tested up to:** 6.8
-**Stable tag:** 1.4.0
+**Stable tag:** 1.5.0
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -88,6 +88,31 @@ Use shortcodes like `[year]`, `[month]`, `[date]` and more in your posts, pages,
 |-----------|--------|-------------|
 | `[blackfriday]` | November 28 | Black Friday date (auto-calculated) |
 | `[cybermonday]` | December 1 | Cyber Monday date (auto-calculated) |
+
+#### Countdown Shortcodes
+
+| Shortcode | Description |
+|-----------|-------------|
+| `[daysuntil date="2025-12-31"]` | Days until a specific date |
+| `[dayssince date="2020-01-01"]` | Days since a specific date |
+
+### Block Editor Features
+
+#### Toolbar Button
+A calendar icon in the Block Editor toolbar provides quick access to all dynamic date shortcodes. Click to open a dropdown organized by category.
+
+#### Sidebar Panel
+Access the **Dynamic Dates** sidebar from the editor's settings panel for a complete shortcode reference with one-click copy buttons.
+
+#### Block Patterns
+Pre-built patterns available in the Block Inserter under "Dynamic Dates" category:
+- **Copyright Footer** - Auto-updating copyright year
+- **Last Updated Notice** - Shows post modified date
+- **Affiliate Post Header** - "Updated for [month] [year]" banner
+- **Monthly Sale Banner** - Promotional banner with current month
+- **Black Friday Banner** - Auto-calculated Black Friday/Cyber Monday dates
+- **Days Until Countdown** - Countdown to a specific date
+- **Today's Date Header** - Display current date
 
 ### Works With Popular SEO Plugins
 
@@ -205,6 +230,13 @@ This plugin:
 - [Request a Feature](https://gauravtiwari.org/contact/)
 
 ## Changelog
+
+### 1.5.0
+- New: `[daysuntil]` and `[dayssince]` countdown shortcodes
+- New: Block Editor toolbar button for inserting shortcodes
+- New: Dynamic Dates sidebar panel with shortcode reference
+- New: 7 pre-built Block Patterns (Copyright Footer, Sale Banners, etc.)
+- New: GitHub Actions workflow for automated releases
 
 ### 1.4.0
 - More improvements (props @meteorlxy)

@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: content, marketing, seo, shortcode, writing, dates, dynamic content
 Requires at least: 3.0.1
 Tested up to: 6.8
-Stable tag: 1.4.0
+Stable tag: 1.5.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -146,6 +146,13 @@ ACF field name => headline
 
 
 == Changelog ==
+= 1.5.0 =
+* New: `[daysuntil]` and `[dayssince]` countdown shortcodes for calculating days until/since a specific date.
+* New: Block Editor toolbar button for quick shortcode insertion.
+* New: Dynamic Dates sidebar panel with complete shortcode reference and copy buttons.
+* New: 7 pre-built Block Patterns (Copyright Footer, Sale Banners, Countdown, etc.).
+* New: GitHub Actions workflow for automated plugin releases.
+
 = 1.4.0 =
 * More improvements. props @meteorlxy
 

@@ -194,6 +194,71 @@ function dmyip_rmd_cybermonday() {
     return esc_html( date_i18n( 'F j', $cyber_monday ) );
 }
 
+// Countdown shortcodes.
+add_shortcode( 'daysuntil', 'dmyip_rmd_daysuntil' );
+/**
+ * Calculate days until a specific date.
+ * Usage: [daysuntil date="2025-12-31"] or [daysuntil date="December 31, 2025"]
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string Number of days until the target date.
+ */
+function dmyip_rmd_daysuntil( $atts ) {
+    $attributes = shortcode_atts(
+        array(
+            'date' => '',
+        ),
+        $atts
+    );
+
+    if ( empty( $attributes['date'] ) ) {
+        return '';
+    }
+
+    $target_timestamp = strtotime( $attributes['date'] );
+    if ( false === $target_timestamp ) {
+        return '';
+    }
+
+    $today_timestamp = strtotime( 'today' );
+    $diff_seconds    = $target_timestamp - $today_timestamp;
+    $diff_days       = intval( floor( $diff_seconds / DAY_IN_SECONDS ) );
+
+    return esc_html( $diff_days );
+}
+
+add_shortcode( 'dayssince', 'dmyip_rmd_dayssince' );
+/**
+ * Calculate days since a specific date.
+ * Usage: [dayssince date="2020-01-01"]
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string Number of days since the target date.
+ */
+function dmyip_rmd_dayssince( $atts ) {
+    $attributes = shortcode_atts(
+        array(
+            'date' => '',
+        ),
+        $atts
+    );
+
+    if ( empty( $attributes['date'] ) ) {
+        return '';
+    }
+
+    $target_timestamp = strtotime( $attributes['date'] );
+    if ( false === $target_timestamp ) {
+        return '';
+    }
+
+    $today_timestamp = strtotime( 'today' );
+    $diff_seconds    = $today_timestamp - $target_timestamp;
+    $diff_days       = intval( floor( $diff_seconds / DAY_IN_SECONDS ) );
+
+    return esc_html( $diff_days );
+}
+
 // Published and Modified Date shortcodes.
 add_shortcode( 'datepublished', 'dmyip_rmd_published' );
 function dmyip_rmd_published() {
