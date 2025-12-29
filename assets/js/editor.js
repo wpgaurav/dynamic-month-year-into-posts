@@ -7,14 +7,12 @@
  */
 
 ( function( wp ) {
-    const { registerFormatType, insertObject } = wp.richText;
-    const { RichTextToolbarButton } = wp.blockEditor;
-    const { DropdownMenu, MenuGroup, MenuItem, Panel, PanelBody, PanelRow, Button } = wp.components;
-    const { Fragment, useState, useEffect } = wp.element;
+    const { registerFormatType, insert, create } = wp.richText;
+    const { RichTextToolbarButton, BlockControls } = wp.blockEditor;
+    const { Popover, MenuGroup, MenuItem, PanelBody, PanelRow, Button, Dropdown, ToolbarButton } = wp.components;
+    const { Fragment, useState, useCallback } = wp.element;
     const { PluginSidebar, PluginSidebarMoreMenuItem } = wp.editor;
     const { registerPlugin } = wp.plugins;
-    const { select, dispatch } = wp.data;
-    const { createBlock } = wp.blocks;
     const { __ } = wp.i18n;
 
     // All available shortcodes organized by category
@@ -85,47 +83,21 @@
     };
 
     // Calendar icon SVG
-    const calendarIcon = wp.element.createElement(
-        'svg',
-        {
-            xmlns: 'http://www.w3.org/2000/svg',
-            viewBox: '0 0 24 24',
-            width: '24',
-            height: '24'
-        },
-        wp.element.createElement( 'path', {
-            d: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7v-5z'
-        } )
-    );
-
-    /**
-     * Insert shortcode at cursor position
-     */
-    function insertShortcode( shortcode ) {
-        const selectedBlock = select( 'core/block-editor' ).getSelectedBlock();
-
-        if ( selectedBlock ) {
-            // If we have a text-based block selected, insert at cursor
-            const blockClientId = selectedBlock.clientId;
-
-            // Use the rich text insert if available
-            if ( window.dmyipInsertCallback ) {
-                window.dmyipInsertCallback( shortcode );
-            } else {
-                // Fallback: Insert a new paragraph block with the shortcode
-                const newBlock = createBlock( 'core/paragraph', {
-                    content: shortcode
-                } );
-                dispatch( 'core/block-editor' ).insertBlocks( newBlock );
-            }
-        } else {
-            // No block selected, insert a new paragraph
-            const newBlock = createBlock( 'core/paragraph', {
-                content: shortcode
-            } );
-            dispatch( 'core/block-editor' ).insertBlocks( newBlock );
-        }
-    }
+    const CalendarIcon = function() {
+        return wp.element.createElement(
+            'svg',
+            {
+                xmlns: 'http://www.w3.org/2000/svg',
+                viewBox: '0 0 24 24',
+                width: '24',
+                height: '24',
+                fill: 'currentColor'
+            },
+            wp.element.createElement( 'path', {
+                d: 'M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM7 10h5v5H7v-5z'
+            } )
+        );
+    };
 
     /**
      * Copy shortcode to clipboard
@@ -140,59 +112,85 @@
     }
 
     /**
-     * Toolbar Dropdown Component
+     * Shortcode Menu Content Component
      */
-    const DynamicDateToolbar = function( props ) {
-        const { isActive, value, onChange } = props;
+    const ShortcodeMenuContent = function( { onInsert, onClose } ) {
+        return wp.element.createElement(
+            'div',
+            {
+                className: 'dmyip-shortcode-menu',
+                style: {
+                    padding: '8px 0',
+                    minWidth: '280px',
+                    maxHeight: '400px',
+                    overflowY: 'auto'
+                }
+            },
+            Object.keys( shortcodeCategories ).map( function( categoryKey ) {
+                const category = shortcodeCategories[ categoryKey ];
+                return wp.element.createElement(
+                    MenuGroup,
+                    {
+                        key: categoryKey,
+                        label: category.label
+                    },
+                    category.shortcodes.map( function( item ) {
+                        return wp.element.createElement(
+                            MenuItem,
+                            {
+                                key: item.code,
+                                onClick: function() {
+                                    onInsert( item.code );
+                                    onClose();
+                                },
+                                info: item.desc
+                            },
+                            wp.element.createElement( 'code', null, item.code )
+                        );
+                    } )
+                );
+            } )
+        );
+    };
+
+    /**
+     * Toolbar Button with Dropdown
+     */
+    const DynamicDateToolbarButton = function( { isActive, value, onChange, contentRef } ) {
+        const onInsertShortcode = useCallback( function( shortcode ) {
+            // Insert the shortcode text at the current cursor position
+            const newValue = insert( value, create( { text: shortcode } ) );
+            onChange( newValue );
+        }, [ value, onChange ] );
 
         return wp.element.createElement(
-            DropdownMenu,
+            Dropdown,
             {
-                icon: calendarIcon,
-                label: __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ),
-                className: 'dmyip-toolbar-dropdown'
-            },
-            function( { onClose } ) {
-                return Object.keys( shortcodeCategories ).map( function( categoryKey ) {
-                    const category = shortcodeCategories[ categoryKey ];
+                className: 'dmyip-toolbar-dropdown',
+                contentClassName: 'dmyip-toolbar-dropdown-content',
+                popoverProps: {
+                    placement: 'bottom-start'
+                },
+                renderToggle: function( { isOpen, onToggle } ) {
                     return wp.element.createElement(
-                        MenuGroup,
+                        RichTextToolbarButton,
                         {
-                            key: categoryKey,
-                            label: category.label
-                        },
-                        category.shortcodes.map( function( item ) {
-                            return wp.element.createElement(
-                                MenuItem,
-                                {
-                                    key: item.code,
-                                    onClick: function() {
-                                        // Insert shortcode into the rich text
-                                        onChange(
-                                            insertObject(
-                                                value,
-                                                {
-                                                    type: 'dmyip/shortcode'
-                                                },
-                                                value.start,
-                                                value.end
-                                            )
-                                        );
-                                        // Actually insert the text
-                                        document.execCommand( 'insertText', false, item.code );
-                                        onClose();
-                                    }
-                                },
-                                item.code,
-                                wp.element.createElement(
-                                    'span',
-                                    { style: { opacity: 0.6, marginLeft: '8px', fontSize: '12px' } },
-                                    item.desc
-                                )
-                            );
-                        } )
+                            icon: CalendarIcon,
+                            title: __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ),
+                            onClick: onToggle,
+                            isActive: isOpen
+                        }
                     );
-                } );
+                },
+                renderContent: function( { onClose } ) {
+                    return wp.element.createElement(
+                        ShortcodeMenuContent,
+                        {
+                            onInsert: onInsertShortcode,
+                            onClose: onClose
+                        }
+                    );
+                }
             }
         );
     };
@@ -201,8 +199,8 @@
     registerFormatType( 'dmyip/dynamic-date', {
         title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
         tagName: 'span',
-        className: 'dmyip-dynamic-date',
-        edit: DynamicDateToolbar
+        className: null,
+        edit: DynamicDateToolbarButton
     } );
 
     /**
@@ -218,7 +216,7 @@
                 PluginSidebarMoreMenuItem,
                 {
                     target: 'dmyip-sidebar',
-                    icon: calendarIcon
+                    icon: CalendarIcon
                 },
                 __( 'Dynamic Dates', 'dynamic-month-year-into-posts' )
             ),
@@ -226,7 +224,7 @@
                 PluginSidebar,
                 {
                     name: 'dmyip-sidebar',
-                    icon: calendarIcon,
+                    icon: CalendarIcon,
                     title: __( 'Dynamic Date Shortcodes', 'dynamic-month-year-into-posts' )
                 },
                 Object.keys( shortcodeCategories ).map( function( categoryKey ) {
@@ -247,18 +245,18 @@
                                 },
                                 wp.element.createElement(
                                     'div',
-                                    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' } },
+                                    { style: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%', gap: '8px' } },
                                     wp.element.createElement(
                                         'div',
-                                        null,
-                                        wp.element.createElement( 'code', { style: { fontSize: '12px' } }, item.code ),
-                                        wp.element.createElement( 'div', { style: { fontSize: '11px', opacity: 0.7 } }, item.desc )
+                                        { style: { flex: 1, minWidth: 0 } },
+                                        wp.element.createElement( 'code', { style: { fontSize: '11px', wordBreak: 'break-all' } }, item.code ),
+                                        wp.element.createElement( 'div', { style: { fontSize: '11px', opacity: 0.7, marginTop: '2px' } }, item.desc )
                                     ),
                                     wp.element.createElement(
                                         Button,
                                         {
                                             variant: 'secondary',
-                                            isSmall: true,
+                                            size: 'small',
                                             onClick: function() {
                                                 copyToClipboard( item.code, setCopied );
                                             }
@@ -278,12 +276,12 @@
                     },
                     wp.element.createElement(
                         'p',
-                        { style: { fontSize: '12px' } },
+                        { style: { fontSize: '12px', margin: '0 0 8px' } },
                         __( 'Use [year n=5] for offset years. Example: [year n=-2] shows 2 years ago.', 'dynamic-month-year-into-posts' )
                     ),
                     wp.element.createElement(
                         'p',
-                        { style: { fontSize: '12px' } },
+                        { style: { fontSize: '12px', margin: 0 } },
                         __( 'Capitalize shortcodes: [cmonth], [cmon], [cnmonth], [cpmonth]', 'dynamic-month-year-into-posts' )
                     )
                 )
@@ -294,7 +292,7 @@
     // Register the sidebar plugin
     registerPlugin( 'dmyip-sidebar', {
         render: DynamicDateSidebar,
-        icon: calendarIcon
+        icon: CalendarIcon
     } );
 
 } )( window.wp );
