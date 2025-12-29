@@ -1,294 +1,286 @@
 # Dynamic Month & Year into Posts
-Contributors: gauravtiwari
-Donate link: https://gauravtiwari.org/donate/
-Tags: content, marketing, seo, shortcode, writing
-Requires at least: 3.0.1
-Tested up to: 6.8
-Stable tag: 1.4.0
-License: GPLv3 or later
-License URI: http://www.gnu.org/licenses/gpl-3.0.html
 
-Automate SEO and content with dynamic shortcodes for dates, years, months in content, titles and more.
+[![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/dynamic-month-year-into-posts)](https://wordpress.org/plugins/dynamic-month-year-into-posts/)
+[![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/dynamic-month-year-into-posts)](https://wordpress.org/plugins/dynamic-month-year-into-posts/)
+[![License](https://img.shields.io/badge/license-GPL--3.0%2B-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+
+Automate SEO and content with dynamic shortcodes for dates, years, months in content, titles, and meta descriptions.
+
+**Contributors:** gauravtiwari
+**Donate link:** https://gauravtiwari.org/donate/
+**Tags:** content, marketing, seo, shortcode, writing, dates, dynamic content
+**Requires at least:** 3.0.1
+**Tested up to:** 6.8
+**Stable tag:** 1.5.0
+**License:** GPL-3.0 or later
+**License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
 ## Description
 
-### Automate your SEO
+### Automate Your SEO
 
-Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear]`, next year by `[nyear]`, current month (like January) by `[month]`, next month (like February) by `[nmonth]`, previous month (like December) by `[pmonth]`, current/next/previous month shortname (like Jan, Feb and Dec) by `[mon]`, `[nmon]` & `[pmon]` shortcodes anywhere, including content and title. Uses your default WordPress language. Use this plugin to boost your site's SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
+Insert dynamic dates, months, and years anywhere in your WordPress content. Perfect for affiliate marketers, bloggers, and content creators who want their content to stay fresh and up-to-date automatically.
 
-But that's not it.
+Use shortcodes like `[year]`, `[month]`, `[date]` and more in your posts, pages, titles, and SEO meta to keep your content always current without manual updates.
 
-[See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
+### Complete Shortcode Reference
 
-* New: Add post modified date by using `[datemodified]` and post publication date by using `[datepublished]` shortcodes.
-* New: Ace Black Friday with new dynamic shortcodes. Black Friday and Cyber Monday dates can be inserted anywhere by using `[blackfriday]` and `[cybermonday]`.
+#### Year Shortcodes
 
-### Works with popular SEO Plugins
+| Shortcode | Output | Description |
+|-----------|--------|-------------|
+| `[year]` | 2025 | Current year |
+| `[year n=5]` | 2030 | Year with offset (+5 years) |
+| `[year n=-3]` | 2022 | Year with offset (-3 years) |
+| `[nyear]` | 2026 | Next year |
+| `[nnyear]` | 2027 | Year after next |
+| `[pyear]` | 2024 | Previous year |
+| `[ppyear]` | 2023 | Year before previous |
 
-* Supports RankMath, Yoast and SEOPress plugins and can be used to replace all their date based variables.
-* `[year]` works as a replacement to `%currentyear%` , `[month]` as a replacement to `%currentmonth%` already.
-* Use various combinations to make your articles even more dynamic and make your content always SEO ready — no matter the date or year.
-* Extremely useful for Affiliate Marketers, Amazon Affiliates and Copywriters.
+#### Month Shortcodes
 
-= Tested Support With =
-* Rank Math (100%)
-* Rank Math Pro (100%)
-* SEOPress
-* SEOPress Premium
-* Yoast SEO
-* Yoast SEO Premium
-* Gutenberg and Block Editor Content, Headings and Buttons
-* [All popular Block Editor Addons](https://gauravtiwari.org/best-gutenberg-blocks-plugins-for-wordpress/), including Greenshift, GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks.
-* Elementor Page Builder (100%)
-* WP Bakery Page Builder
-* Visual Composer
-* Beaver Builder
-* Brizy Builder
-* Oxygen Builder
-* Bricks Builder
-* Jetpack
-* Intelly Related Posts a.k.a. Inline Related Posts (IRP)
-* Advanced Custom Fields (Manual: please see the FAQs)
-* Lightweight Accordion (including Schema)
-* All major themes like default WordPress themes, Astra, Neve, Hello, Kadence, GeneratePress and Blocksy.
+| Shortcode | Output | Description |
+|-----------|--------|-------------|
+| `[month]` | December | Current month (full name) |
+| `[cmonth]` | December | Current month (capitalized) |
+| `[mon]` | Dec | Current month (short name) |
+| `[cmon]` | Dec | Current month (short, capitalized) |
+| `[mm]` | 12 | Month number with zero (01-12) |
+| `[mn]` | 12 | Month number without zero (1-12) |
+| `[nmonth]` | January | Next month (full name) |
+| `[cnmonth]` | January | Next month (capitalized) |
+| `[nmon]` | Jan | Next month (short name) |
+| `[cnmon]` | Jan | Next month (short, capitalized) |
+| `[pmonth]` | November | Previous month (full name) |
+| `[cpmonth]` | November | Previous month (capitalized) |
+| `[pmon]` | Nov | Previous month (short name) |
+| `[cpmon]` | Nov | Previous month (short, capitalized) |
 
-Tested to be totally working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
+#### Combined Date Shortcodes
 
-Note: Since August 2021, Google has started showing h1 titles in search results, this plugin becomes even more useful as no other SEO plugins adds Current Month, Current Year or Today's Date in h1 titles except this; keeping the same in SEO meta as well.
+| Shortcode | Output | Description |
+|-----------|--------|-------------|
+| `[date]` | December 29, 2025 | Today's full date |
+| `[monthyear]` | December 2025 | Current month and year |
+| `[nmonthyear]` | January 2026 | Next month and year |
+| `[pmonthyear]` | November 2025 | Previous month and year |
 
-### More features
+#### Day Shortcodes
 
-* Full Rank Math OpenGraph Support.
-* Full Schema and OpenGraph support in YoastSEO.
-* Multiple Langauge (WPML) Support: Shortcode renders your site's defined language.
-* Contextual Related Posts Support.
-* Jetpack Related Posts Support.
-* Totally native. Doesn't write anything to the database.
-* No configuration required.
-* Cache friendly.
+| Shortcode | Output | Description |
+|-----------|--------|-------------|
+| `[dt]` | 29 | Day of month (1-31) |
+| `[nd]` | 30 | Tomorrow's day number |
+| `[pd]` | 28 | Yesterday's day number |
+| `[weekday]` | Sunday | Day of week (full name) |
+| `[wd]` | Sun | Day of week (short name) |
 
-### Easy to use
+#### Post Date Shortcodes
 
-Just install the plugin (see Installation tab) and activate it. Add [year] to render current year, [nyear] to render next year, [pyear] to render previous year, [month] to render current month (full name) and [mon] to render first three letters of months automatically. [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes) (You can also see this link in *Plugins* page in your WordPress dashboard).
+| Shortcode | Description |
+|-----------|-------------|
+| `[datepublished]` | Post publication date |
+| `[datemodified]` | Post last modified date |
 
-As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
+#### Special Event Shortcodes
 
-Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need. Please use a [WordPress cache plugin](https://gauravtiwari.org/best-wordpress-caching-plugin/) to cache the rendered content.
+| Shortcode | Output | Description |
+|-----------|--------|-------------|
+| `[blackfriday]` | November 28 | Black Friday date (auto-calculated) |
+| `[cybermonday]` | December 1 | Cyber Monday date (auto-calculated) |
 
-Also, Dynamic Month & Year into Posts is a totally free plugin. There are no upsells and will never be.
+#### Countdown Shortcodes
 
-* [More details](https://gauravtiwari.org/snippet/dynamic-month-year/)
-* [Free Support](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
-* [More WordPress Plugins and Web Tools](https://gauravtiwari.org/code/)
-* [WordPress Deals](https://gauravtiwari.org/wordpress-deals/)
-* [Request a Feature](https://gauravtiwari.org/contact/)
+| Shortcode | Description |
+|-----------|-------------|
+| `[daysuntil date="2025-12-31"]` | Days until a specific date |
+| `[dayssince date="2020-01-01"]` | Days since a specific date |
 
-### Privacy
+### Block Editor Features
 
-Dynamic Month & Year into Posts by [Gaurav Tiwari](https://gauravtiwari.org) is a completely native shortcode plugin. It has no settings page and does not use any analytics tool to gather or use your data. It's bloat and ad-free. No notifications. No upgrade notices. Nothing.
+#### Toolbar Button
+A calendar icon in the Block Editor toolbar provides quick access to all dynamic date shortcodes. Click to open a dropdown organized by category.
 
-### Fast Support and Feature Implementation
+#### Sidebar Panel
+Access the **Dynamic Dates** sidebar from the editor's settings panel for a complete shortcode reference with one-click copy buttons.
 
-I will provide instant support for all your queries or feature requests. Use [support forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/) to ask your questions, request new features or report something broken. I will also update the plugin for every major and minor WordPress version.
+#### Block Patterns
+Pre-built patterns available in the Block Inserter under "Dynamic Dates" category:
+- **Copyright Footer** - Auto-updating copyright year
+- **Last Updated Notice** - Shows post modified date
+- **Affiliate Post Header** - "Updated for [month] [year]" banner
+- **Monthly Sale Banner** - Promotional banner with current month
+- **Black Friday Banner** - Auto-calculated Black Friday/Cyber Monday dates
+- **Days Until Countdown** - Countdown to a specific date
+- **Today's Date Header** - Display current date
 
-### Compatibility
+### Works With Popular SEO Plugins
 
-I use the plugin myself on [my primary website](https://gauravtiwari.org) and other client sites that I run. I try my best to ensure that this plugin is compatible with every functionality plugin you use. Please let me know if this plugin isn't compatible with your stack, create a support request and allow me some time.
+- **Rank Math** - Full support including OpenGraph and Schema
+- **Rank Math Pro** - 100% compatible
+- **Yoast SEO** - Full support including JSON-LD Schema
+- **Yoast SEO Premium** - 100% compatible
+- **SEOPress** - Full support
+- **SEOPress Premium** - Full support
 
-Please note that some plugins strip shortcodes or disable rendering of shortcodes. In such cases, it's impossible to implement dynamic dates without rewriting the whole plugin code and breaking a couple of things. But still, I'll give a try.
+### Page Builder Compatibility
 
-Help me with a positive review to keep the development going.
+- Gutenberg / Block Editor
+- Elementor (100% support)
+- WPBakery Page Builder
+- Visual Composer
+- Beaver Builder
+- Brizy Builder
+- Oxygen Builder
+- Bricks Builder
 
-## Frequently Asked Questions
+### Theme Compatibility
 
-= Why would I need this? =
-If you are an affiliate marketer or blogger who uses months, years and dates in your posts. If you use this plugin to render dynamic month, year, date, next year, and previous year shortcodes, you won’t have to update those posts again and again as time passes.
+Works with all major themes including:
+- Default WordPress themes
+- Astra
+- Neve
+- Hello (Elementor)
+- Kadence
+- GeneratePress
+- Blocksy
 
-= How can I access settings? =
-You cannot. There is no options panel because there is no need to have one. Why bloat the WordPress dashboard with more options?
+### Additional Plugin Support
 
-= Can I use it in Block Editor or Classic Editor? =
-Like running text, you can use the shortcodes in both Block Editor and Classic Editor. You can also use the shortcodes in widget areas, including the footer (use-case: Autoupdating Copyright Year) and headers (use-case: Today’s Date).
+- Jetpack Related Posts
+- Contextual Related Posts
+- Intelly Related Posts (IRP)
+- Advanced Custom Fields (see FAQ)
+- Lightweight Accordion
+- All popular Gutenberg block plugins
 
-= Will this plugin work in my language? =
-Yes. The shortcode outputs are WPML ready and render as per the language set in your WordPress dashboard. Since there is no settings page, you don’t have to translate this plugin.
+## Key Features
 
-= How can I use these shortcodes in my theme/PHP code? =
-You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[month]');?>` etc. in themes or in functionality plugins to use these shortcodes.
-
-= How can I render shortcodes in ACF fields? =
-This plugin doesn’t render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you really need to render [year] etc., shortcodes, you can enable selective rendering.
-Just add this code in your theme’s functions.php file or in the Code Snippets plugin:
-
-ACF field type => text
-	```
-	add_filter('acf/format_value/type=text', 'do_shortcode');
-	```
-
-ACF field name => headline
-	```
-	add_filter('acf/format_value/name=headline', 'do_shortcode');
-	```
+- **Zero Configuration** - Works out of the box, no settings needed
+- **Multi-language Support** - WPML ready, renders in your site's language
+- **Performance Focused** - No CSS/JS files, no database queries
+- **Cache Friendly** - Content rendered on-the-fly
+- **Privacy First** - No analytics, no data collection
+- **Free Forever** - No upsells, no premium version
 
 ## Installation
 
-1. Upload the plugin folder to the `/wp-content/plugins/` directory, or install the plugin through the WordPress plugins screen directly.
-1. Activate the plugin through the 'Plugins' screen in WordPress
-1. There is no additional configuration required. There will not be any menus or settings for this plugin.
+1. Upload the plugin folder to `/wp-content/plugins/` directory, or install through WordPress plugins screen
+2. Activate the plugin through the 'Plugins' screen in WordPress
+3. Start using shortcodes in your content - no configuration required!
 
-== Screenshots ==
+## Frequently Asked Questions
 
-1. Backend Editing
-2. Front end preview (without Rank Math)
-3. With RM Breadcrumb
-4. Admin Post list demo
-5. Multi Language Support
+### Why would I need this?
 
+If you're an affiliate marketer or blogger who uses dates in your posts (e.g., "Best Products of 2025", "January Deals"), this plugin automatically updates those dates as time passes. No more manually updating old posts!
 
-== Changelog ==
-= 1.4.0 =
-* More improvements. props @meteorlxy
+### How can I use shortcodes in my theme/PHP code?
 
-= 1.3.9 =
-* Refactor code.
-* Attempted a fix for Rank Math SEO JSON and Excerpts.
+```php
+<?php echo do_shortcode('[year]'); ?>
+<?php echo do_shortcode('[month]'); ?>
+```
 
-= 1.3.8 =
-* New: [nd] and [pd] display next and previous dates (number only).
+### How can I render shortcodes in ACF fields?
 
-= 1.3.7 =
-* New: [nmonthyear] and [pmonthyear] display next and previous month and years together. Useful in many cases.
+Add this to your theme's `functions.php` or Code Snippets plugin:
 
-= 1.3.6 =
-* Shortcode support in Archive Titles.
+```php
+// For text field type
+add_filter('acf/format_value/type=text', 'do_shortcode');
 
-= 1.3.5 =
-* Made Black Friday and Cyber Monday dates totally dynamic and auto-updating.
-* Use [year n=number] to display any year next or previous to this year. For example [year n=5] renders 5th year from now and [year n=-5] renders 5th year back from today.
+// For a specific field name
+add_filter('acf/format_value/name=headline', 'do_shortcode');
+```
 
-= 1.3.4 =
-* Two new useful shortcodes. Post modified/updated date: `[datemodified]` and post publication date: `[datepublished]`. Use these anywhere you want to make your site more dynamic and SEO friendly.
+### Can I use it in Block Editor or Classic Editor?
 
+Yes! Shortcodes work in both editors, as well as in widget areas (perfect for auto-updating copyright years in footers).
 
-= 1.3.3 =
-* Revert some changes
+### Will this plugin work in my language?
 
+Yes. All shortcode outputs use WordPress's `date_i18n()` function and render in your site's configured language.
 
-= 1.3.2 =
-* Full Yoast SEO Support. Finally.
-* Optimized Code
-* SEOPress Support complete
+### Does it affect site performance?
 
-= 1.3.1 =
-* Date change for Black Friday and Cyber Monday dates
+No. The plugin adds zero overhead - no CSS/JS files, no database queries. Content is rendered on-the-fly using PHP's native date functions.
 
-= 1.3.0 =
-* New: `[blackfriday]` and `[cybermonday]` shortcodes render this years Black Fridy and Cyber Monday dates like November 25 and November 28. Couple these with `[year]` to make the dates complete. [See this example](https://gauravtiwari.org/wp-content/uploads/2022/10/black-friday-date.jpg)
-* Intelly Related Posts a.k.a. IRP support.
+## Use Cases
 
-= 1.2.9 =
-* Readme update.
+- **Copyright notices**: Use `[year]` in footer widgets
+- **Affiliate content**: "Best Products of [year]" or "Top Deals for [month] [year]"
+- **Time-sensitive content**: "[month] Sale - Ends Soon!"
+- **Black Friday content**: "Black Friday [year] starts [blackfriday]"
+- **Evergreen content**: Keep "Updated for [year]" current automatically
 
-= 1.2.8 =
-* Fixed some issues related to rendering of next month.
-* `[monthyear]` no longer prints next month after 28th. Reason: User experience, as the user may be tricked to thinking the wrong current month and year names.
+## Privacy
 
-= 1.2.7 =
-* Fix rendering of [monthyear] shortcode in languages other than English.
+This plugin:
+- Does not collect any user data
+- Does not use analytics or tracking
+- Does not make external requests
+- Does not store anything in the database
+- Has no settings page or admin notices
 
-= 1.2.6 =
-* New: Full Elementor Support. Now the shortcodes should render in all core and Elementor Pro widgets
+## Support
 
-= 1.2.5 =
-* Added: `[weekday]` shortcode renders day of the week like Sunday, Monday, …
-* Added: `[wd]` shortcode renders shortnames for days of the week like Sun, Mon,…
-* Compatibility with 6.0.1 tested.
+- [Documentation](https://gauravtiwari.org/snippet/dynamic-month-year/)
+- [Support Forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
+- [Request a Feature](https://gauravtiwari.org/contact/)
 
-= 1.2.4 =
-* Added: JSON-LD support for Yoast SEO Schema. Props to [@sathoro](https://wordpress.org/support/topic/works-great-8169/)
+## Changelog
 
-= 1.2.3 =
-* Improved: `[monthyear]` shortcode renders next month if the current month is about to end, after 28th every month.
+### 1.5.0
+- New: `[daysuntil]` and `[dayssince]` countdown shortcodes
+- New: Block Editor toolbar button for inserting shortcodes
+- New: Dynamic Dates sidebar panel with shortcode reference
+- New: 7 pre-built Block Patterns (Copyright Footer, Sale Banners, etc.)
+- New: GitHub Actions workflow for automated releases
 
-= 1.2.2 =
-* New: Capitalize Month Names. Add `c` before any month based shortcode to render it capitalized. Useful in various languages where Month names are generally in small letters, like French, Swedish etc.
-* Example shortcodes: `[cmonth]`, `[cmon]`, `[cnmonth]`, `[cpmonth]`, `[cnmon]`, `[cpmon]` etc.
-* New Shortcodes: `[nnyear]` and `[ppyear]` show 2 years next and previous years, like 2023 and 2019 respectively.
-* New Shortcode: `[monthyear]` shows current month and year together for specific purposes.
-* Better compatibility with Rank Math Pro and Elementor.
+### 1.4.0
+- More improvements (props @meteorlxy)
 
-= 1.2.1 =
-* New Shortcodes: `[mm]` renders month number including trailing zero (01-12)
-* New Shortcodes: `[mn]` renders month number without trailing zero (1-12)
-* Full Jetpack Related Posts Support (Thanks Jetpack team!)
+### 1.3.9
+- Refactored code structure
+- Fix for Rank Math SEO JSON and Excerpts
 
-= 1.2.0 =
-* WordPress 5.8 Support
-* New Shortcode: [nmonth] renders next month (full name)
-* New Shortcode: [pmonth] renders previous month (full name)
-* New Shortcode: [nmon] renders next month (short name, like Jan, Feb)
-* New Shortcode: [pmon] renders previous month (short name, like Dec, Nov)
+### 1.3.8
+- New: `[nd]` and `[pd]` for next and previous day numbers
 
-= 1.1.9 =
-* IMPROVED! Performance by removing `rank_math/paper/auto_generated_description/apply_shortcode` filter that causes more load on sites, specially where `wp_query` is used.
-* This is first of many attempts to remove unnecessary elements.
+### 1.3.7
+- New: `[nmonthyear]` and `[pmonthyear]` shortcodes
 
-= 1.1.8 =
-* Revert back some of the changes in 1.1.6
+### 1.3.6
+- Shortcode support in Archive Titles
 
-= 1.1.7 =
-* Bug fix
+### 1.3.5
+- Dynamic Black Friday and Cyber Monday dates
+- Year offset support: `[year n=5]` for future years
 
-= 1.1.6 =
-* NEW! `[dt]` shortcode to render only the day of the month (like 1, 2, 3, 17, 28). Combine this with other shortcodes to create date formats you desire.
-* Added support for shortcodes in Rank Math's Product schema description
-* IMPROVED! `[date]` shortcode renders date as set by Dashboard -> Settings -> General -> Date.
+### 1.3.4
+- New: `[datemodified]` and `[datepublished]` shortcodes
 
-= 1.1.5 =
-* NEW! `[mon]` shortcode to render only the first three-letters of Month, like Jan, Feb, Mar, Apr etc.
-* Tested with WordPress 5.8 Beta
+### 1.3.2
+- Full Yoast SEO support
+- Optimized code
+- Complete SEOPress support
 
-= 1.1.2 =
-* Updated Readme.txt and Instructions
+### 1.3.0
+- New: `[blackfriday]` and `[cybermonday]` shortcodes
+- Intelly Related Posts support
 
-= 1.1.1 =
-* Bug fixes.
+[View full changelog](https://wordpress.org/plugins/dynamic-month-year-into-posts/#developers)
 
-= 1.1.0 =
-* Bug fixes.
-* New: Rank Math OpenGraph Support
+## License
 
-= 1.0.9 =
-* Improved: Schema and OpenGraph support in YoastSEO.
-* Work in Progress: Full Schema and OpenGraph support in Rank Math
-* Removed: Rank Math recommendation.
+This plugin is licensed under the GPL v3 or later.
 
-= 1.0.8 =
-* New: Contextual Related Posts Support
+```
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+```
 
-= 1.0.7 =
-* New: SEOPress Support
-
-= 1.0.6 =
-* New: Yoast SEO Support
-
-= 1.0.5 =
-* Multiple Langauge Support: Shortcode renders your site's defined language.
-* New: [date] shortcode for today's date.
-* WordPress 5.6 Compatibility
-
-= 1.0.4 =
-* Optimization
-
-= 1.0.3 =
-* Updated Readme.txt file
-
-= 1.0.2 =
-* [pyear] yields previous year (e.g., 2021)
-* [nyear] yields next year (e.g., 2023)
-
-= 1.0.1 =
-* Fixed Name Conflicts
-
-= 1.0.0 =
-* First version
+See [LICENSE](LICENSE) for the full license text.

@@ -1,0 +1,34 @@
+/**
+ * Dynamic Month & Year into Posts - Editor Styles
+ */
+
+/* Toolbar dropdown styling */
+.dmyip-toolbar-dropdown .components-menu-group__label {
+    font-weight: 600;
+    color: #1e1e1e;
+    padding: 8px 12px 4px;
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.5px;
+}
+
+.dmyip-toolbar-dropdown .components-menu-item__button {
+    padding: 8px 12px;
+}
+
+/* Sidebar shortcode rows */
+.dmyip-shortcode-row {
+    padding: 8px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.dmyip-shortcode-row:last-child {
+    border-bottom: none;
+}
+
+/* Dynamic date inline highlight in editor (optional) */
+.dmyip-dynamic-date {
+    background-color: rgba(0, 124, 186, 0.1);
+    border-radius: 2px;
+    padding: 0 2px;
+}
