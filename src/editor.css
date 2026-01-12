@@ -2,41 +2,78 @@
  * Editor styles for Dynamic Month & Year into Posts
  *
  * Styles for the shortcode format type in the block editor.
+ * Shows preview value by default, shortcode text when focused.
  */
 
-/* Base shortcode styling - visible in editor */
+/* Base shortcode styling - show preview by default */
 .dmyip-shortcode {
+	position: relative;
 	background-color: #fff3e0;
 	border-radius: 3px;
 	padding: 1px 4px;
-	color: #e65100;
+	color: transparent; /* Hide the actual shortcode text */
 	font-family: inherit;
-	font-weight: 500;
-	transition: background-color 0.15s ease;
+	transition: all 0.15s ease;
+	display: inline;
+	vertical-align: baseline;
 }
 
-/* Hover state */
-.dmyip-shortcode:hover {
+/* Show preview value via ::before pseudo-element */
+.dmyip-shortcode::before {
+	content: attr(data-preview);
+	color: #1e1e1e;
+	font-weight: 500;
+}
+
+/* When the shortcode span is being edited (has selection or caret inside) */
+.dmyip-shortcode:focus,
+.dmyip-shortcode.is-editing {
+	color: #e65100; /* Show the shortcode text */
 	background-color: #ffe0b2;
 }
 
-/* When selected/focused */
-.dmyip-shortcode:focus,
+.dmyip-shortcode:focus::before,
+.dmyip-shortcode.is-editing::before {
+	content: none; /* Hide the preview */
+}
+
+/* When cursor is inside the block containing shortcode */
+.is-selected .dmyip-shortcode,
 .block-editor-rich-text__editable:focus .dmyip-shortcode {
-	background-color: #ffcc80;
-	outline: none;
-	box-shadow: 0 0 0 1px #fb8c00;
+	color: #e65100;
+	background-color: #ffe0b2;
 }
 
-/* Preview mode - when showing rendered value */
-.dmyip-shortcode[data-preview="true"] {
-	background-color: #e8f5e9;
-	color: #2e7d32;
+.is-selected .dmyip-shortcode::before,
+.block-editor-rich-text__editable:focus .dmyip-shortcode::before {
+	content: none;
 }
 
-/* Inline display for shortcode in paragraph */
-p .dmyip-shortcode,
-.rich-text .dmyip-shortcode {
-	display: inline;
-	vertical-align: baseline;
+/* Hover state - show hint that it's interactive */
+.dmyip-shortcode:hover {
+	background-color: #ffe0b2;
+	cursor: text;
+}
+
+/* Tooltip showing shortcode on hover when in preview mode */
+.dmyip-shortcode:not(:focus):hover::after {
+	content: attr(data-shortcode);
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	transform: translateX(-50%);
+	background: #333;
+	color: #fff;
+	padding: 4px 8px;
+	border-radius: 4px;
+	font-size: 11px;
+	white-space: nowrap;
+	z-index: 100;
+	margin-bottom: 4px;
+	font-weight: normal;
+}
+
+/* Tooltip arrow */
+.dmyip-shortcode:not(:focus):hover::before {
+	/* Keep showing preview, arrow will be separate element if needed */
 }
