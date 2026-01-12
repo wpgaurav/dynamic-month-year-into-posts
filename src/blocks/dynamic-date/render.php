@@ -215,7 +215,7 @@ call_user_func(
 		$dmyip_output = $dmyip_get_output( $dmyip_type, $dmyip_format, $dmyip_offset, $dmyip_date );
 
 		printf(
-			'<span %s>%s</span>',
+			'<p %s>%s</p>',
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() is safe.
 			get_block_wrapper_attributes(),
 			esc_html( $dmyip_output )
