@@ -4,13 +4,13 @@
 [![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/dynamic-month-year-into-posts)](https://wordpress.org/plugins/dynamic-month-year-into-posts/)
 [![License](https://img.shields.io/badge/license-GPL--3.0%2B-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
 
-Automate SEO and content with dynamic shortcodes for dates, years, months in content, titles, and meta descriptions.
+Automate SEO and content with dynamic shortcodes for dates, years, months, age calculations, and countdowns in content, titles, and meta descriptions.
 
 **Contributors:** gauravtiwari
 **Donate link:** https://gauravtiwari.org/donate/
-**Tags:** content, marketing, seo, shortcode, writing, dates, dynamic content
-**Requires at least:** 3.0.1
-**Tested up to:** 6.8
+**Tags:** dynamic content, shortcode, seo, dates, year
+**Requires at least:** 6.0
+**Tested up to:** 6.9
 **Stable tag:** 1.6.0
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
@@ -19,113 +19,203 @@ Automate SEO and content with dynamic shortcodes for dates, years, months in con
 
 ### Automate Your SEO
 
-Insert dynamic dates, months, and years anywhere in your WordPress content. Perfect for affiliate marketers, bloggers, and content creators who want their content to stay fresh and up-to-date automatically.
+Insert dynamic dates, months, years, age calculations, and countdowns anywhere in your WordPress content. Perfect for affiliate marketers, bloggers, and content creators who want their content to stay fresh and up-to-date automatically.
 
-Use shortcodes like `[year]`, `[month]`, `[date]` and more in your posts, pages, titles, and SEO meta to keep your content always current without manual updates.
+Use shortcodes like `[year]`, `[month]`, `[date]`, `[age]`, `[daysuntil]` and more in your posts, pages, titles, and SEO meta to keep your content always current without manual updates.
 
-### Complete Shortcode Reference
+## Complete Shortcode Reference
 
-#### Year Shortcodes
-
-| Shortcode | Output | Description |
-|-----------|--------|-------------|
-| `[year]` | 2025 | Current year |
-| `[year n=5]` | 2030 | Year with offset (+5 years) |
-| `[year n=-3]` | 2022 | Year with offset (-3 years) |
-| `[nyear]` | 2026 | Next year |
-| `[nnyear]` | 2027 | Year after next |
-| `[pyear]` | 2024 | Previous year |
-| `[ppyear]` | 2023 | Year before previous |
-
-#### Month Shortcodes
+### Year Shortcodes
 
 | Shortcode | Output | Description |
 |-----------|--------|-------------|
-| `[month]` | December | Current month (full name) |
-| `[cmonth]` | December | Current month (capitalized) |
-| `[mon]` | Dec | Current month (short name) |
-| `[cmon]` | Dec | Current month (short, capitalized) |
-| `[mm]` | 12 | Month number with zero (01-12) |
-| `[mn]` | 12 | Month number without zero (1-12) |
-| `[nmonth]` | January | Next month (full name) |
-| `[cnmonth]` | January | Next month (capitalized) |
-| `[nmon]` | Jan | Next month (short name) |
-| `[cnmon]` | Jan | Next month (short, capitalized) |
-| `[pmonth]` | November | Previous month (full name) |
-| `[cpmonth]` | November | Previous month (capitalized) |
-| `[pmon]` | Nov | Previous month (short name) |
-| `[cpmon]` | Nov | Previous month (short, capitalized) |
+| `[year]` | 2026 | Current year |
+| `[year n=5]` | 2031 | Year with offset (+5 years) |
+| `[year n=-3]` | 2023 | Year with offset (-3 years) |
+| `[nyear]` | 2027 | Next year |
+| `[nnyear]` | 2028 | Year after next |
+| `[pyear]` | 2025 | Previous year |
+| `[ppyear]` | 2024 | Year before previous |
 
-#### Combined Date Shortcodes
+### Month Shortcodes
 
 | Shortcode | Output | Description |
 |-----------|--------|-------------|
-| `[date]` | December 29, 2025 | Today's full date |
-| `[monthyear]` | December 2025 | Current month and year |
-| `[nmonthyear]` | January 2026 | Next month and year |
-| `[pmonthyear]` | November 2025 | Previous month and year |
+| `[month]` | January | Current month (full name) |
+| `[cmonth]` | January | Current month (capitalized) |
+| `[mon]` | Jan | Current month (short name) |
+| `[cmon]` | Jan | Current month (short, capitalized) |
+| `[mm]` | 01 | Month number with zero (01-12) |
+| `[mn]` | 1 | Month number without zero (1-12) |
+| `[nmonth]` | February | Next month (full name) |
+| `[cnmonth]` | February | Next month (capitalized) |
+| `[nmon]` | Feb | Next month (short name) |
+| `[pmonth]` | December | Previous month (full name) |
+| `[cpmonth]` | December | Previous month (capitalized) |
+| `[pmon]` | Dec | Previous month (short name) |
 
-#### Day Shortcodes
+### Combined Date Shortcodes
 
 | Shortcode | Output | Description |
 |-----------|--------|-------------|
-| `[dt]` | 29 | Day of month (1-31) |
-| `[nd]` | 30 | Tomorrow's day number |
-| `[pd]` | 28 | Yesterday's day number |
+| `[date]` | January 12, 2026 | Today's full date |
+| `[monthyear]` | January 2026 | Current month and year |
+| `[nmonthyear]` | February 2026 | Next month and year |
+| `[pmonthyear]` | December 2025 | Previous month and year |
+
+### Day Shortcodes
+
+| Shortcode | Output | Description |
+|-----------|--------|-------------|
+| `[dt]` | 12 | Day of month (1-31) |
+| `[nd]` | 13 | Tomorrow's day number |
+| `[pd]` | 11 | Yesterday's day number |
 | `[weekday]` | Sunday | Day of week (full name) |
 | `[wd]` | Sun | Day of week (short name) |
 
-#### Post Date Shortcodes
+### Post Date Shortcodes
 
 | Shortcode | Description |
 |-----------|-------------|
 | `[datepublished]` | Post publication date |
 | `[datemodified]` | Post last modified date |
 
-#### Special Event Shortcodes
+### Special Event Shortcodes
 
 | Shortcode | Output | Description |
 |-----------|--------|-------------|
-| `[blackfriday]` | November 28 | Black Friday date (auto-calculated) |
-| `[cybermonday]` | December 1 | Cyber Monday date (auto-calculated) |
+| `[blackfriday]` | November 27 | Black Friday date (auto-calculated) |
+| `[cybermonday]` | November 30 | Cyber Monday date (auto-calculated) |
 
-#### Countdown Shortcodes
+### Countdown Shortcodes
 
-| Shortcode | Description |
-|-----------|-------------|
-| `[daysuntil date="2025-12-31"]` | Days until a specific date |
-| `[dayssince date="2020-01-01"]` | Days since a specific date |
+| Shortcode | Example | Description |
+|-----------|---------|-------------|
+| `[daysuntil date="2026-12-25"]` | 347 | Days until a specific date |
+| `[dayssince date="2020-01-01"]` | 2203 | Days since a specific date |
 
-### Block Editor Features
+### Age Shortcodes
 
-#### Toolbar Button
-A calendar icon in the Block Editor toolbar provides quick access to all dynamic date shortcodes. Click to open a dropdown organized by category.
+Calculate and display age from any date. Perfect for "years of experience", personal profiles, or anniversary tracking.
 
-#### Sidebar Panel
+| Shortcode | Example Output | Description |
+|-----------|----------------|-------------|
+| `[age date="1990-05-15"]` | 35 | Age in years only |
+| `[age date="1990-05-15" format="ym"]` | 35 years, 7 months | Years and months |
+| `[age date="1990-05-15" format="ymd"]` | 35 years, 7 months, 28 days | Full age breakdown |
+
+**Use cases:**
+- Display years of experience: `[age date="2010-06-01"]+ years of experience`
+- Personal profiles: `Age: [age date="1990-05-15"]`
+- Anniversary tracking: `Married for [age date="2015-08-20" format="ym"]`
+
+## Block Editor Features
+
+### Dynamic Date Block
+
+A dedicated Gutenberg block for inserting dynamic dates with:
+- Live preview in the editor
+- All date types available via dropdown
+- Custom format options
+- Age calculation with format selection
+- Typography and color controls
+
+### Live Countdown Block
+
+Interactive countdown block powered by the WordPress Interactivity API:
+- Real-time countdown display (days, hours, minutes, seconds)
+- Auto-updates at midnight
+- Customizable target date
+- Style options for colors and typography
+
+### Toolbar Button
+
+A calendar icon in the Block Editor formatting toolbar provides quick access to all shortcodes:
+- Organized by category (Year, Month, Date, Events, Countdown, Age)
+- Shows usage examples for shortcodes with arguments
+- Inserted shortcodes are highlighted with orange background for visibility
+- One-click insertion into any text block
+
+### Sidebar Panel
+
 Access the **Dynamic Dates** sidebar from the editor's settings panel for a complete shortcode reference with one-click copy buttons.
 
-#### Block Patterns
-Pre-built patterns available in the Block Inserter under "Dynamic Dates" category:
+### Block Patterns
+
+13 pre-built patterns available in the Block Inserter under "Dynamic Dates" category:
+
+**Basic Patterns:**
 - **Copyright Footer** - Auto-updating copyright year
 - **Last Updated Notice** - Shows post modified date
-- **Affiliate Post Header** - "Updated for [month] [year]" banner
-- **Monthly Sale Banner** - Promotional banner with current month
-- **Black Friday Banner** - Auto-calculated Black Friday/Cyber Monday dates
-- **Days Until Countdown** - Countdown to a specific date
 - **Today's Date Header** - Display current date
 
-### Works With Popular SEO Plugins
+**Marketing Patterns:**
+- **Affiliate Post Header** - "Updated for [month] [year]" banner
+- **Monthly Sale Banner** - Promotional banner with current month
+- **Promotional Banner with CTA** - Eye-catching promo with button
+
+**Event Patterns:**
+- **Black Friday Banner** - Auto-calculated Black Friday/Cyber Monday dates
+- **New Year Countdown** - Festive countdown to next year
+
+**Countdown Patterns:**
+- **Days Until Countdown** - Countdown to a specific date
+- **Birthday Countdown** - Countdown with celebration styling
+- **Days Since Milestone** - Track days since an important event
+
+**Age Patterns:**
+- **Age Display Card** - Shows age with prominent styling
+- **Experience Badge** - Display years of experience as a badge
+
+## Block Bindings API
+
+For WordPress 6.5+, use Block Bindings to connect core blocks directly to dynamic date values:
+
+```html
+<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"dmyip/date","args":{"type":"year"}}}}} -->
+<p></p>
+<!-- /wp:paragraph -->
+```
+
+Available binding types: `year`, `month`, `date`, `monthyear`, `weekday`, and more.
+
+## REST API
+
+Access dynamic dates programmatically:
+
+```
+GET /wp-json/dmyip/v1/dates
+GET /wp-json/dmyip/v1/shortcodes
+GET /wp-json/dmyip/v1/render?shortcode=[year]
+```
+
+## WP-CLI Commands
+
+```bash
+# Render a shortcode
+wp dmyip shortcode "[year]"
+wp dmyip shortcode "[age date='1990-05-15' format='ym']"
+
+# List all available shortcodes
+wp dmyip list
+
+# Test all shortcodes
+wp dmyip test
+```
+
+## Compatibility
+
+### SEO Plugins
 
 - **Rank Math** - Full support including OpenGraph and Schema
 - **Rank Math Pro** - 100% compatible
 - **Yoast SEO** - Full support including JSON-LD Schema
 - **Yoast SEO Premium** - 100% compatible
-- **SEOPress** - Full support
-- **SEOPress Premium** - Full support
+- **SEOPress / SEOPress Premium** - Full support
 
-### Page Builder Compatibility
+### Page Builders
 
-- Gutenberg / Block Editor
+- Gutenberg / Block Editor (native support)
 - Elementor (100% support)
 - WPBakery Page Builder
 - Visual Composer
@@ -134,34 +224,28 @@ Pre-built patterns available in the Block Inserter under "Dynamic Dates" categor
 - Oxygen Builder
 - Bricks Builder
 
-### Theme Compatibility
+### Themes
 
-Works with all major themes including:
-- Default WordPress themes
-- Astra
-- Neve
-- Hello (Elementor)
-- Kadence
-- GeneratePress
-- Blocksy
+Works with all major themes including default WordPress themes, Astra, Neve, Hello (Elementor), Kadence, GeneratePress, and Blocksy.
 
-### Additional Plugin Support
+### Additional Plugins
 
 - Jetpack Related Posts
 - Contextual Related Posts
 - Intelly Related Posts (IRP)
 - Advanced Custom Fields (see FAQ)
 - Lightweight Accordion
-- All popular Gutenberg block plugins
+- All popular Gutenberg block plugins (Greenshift, GenerateBlocks, Kadence Blocks, Spectra, Otter Blocks)
 
 ## Key Features
 
 - **Zero Configuration** - Works out of the box, no settings needed
 - **Multi-language Support** - WPML ready, renders in your site's language
-- **Performance Focused** - No CSS/JS files, no database queries
+- **Performance Focused** - Minimal CSS/JS, no database queries for shortcodes
 - **Cache Friendly** - Content rendered on-the-fly
 - **Privacy First** - No analytics, no data collection
 - **Free Forever** - No upsells, no premium version
+- **Modern Codebase** - PSR-4 autoloading, namespaced classes, PHPStan/PHPCS validated
 
 ## Installation
 
@@ -173,13 +257,23 @@ Works with all major themes including:
 
 ### Why would I need this?
 
-If you're an affiliate marketer or blogger who uses dates in your posts (e.g., "Best Products of 2025", "January Deals"), this plugin automatically updates those dates as time passes. No more manually updating old posts!
+If you're an affiliate marketer or blogger who uses dates in your posts (e.g., "Best Products of 2026", "January Deals"), this plugin automatically updates those dates as time passes. No more manually updating old posts!
+
+### How do I calculate someone's age?
+
+Use the `[age]` shortcode with a birth date:
+
+```
+[age date="1990-05-15"]              → 35
+[age date="1990-05-15" format="ym"]  → 35 years, 7 months
+[age date="1990-05-15" format="ymd"] → 35 years, 7 months, 28 days
+```
 
 ### How can I use shortcodes in my theme/PHP code?
 
 ```php
 <?php echo do_shortcode('[year]'); ?>
-<?php echo do_shortcode('[month]'); ?>
+<?php echo do_shortcode('[age date="1990-05-15"]'); ?>
 ```
 
 ### How can I render shortcodes in ACF fields?
@@ -196,7 +290,11 @@ add_filter('acf/format_value/name=headline', 'do_shortcode');
 
 ### Can I use it in Block Editor or Classic Editor?
 
-Yes! Shortcodes work in both editors, as well as in widget areas (perfect for auto-updating copyright years in footers).
+Yes! Shortcodes work in both editors. In the Block Editor, you also get:
+- A dedicated Dynamic Date block
+- Toolbar button for quick insertion
+- Visual highlighting of shortcodes
+- Pre-built patterns
 
 ### Will this plugin work in my language?
 
@@ -204,7 +302,7 @@ Yes. All shortcode outputs use WordPress's `date_i18n()` function and render in 
 
 ### Does it affect site performance?
 
-No. The plugin adds zero overhead - no CSS/JS files, no database queries. Content is rendered on-the-fly using PHP's native date functions.
+Minimal impact. The plugin loads a small CSS file in the editor for shortcode highlighting. No database queries are made for shortcode rendering - content is generated on-the-fly using PHP's native date functions.
 
 ## Use Cases
 
@@ -213,6 +311,10 @@ No. The plugin adds zero overhead - no CSS/JS files, no database queries. Conten
 - **Time-sensitive content**: "[month] Sale - Ends Soon!"
 - **Black Friday content**: "Black Friday [year] starts [blackfriday]"
 - **Evergreen content**: Keep "Updated for [year]" current automatically
+- **Experience/tenure**: "[age date="2015-01-01"] years in business"
+- **Age display**: "Age: [age date="1990-05-15" format="ym"]"
+- **Event countdowns**: "Only [daysuntil date="2026-12-25"] days until Christmas!"
+- **Milestone tracking**: "It's been [dayssince date="2020-03-15"] days since we launched"
 
 ## Privacy
 
@@ -223,20 +325,33 @@ This plugin:
 - Does not store anything in the database
 - Has no settings page or admin notices
 
+## Requirements
+
+- WordPress 6.0 or higher
+- PHP 7.4 or higher
+
 ## Support
 
 - [Documentation](https://gauravtiwari.org/snippet/dynamic-month-year/)
 - [Support Forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
 - [Request a Feature](https://gauravtiwari.org/contact/)
+- [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ## Changelog
 
 ### 1.6.0
+- New: `[age]` shortcode to calculate and display age from a birth date
+  - `[age date="1990-05-15"]` - Years only
+  - `[age date="1990-05-15" format="ym"]` - Years and months
+  - `[age date="1990-05-15" format="ymd"]` - Full age breakdown
 - New: Dedicated Dynamic Date Gutenberg block with live preview
 - New: Live Countdown block with Interactivity API (auto-updates at midnight)
 - New: Block Bindings API support (WP 6.5+) for binding core blocks to dynamic dates
 - New: REST API endpoints (`/wp-json/dmyip/v1/dates`, `/dmyip/v1/shortcodes`)
 - New: WP-CLI commands (`wp dmyip shortcode`, `wp dmyip list`, `wp dmyip test`)
+- New: 13 Block Patterns including Age Display Card, Birthday Countdown, Experience Badge, New Year Countdown, Days Since Milestone, and Promotional Banner with CTA
+- New: Shortcodes inserted via toolbar are highlighted with orange background in editor
+- New: Toolbar dropdown shows usage examples for shortcodes with arguments
 - New: PHPStan and PHPCS configuration for code quality
 - New: Modernized codebase with namespaced PHP classes (PSR-4 autoloading)
 - New: CI/CD pipeline with automated testing
