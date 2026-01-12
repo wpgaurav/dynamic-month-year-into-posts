@@ -22,7 +22,6 @@ Thumbs.db
 composer.lock
 
 # npm
-package-lock.json
 
 # Testing
 .phpunit.result.cache
