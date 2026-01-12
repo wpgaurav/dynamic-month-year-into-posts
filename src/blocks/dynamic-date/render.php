@@ -13,6 +13,77 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+/**
+ * Calculate age from a birth date.
+ *
+ * @param string $date   Birth date string.
+ * @param string $format Format: 'y', 'ym', or 'ymd'.
+ * @return string Formatted age string.
+ */
+function dmyip_render_age( $date, $format = 'y' ) {
+	if ( empty( $date ) ) {
+		return '0';
+	}
+
+	$birth_timestamp = strtotime( $date );
+	if ( false === $birth_timestamp ) {
+		return '0';
+	}
+
+	$birth = new DateTime( gmdate( 'Y-m-d', $birth_timestamp ) );
+	$today = new DateTime( gmdate( 'Y-m-d' ) );
+	$diff  = $today->diff( $birth );
+
+	switch ( $format ) {
+		case 'ymd':
+			$parts = [];
+			if ( $diff->y > 0 ) {
+				$parts[] = sprintf(
+					/* translators: %d: number of years */
+					_n( '%d year', '%d years', $diff->y, 'dynamic-month-year-into-posts' ),
+					$diff->y
+				);
+			}
+			if ( $diff->m > 0 ) {
+				$parts[] = sprintf(
+					/* translators: %d: number of months */
+					_n( '%d month', '%d months', $diff->m, 'dynamic-month-year-into-posts' ),
+					$diff->m
+				);
+			}
+			if ( $diff->d > 0 ) {
+				$parts[] = sprintf(
+					/* translators: %d: number of days */
+					_n( '%d day', '%d days', $diff->d, 'dynamic-month-year-into-posts' ),
+					$diff->d
+				);
+			}
+			return implode( ', ', $parts );
+
+		case 'ym':
+			$parts = [];
+			if ( $diff->y > 0 ) {
+				$parts[] = sprintf(
+					/* translators: %d: number of years */
+					_n( '%d year', '%d years', $diff->y, 'dynamic-month-year-into-posts' ),
+					$diff->y
+				);
+			}
+			if ( $diff->m > 0 ) {
+				$parts[] = sprintf(
+					/* translators: %d: number of months */
+					_n( '%d month', '%d months', $diff->m, 'dynamic-month-year-into-posts' ),
+					$diff->m
+				);
+			}
+			return implode( ', ', $parts );
+
+		case 'y':
+		default:
+			return (string) $diff->y;
+	}
+}
+
 // Wrap in IIFE to avoid global variable pollution.
 call_user_func(
 	static function ( $attributes ) {
@@ -126,6 +197,15 @@ call_user_func(
 					}
 					$diff = (int) floor( ( $today - $target ) / DAY_IN_SECONDS );
 					return (string) max( 0, $diff );
+
+				case 'age':
+					return dmyip_render_age( $date, 'y' );
+
+				case 'age_ym':
+					return dmyip_render_age( $date, 'ym' );
+
+				case 'age_ymd':
+					return dmyip_render_age( $date, 'ymd' );
 
 				default:
 					return date_i18n( 'Y' );

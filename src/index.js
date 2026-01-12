@@ -67,6 +67,14 @@ const SHORTCODE_CATEGORIES = [
 			{ code: '[dayssince date=""]', desc: __( 'Days since date', 'dynamic-month-year-into-posts' ) },
 		],
 	},
+	{
+		label: __( 'Age', 'dynamic-month-year-into-posts' ),
+		shortcodes: [
+			{ code: '[age date=""]', desc: __( 'Age in years', 'dynamic-month-year-into-posts' ) },
+			{ code: '[age date="" format="ym"]', desc: __( 'Years & months', 'dynamic-month-year-into-posts' ) },
+			{ code: '[age date="" format="ymd"]', desc: __( 'Full age', 'dynamic-month-year-into-posts' ) },
+		],
+	},
 ];
 
 /**

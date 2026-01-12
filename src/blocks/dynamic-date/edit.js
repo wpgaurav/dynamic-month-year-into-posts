@@ -69,17 +69,35 @@ const DATE_TYPES = [
 			{ value: 'dayssince', label: __( 'Days Since Date', 'dynamic-month-year-into-posts' ) },
 		],
 	},
+	{
+		label: __( 'Age', 'dynamic-month-year-into-posts' ),
+		options: [
+			{ value: 'age', label: __( 'Age (Years)', 'dynamic-month-year-into-posts' ) },
+			{ value: 'age_ym', label: __( 'Age (Years & Months)', 'dynamic-month-year-into-posts' ) },
+			{ value: 'age_ymd', label: __( 'Age (Years, Months & Days)', 'dynamic-month-year-into-posts' ) },
+		],
+	},
+];
+
+/**
+ * Age format options.
+ */
+const AGE_FORMATS = [
+	{ value: 'y', label: __( 'Years only', 'dynamic-month-year-into-posts' ) },
+	{ value: 'ym', label: __( 'Years and Months', 'dynamic-month-year-into-posts' ) },
+	{ value: 'ymd', label: __( 'Years, Months, and Days', 'dynamic-month-year-into-posts' ) },
 ];
 
 /**
  * Get preview text for a date type.
  *
- * @param {string} type   Date type.
- * @param {number} offset Year offset.
- * @param {string} date   Target date.
+ * @param {string} type      Date type.
+ * @param {number} offset    Year offset.
+ * @param {string} date      Target date.
+ * @param {string} ageFormat Age format (y, ym, ymd).
  * @return {string} Preview text.
  */
-function getPreviewText( type, offset, date ) {
+function getPreviewText( type, offset, date, ageFormat = 'y' ) {
 	const now = new Date();
 
 	switch ( type ) {
@@ -124,6 +142,15 @@ function getPreviewText( type, offset, date ) {
 		case 'dayssince':
 			if ( ! date ) return __( 'Set date', 'dynamic-month-year-into-posts' );
 			return getDaysSince( date );
+		case 'age':
+			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
+			return getAge( date, 'y' );
+		case 'age_ym':
+			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
+			return getAge( date, 'ym' );
+		case 'age_ymd':
+			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
+			return getAge( date, 'ymd' );
 		default:
 			return String( now.getFullYear() );
 	}
@@ -185,16 +212,69 @@ function getDaysSince( dateStr ) {
 }
 
 /**
+ * Calculate age from a birth date.
+ *
+ * @param {string} dateStr Birth date string.
+ * @param {string} format  Format: 'y', 'ym', or 'ymd'.
+ * @return {string} Formatted age string.
+ */
+function getAge( dateStr, format = 'y' ) {
+	const birth = new Date( dateStr );
+	const today = new Date();
+
+	if ( isNaN( birth.getTime() ) ) {
+		return '';
+	}
+
+	let years = today.getFullYear() - birth.getFullYear();
+	let months = today.getMonth() - birth.getMonth();
+	let days = today.getDate() - birth.getDate();
+
+	// Adjust for negative days
+	if ( days < 0 ) {
+		months--;
+		const prevMonth = new Date( today.getFullYear(), today.getMonth(), 0 );
+		days += prevMonth.getDate();
+	}
+
+	// Adjust for negative months
+	if ( months < 0 ) {
+		years--;
+		months += 12;
+	}
+
+	switch ( format ) {
+		case 'ymd': {
+			const parts = [];
+			if ( years > 0 ) parts.push( `${ years } year${ years !== 1 ? 's' : '' }` );
+			if ( months > 0 ) parts.push( `${ months } month${ months !== 1 ? 's' : '' }` );
+			if ( days > 0 ) parts.push( `${ days } day${ days !== 1 ? 's' : '' }` );
+			return parts.join( ', ' ) || '0 days';
+		}
+		case 'ym': {
+			const parts = [];
+			if ( years > 0 ) parts.push( `${ years } year${ years !== 1 ? 's' : '' }` );
+			if ( months > 0 ) parts.push( `${ months } month${ months !== 1 ? 's' : '' }` );
+			return parts.join( ', ' ) || '0 months';
+		}
+		case 'y':
+		default:
+			return String( years );
+	}
+}
+
+/**
  * Edit component.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { type, format, offset, date } = attributes;
+	const { type, format, offset, date, ageFormat } = attributes;
 	const blockProps = useBlockProps();
 
-	const previewText = getPreviewText( type, offset, date );
+	const previewText = getPreviewText( type, offset, date, ageFormat );
 	const showOffsetControl = type === 'year';
-	const showDateControl = type === 'daysuntil' || type === 'dayssince';
+	const showDateControl = type === 'daysuntil' || type === 'dayssince' || type.startsWith( 'age' );
 	const showFormatControl = type === 'date';
+	const isAgeType = type.startsWith( 'age' );
 
 	// Flatten options for SelectControl
 	const flatOptions = DATE_TYPES.reduce( ( acc, group ) => {
@@ -226,11 +306,14 @@ export default function Edit( { attributes, setAttributes } ) {
 
 					{ showDateControl && (
 						<TextControl
-							label={ __( 'Target Date', 'dynamic-month-year-into-posts' ) }
+							label={ isAgeType ? __( 'Birth Date', 'dynamic-month-year-into-posts' ) : __( 'Target Date', 'dynamic-month-year-into-posts' ) }
 							value={ date }
 							onChange={ ( newDate ) => setAttributes( { date: newDate } ) }
 							placeholder="YYYY-MM-DD"
-							help={ __( 'Enter date in YYYY-MM-DD format.', 'dynamic-month-year-into-posts' ) }
+							help={ isAgeType
+								? __( 'Enter birth date in YYYY-MM-DD format.', 'dynamic-month-year-into-posts' )
+								: __( 'Enter date in YYYY-MM-DD format.', 'dynamic-month-year-into-posts' )
+							}
 						/>
 					) }
 

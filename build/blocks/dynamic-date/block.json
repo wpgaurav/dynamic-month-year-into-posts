@@ -12,7 +12,8 @@
     "year",
     "month",
     "dynamic",
-    "time"
+    "time",
+    "age"
   ],
   "textdomain": "dynamic-month-year-into-posts",
   "attributes": {
@@ -31,6 +32,15 @@
     "date": {
       "type": "string",
       "default": ""
+    },
+    "ageFormat": {
+      "type": "string",
+      "default": "y",
+      "enum": [
+        "y",
+        "ym",
+        "ymd"
+      ]
     }
   },
   "supports": {

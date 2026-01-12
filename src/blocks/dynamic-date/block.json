@@ -25,6 +25,11 @@
 		"date": {
 			"type": "string",
 			"default": ""
+		},
+		"ageFormat": {
+			"type": "string",
+			"default": "y",
+			"enum": [ "y", "ym", "ymd" ]
 		}
 	},
 	"supports": {
