@@ -76,7 +76,7 @@ jobs:
           # Copy required files
           cp index.php build-release/${PLUGIN_SLUG}/
           cp uninstall.php build-release/${PLUGIN_SLUG}/
-          cp readme.txt build-release/${PLUGIN_SLUG}/
+          cp README.txt build-release/${PLUGIN_SLUG}/
           cp composer.json build-release/${PLUGIN_SLUG}/
           [ -f "LICENSE" ] && cp LICENSE build-release/${PLUGIN_SLUG}/ || true
           [ -f "LICENSE.txt" ] && cp LICENSE.txt build-release/${PLUGIN_SLUG}/ || true
