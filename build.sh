@@ -64,8 +64,12 @@ find "${BUILD_DIR}" -name "Thumbs.db" -delete
 find "${BUILD_DIR}" -name ".gitkeep" -delete
 find "${BUILD_DIR}" -type d -name ".git" -exec rm -rf {} + 2>/dev/null || true
 
-# Remove src JS files (only need built versions).
+# Remove markdown files (not needed in distribution).
+find "${BUILD_DIR}" -name "*.md" -delete
+
+# Remove src JS/CSS files (only need built versions).
 find "${BUILD_DIR}/${PLUGIN_SLUG}/src" -name "*.js" -delete
+find "${BUILD_DIR}/${PLUGIN_SLUG}/src" -name "*.css" -delete
 find "${BUILD_DIR}/${PLUGIN_SLUG}/src" -name "*.json" ! -name "block.json" -delete
 
 # Create zip file.

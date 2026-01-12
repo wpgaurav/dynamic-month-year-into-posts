@@ -93,8 +93,12 @@ jobs:
           # Remove git directories
           find build-release -type d -name ".git" -exec rm -rf {} + 2>/dev/null || true
 
-          # Remove JS source files from src (keep only PHP and block.json)
+          # Remove markdown files (not needed in distribution)
+          find build-release -name "*.md" -delete
+
+          # Remove JS/CSS source files from src (keep only PHP and block.json)
           find build-release/${PLUGIN_SLUG}/src -name "*.js" -delete 2>/dev/null || true
+          find build-release/${PLUGIN_SLUG}/src -name "*.css" -delete 2>/dev/null || true
           find build-release/${PLUGIN_SLUG}/src -name "*.json" ! -name "block.json" -delete 2>/dev/null || true
 
       - name: Create zip file
