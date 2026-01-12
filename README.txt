@@ -157,18 +157,6 @@ ACF field name => headline
 * New: Toolbar dropdown now shows usage examples for shortcodes with arguments.
 * Improved: Dynamic Date block now supports age calculation with configurable format options.
 
-= 1.5.5 =
-* Fix: Block Editor toolbar using RichTextToolbarButton for proper formatting toolbar integration.
-
-= 1.5.4 =
-* Fix: Block Editor toolbar button using proper BlockControls API.
-
-= 1.5.3 =
-* Fix: Block Editor crash when opening options menu.
-
-= 1.5.1 =
-* Fix: Block Editor toolbar button display and shortcode insertion.
-
 = 1.5.0 =
 * New: `[daysuntil]` and `[dayssince]` countdown shortcodes for calculating days until/since a specific date.
 * New: Block Editor toolbar button for quick shortcode insertion.
