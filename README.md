@@ -11,7 +11,7 @@ Automate SEO and content with dynamic shortcodes for dates, years, months in con
 **Tags:** content, marketing, seo, shortcode, writing, dates, dynamic content
 **Requires at least:** 3.0.1
 **Tested up to:** 6.8
-**Stable tag:** 1.5.5
+**Stable tag:** 1.6.0
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -230,6 +230,17 @@ This plugin:
 - [Request a Feature](https://gauravtiwari.org/contact/)
 
 ## Changelog
+
+### 1.6.0
+- New: Dedicated Dynamic Date Gutenberg block with live preview
+- New: Live Countdown block with Interactivity API (auto-updates at midnight)
+- New: Block Bindings API support (WP 6.5+) for binding core blocks to dynamic dates
+- New: REST API endpoints (`/wp-json/dmyip/v1/dates`, `/dmyip/v1/shortcodes`)
+- New: WP-CLI commands (`wp dmyip shortcode`, `wp dmyip list`, `wp dmyip test`)
+- New: PHPStan and PHPCS configuration for code quality
+- New: Modernized codebase with namespaced PHP classes (PSR-4 autoloading)
+- New: CI/CD pipeline with automated testing
+- Improvement: Requires WordPress 6.0+ and PHP 7.4+
 
 ### 1.5.5
 - Fix: Block Editor toolbar using RichTextToolbarButton for proper formatting toolbar integration

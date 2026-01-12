@@ -1,0 +1,26 @@
+{
+	"name": "dynamic-month-year-into-posts",
+	"version": "1.6.0",
+	"description": "Insert dynamic year, month, dates into content and meta using shortcodes and blocks.",
+	"author": "Gaurav Tiwari",
+	"license": "GPL-3.0-or-later",
+	"main": "build/index.js",
+	"scripts": {
+		"build": "wp-scripts build",
+		"start": "wp-scripts start",
+		"lint:js": "wp-scripts lint-js",
+		"lint:css": "wp-scripts lint-style",
+		"format": "wp-scripts format",
+		"packages-update": "wp-scripts packages-update"
+	},
+	"devDependencies": {
+		"@babel/runtime": "^7.28.4",
+		"@wordpress/icons": "^11.4.0",
+		"@wordpress/interactivity": "^6.37.0",
+		"@wordpress/scripts": "^28.0.0"
+	},
+	"files": [
+		"build",
+		"src"
+	]
+}

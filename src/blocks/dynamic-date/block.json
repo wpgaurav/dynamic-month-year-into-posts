@@ -1,0 +1,48 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "dmyip/dynamic-date",
+	"version": "1.6.0",
+	"title": "Dynamic Date",
+	"category": "widgets",
+	"icon": "calendar-alt",
+	"description": "Display dynamic dates that update automatically.",
+	"keywords": [ "date", "year", "month", "dynamic", "time", "age" ],
+	"textdomain": "dynamic-month-year-into-posts",
+	"attributes": {
+		"type": {
+			"type": "string",
+			"default": "year"
+		},
+		"format": {
+			"type": "string",
+			"default": ""
+		},
+		"offset": {
+			"type": "number",
+			"default": 0
+		},
+		"date": {
+			"type": "string",
+			"default": ""
+		}
+	},
+	"supports": {
+		"html": false,
+		"align": [ "left", "center", "right" ],
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		},
+		"color": {
+			"text": true,
+			"background": true
+		},
+		"spacing": {
+			"margin": true,
+			"padding": true
+		}
+	},
+	"editorScript": "file:./index.js",
+	"render": "file:./render.php"
+}

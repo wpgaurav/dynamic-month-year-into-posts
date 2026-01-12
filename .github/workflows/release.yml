@@ -1,82 +1,132 @@
-name: Build and Release Plugin
+name: Release
 
 on:
-  push:
-    tags:
-      # Match version tags like 1.4.1, 1.5.0, 2.0.0 (without v prefix)
-      - '[0-9]+.[0-9]+.[0-9]+'
+  release:
+    types: [published]
+
+env:
+  PLUGIN_SLUG: dynamic-month-year-into-posts
 
 jobs:
   build:
-    name: Build Plugin ZIP
+    name: Build Plugin Zip
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
       - name: Get version from tag
         id: get_version
-        run: echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/}
+          # Remove 'v' prefix if present
+          VERSION=${TAG_VERSION#v}
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "TAG=$TAG_VERSION" >> $GITHUB_OUTPUT
+
+      - name: Verify version matches plugin
+        run: |
+          PLUGIN_VERSION=$(grep "Version:" ${PLUGIN_SLUG}.php | head -1 | sed 's/.*Version:[[:space:]]*//' | tr -d '[:space:]')
+          TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
+          if [ "$PLUGIN_VERSION" != "$TAG_VERSION" ]; then
+            echo "::error::Plugin version ($PLUGIN_VERSION) does not match tag version ($TAG_VERSION)"
+            exit 1
+          fi
+          echo "✓ Version verified: $PLUGIN_VERSION"
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Install Composer dependencies (production)
+        run: composer install --no-dev --optimize-autoloader --no-interaction
 
       - name: Create plugin directory
         run: |
-          mkdir -p build/dynamic-month-year-into-posts
+          mkdir -p build-release/${PLUGIN_SLUG}
 
-      - name: Copy plugin files
+          # Copy main plugin file
+          cp ${PLUGIN_SLUG}.php build-release/${PLUGIN_SLUG}/
+
+          # Copy required directories
+          cp -r build build-release/${PLUGIN_SLUG}/
+          cp -r includes build-release/${PLUGIN_SLUG}/
+          cp -r src build-release/${PLUGIN_SLUG}/
+          cp -r vendor build-release/${PLUGIN_SLUG}/
+
+          # Copy optional directories
+          [ -d "assets" ] && cp -r assets build-release/${PLUGIN_SLUG}/ || true
+          [ -d "languages" ] && cp -r languages build-release/${PLUGIN_SLUG}/ || true
+
+          # Copy required files
+          cp index.php build-release/${PLUGIN_SLUG}/
+          cp uninstall.php build-release/${PLUGIN_SLUG}/
+          cp readme.txt build-release/${PLUGIN_SLUG}/
+          [ -f "LICENSE" ] && cp LICENSE build-release/${PLUGIN_SLUG}/ || true
+          [ -f "LICENSE.txt" ] && cp LICENSE.txt build-release/${PLUGIN_SLUG}/ || true
+
+      - name: Clean up development files
         run: |
-          # Copy all plugin files except dev/build files
-          rsync -av --progress . build/dynamic-month-year-into-posts/ \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='.gitignore' \
-            --exclude='.DS_Store' \
-            --exclude='node_modules' \
-            --exclude='vendor' \
-            --exclude='build' \
-            --exclude='tests' \
-            --exclude='phpcs.xml' \
-            --exclude='phpunit.xml' \
-            --exclude='composer.json' \
-            --exclude='composer.lock' \
-            --exclude='package.json' \
-            --exclude='package-lock.json' \
-            --exclude='webpack.config.js' \
-            --exclude='*.log' \
-            --exclude='*.map' \
-            --exclude='.editorconfig' \
-            --exclude='.eslintrc' \
-            --exclude='.prettierrc' \
-            --exclude='CONTRIBUTING.md' \
-            --exclude='CODE_OF_CONDUCT.md'
+          # Remove source maps
+          find build-release -name "*.map" -delete
 
-      - name: Create ZIP archive
+          # Remove OS files
+          find build-release -name ".DS_Store" -delete
+          find build-release -name "Thumbs.db" -delete
+          find build-release -name ".gitkeep" -delete
+
+          # Remove git directories
+          find build-release -type d -name ".git" -exec rm -rf {} + 2>/dev/null || true
+
+          # Remove JS source files from src (keep only PHP and block.json)
+          find build-release/${PLUGIN_SLUG}/src -name "*.js" -delete 2>/dev/null || true
+          find build-release/${PLUGIN_SLUG}/src -name "*.json" ! -name "block.json" -delete 2>/dev/null || true
+
+      - name: Create zip file
+        id: zip
         run: |
-          cd build
-          zip -r dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}.zip dynamic-month-year-into-posts
+          cd build-release
+          ZIP_NAME="${PLUGIN_SLUG}-${{ steps.get_version.outputs.VERSION }}.zip"
+          zip -rq "../${ZIP_NAME}" ${PLUGIN_SLUG}
+          cd ..
+          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_OUTPUT
+          echo "ZIP_PATH=${ZIP_NAME}" >> $GITHUB_OUTPUT
+          ls -lh ${ZIP_NAME}
 
-      - name: Create GitHub Release
-        uses: softprops/action-gh-release@v1
+      - name: Generate checksums
+        run: |
+          sha256sum ${{ steps.zip.outputs.ZIP_NAME }} > ${{ steps.zip.outputs.ZIP_NAME }}.sha256
+          md5sum ${{ steps.zip.outputs.ZIP_NAME }} > ${{ steps.zip.outputs.ZIP_NAME }}.md5
+          echo "SHA256: $(cat ${{ steps.zip.outputs.ZIP_NAME }}.sha256)"
+
+      - name: Upload plugin zip to release
+        uses: softprops/action-gh-release@v2
         with:
-          files: build/dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}.zip
-          name: Version ${{ steps.get_version.outputs.VERSION }}
-          body: |
-            ## Dynamic Month & Year into Posts v${{ steps.get_version.outputs.VERSION }}
-
-            ### Installation
-            1. Download the ZIP file below
-            2. Go to WordPress Admin → Plugins → Add New → Upload Plugin
-            3. Upload the ZIP file and activate
-
-            ### What's New
-            See the [changelog](https://github.com/${{ github.repository }}/blob/main/README.md#changelog) for details.
-          draft: false
-          prerelease: false
+          files: |
+            ${{ steps.zip.outputs.ZIP_NAME }}
+            ${{ steps.zip.outputs.ZIP_NAME }}.sha256
+            ${{ steps.zip.outputs.ZIP_NAME }}.md5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload artifact
+      - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}
-          path: build/dynamic-month-year-into-posts-${{ steps.get_version.outputs.VERSION }}.zip
+          name: ${{ env.PLUGIN_SLUG }}-${{ steps.get_version.outputs.VERSION }}
+          path: ${{ steps.zip.outputs.ZIP_NAME }}
+          retention-days: 90

@@ -1,0 +1,60 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dmyip/countdown",
+  "version": "1.6.0",
+  "title": "Live Countdown",
+  "category": "widgets",
+  "icon": "clock",
+  "description": "Display a live countdown that updates automatically.",
+  "keywords": [
+    "countdown",
+    "days",
+    "timer",
+    "until",
+    "since"
+  ],
+  "textdomain": "dynamic-month-year-into-posts",
+  "attributes": {
+    "mode": {
+      "type": "string",
+      "default": "until"
+    },
+    "targetDate": {
+      "type": "string",
+      "default": ""
+    },
+    "label": {
+      "type": "string",
+      "default": "days"
+    },
+    "showLabel": {
+      "type": "boolean",
+      "default": true
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right"
+    ],
+    "interactivity": true,
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    },
+    "color": {
+      "text": true,
+      "background": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "viewScriptModule": "file:./view.js",
+  "render": "file:./render.php"
+}

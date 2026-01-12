@@ -1,0 +1,34 @@
+includes:
+	- vendor/szepeviktor/phpstan-wordpress/extension.neon
+
+parameters:
+	level: 6
+	paths:
+		- dynamic-month-year-into-posts.php
+		- src/
+	excludePaths:
+		- vendor/
+		- node_modules/
+		- build/
+		- tests/
+		- includes/
+	treatPhpDocTypesAsCertain: false
+	ignoreErrors:
+		# WP-CLI is conditionally loaded
+		-
+			identifier: class.notFound
+			path: src/CLI/Commands.php
+		-
+			identifier: function.notFound
+			path: src/CLI/Commands.php
+		# Legacy bootstrap functions
+		-
+			message: '#Function dmyip_.* has no return type specified#'
+			path: dynamic-month-year-into-posts.php
+		# WP_REST_Request generic
+		-
+			message: '#generic class WP_REST_Request#'
+			path: src/REST/DatesEndpoint.php
+		# Iterable value types
+		-
+			identifier: missingType.iterableValue

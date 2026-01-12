@@ -1,0 +1,36 @@
+# Claude Code
+CLAUDE.md
+PLAN.md
+
+# Dependencies
+node_modules/
+vendor/
+
+# Build artifacts (commit build/ for distribution)
+# build/
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Composer
+composer.lock
+
+# npm
+package-lock.json
+
+# Testing
+.phpunit.result.cache
+coverage/
+
+# Logs
+*.log
+
+# Release artifacts
+*.zip
+build-release/

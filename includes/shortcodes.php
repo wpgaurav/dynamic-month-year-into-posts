@@ -57,13 +57,13 @@ function dmyip_rmd_current_mn() {
 // [nmonth] shortcode.
 add_shortcode( 'nmonth', 'dmyip_rmd_next_month' );
 function dmyip_rmd_next_month() {
-    return esc_html( date_i18n( 'F', mktime( 0, 0, 0, date( 'n' ) + 1, 1 ) ) );
+    return esc_html( date_i18n( 'F', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) );
 }
 
 // [cnmonth] shortcode.
 add_shortcode( 'cnmonth', 'dmyip_rmd_next_caps_month' );
 function dmyip_rmd_next_caps_month() {
-    return esc_html( ucfirst( date_i18n( 'F', mktime( 0, 0, 0, date( 'n' ) + 1, 1 ) ) ) );
+    return esc_html( ucfirst( date_i18n( 'F', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) ) );
 }
 
 // [pmonth] shortcode.
@@ -81,13 +81,13 @@ function dmyip_rmd_prev_caps_month() {
 // [nmon] shortcode.
 add_shortcode( 'nmon', 'dmyip_rmd_next_month_short' );
 function dmyip_rmd_next_month_short() {
-    return esc_html( date_i18n( 'M', mktime( 0, 0, 0, date( 'n' ) + 1, 1 ) ) );
+    return esc_html( date_i18n( 'M', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) );
 }
 
 // [cnmon] shortcode.
 add_shortcode( 'cnmon', 'dmyip_rmd_next_month_short_caps' );
 function dmyip_rmd_next_month_short_caps() {
-    return esc_html( ucfirst( date_i18n( 'M', mktime( 0, 0, 0, date( 'n' ) + 1, 1 ) ) ) );
+    return esc_html( ucfirst( date_i18n( 'M', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) ) );
 }
 
 // [pmon] shortcode.
@@ -180,15 +180,15 @@ function dmyip_rmd_current_wd() {
 // Special event shortcodes.
 add_shortcode( 'blackfriday', 'dmyip_rmd_blackfriday' );
 function dmyip_rmd_blackfriday() {
-    $year         = date( "Y" );
+    $year         = gmdate( 'Y' );
     $thanksgiving = strtotime( "fourth thursday of november $year" );
-    $black_friday = strtotime( "+1 day", $thanksgiving );
+    $black_friday = strtotime( '+1 day', $thanksgiving );
     return esc_html( date_i18n( 'F j', $black_friday ) );
 }
 
 add_shortcode( 'cybermonday', 'dmyip_rmd_cybermonday' );
 function dmyip_rmd_cybermonday() {
-    $year         = date( "Y" );
+    $year         = gmdate( 'Y' );
     $thanksgiving = strtotime( "fourth thursday of november $year" );
     $cyber_monday = strtotime( "+4 day", $thanksgiving );
     return esc_html( date_i18n( 'F j', $cyber_monday ) );
@@ -259,6 +259,91 @@ function dmyip_rmd_dayssince( $atts ) {
     return esc_html( $diff_days );
 }
 
+// Age shortcode.
+add_shortcode( 'age', 'dmyip_rmd_age' );
+/**
+ * Calculate age from a birth date.
+ * Usage: [age date="1990-05-15"] - shows years only
+ *        [age date="1990-05-15" format="ym"] - shows years and months
+ *        [age date="1990-05-15" format="ymd"] - shows years, months, and days
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string Formatted age string.
+ */
+function dmyip_rmd_age( $atts ) {
+    $attributes = shortcode_atts(
+        array(
+            'date'   => '',
+            'format' => 'y',
+        ),
+        $atts
+    );
+
+    if ( empty( $attributes['date'] ) ) {
+        return '';
+    }
+
+    $birth_date = strtotime( $attributes['date'] );
+    if ( false === $birth_date ) {
+        return '';
+    }
+
+    $birth = new DateTime( gmdate( 'Y-m-d', $birth_date ) );
+    $today = new DateTime( gmdate( 'Y-m-d' ) );
+    $diff  = $today->diff( $birth );
+
+    $format = strtolower( $attributes['format'] );
+
+    switch ( $format ) {
+        case 'ymd':
+            $parts = array();
+            if ( $diff->y > 0 ) {
+                $parts[] = sprintf(
+                    /* translators: %d: number of years */
+                    _n( '%d year', '%d years', $diff->y, 'dynamic-month-year-into-posts' ),
+                    $diff->y
+                );
+            }
+            if ( $diff->m > 0 ) {
+                $parts[] = sprintf(
+                    /* translators: %d: number of months */
+                    _n( '%d month', '%d months', $diff->m, 'dynamic-month-year-into-posts' ),
+                    $diff->m
+                );
+            }
+            if ( $diff->d > 0 ) {
+                $parts[] = sprintf(
+                    /* translators: %d: number of days */
+                    _n( '%d day', '%d days', $diff->d, 'dynamic-month-year-into-posts' ),
+                    $diff->d
+                );
+            }
+            return esc_html( implode( ', ', $parts ) );
+
+        case 'ym':
+            $parts = array();
+            if ( $diff->y > 0 ) {
+                $parts[] = sprintf(
+                    /* translators: %d: number of years */
+                    _n( '%d year', '%d years', $diff->y, 'dynamic-month-year-into-posts' ),
+                    $diff->y
+                );
+            }
+            if ( $diff->m > 0 ) {
+                $parts[] = sprintf(
+                    /* translators: %d: number of months */
+                    _n( '%d month', '%d months', $diff->m, 'dynamic-month-year-into-posts' ),
+                    $diff->m
+                );
+            }
+            return esc_html( implode( ', ', $parts ) );
+
+        case 'y':
+        default:
+            return esc_html( (string) $diff->y );
+    }
+}
+
 // Published and Modified Date shortcodes.
 add_shortcode( 'datepublished', 'dmyip_rmd_published' );
 function dmyip_rmd_published() {
@@ -277,7 +362,7 @@ function dmyip_rmd_modified() {
 // Settings link for plugin action links.
 add_filter( 'plugin_action_links_dynamic-month-year-into-posts/dynamic-month-year-into-posts.php', 'dmyip_settings_link' );
 function dmyip_settings_link( $links ) {
-    $settings_link = '<a href="https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes">' . __( 'List of Shortcodes' ) . '</a>';
+    $settings_link = '<a href="https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes">' . __( 'List of Shortcodes', 'dynamic-month-year-into-posts' ) . '</a>';
     $links[] = $settings_link;
     return $links;
 }

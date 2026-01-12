@@ -1,10 +1,10 @@
 === Dynamic Month & Year into Posts ===
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
-Tags: content, marketing, seo, shortcode, writing, dates, dynamic content
-Requires at least: 3.0.1
-Tested up to: 6.8
-Stable tag: 1.5.5
+Tags: dynamic content, shortcode, seo, dates, year
+Requires at least: 6.0
+Tested up to: 6.9
+Stable tag: 1.6.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
