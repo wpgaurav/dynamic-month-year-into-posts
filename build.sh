@@ -73,6 +73,9 @@ find "${BUILD_DIR}/${PLUGIN_SLUG}/src" -name "*.js" -delete
 find "${BUILD_DIR}/${PLUGIN_SLUG}/src" -name "*.css" -delete
 find "${BUILD_DIR}/${PLUGIN_SLUG}/src" -name "*.json" ! -name "block.json" -delete
 
+# Remove empty directories.
+find "${BUILD_DIR}" -type d -empty -delete
+
 # Create zip file.
 echo "Creating zip file..."
 cd "${BUILD_DIR}"
