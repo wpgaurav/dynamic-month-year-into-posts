@@ -8,14 +8,19 @@
 import './blocks/dynamic-date';
 import './blocks/countdown';
 
-// Toolbar button for inserting shortcodes into RichText
-import { insert, create } from '@wordpress/rich-text';
+// Editor styles
+import './editor.css';
+
+// Register the toolbar format type for inserting shortcodes into RichText
+import { registerFormatType, insert, create, applyFormat } from '@wordpress/rich-text';
 import { RichTextToolbarButton } from '@wordpress/block-editor';
 import { Popover, Button } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { calendar } from '@wordpress/icons';
-import { registerFormatType } from '@wordpress/rich-text';
+
+// Format type name
+const FORMAT_TYPE = 'dmyip/shortcode';
 
 /**
  * Shortcode categories for the toolbar dropdown.
@@ -79,15 +84,24 @@ const SHORTCODE_CATEGORIES = [
 ];
 
 /**
- * Toolbar button component for inserting shortcodes.
+ * Format type edit component for the toolbar button.
  */
-function DynamicDateToolbarButton( { value, onChange } ) {
+function DynamicDateFormatEdit( { value, onChange, isActive } ) {
 	const [ isOpen, setIsOpen ] = useState( false );
 
+	const togglePopover = () => setIsOpen( ! isOpen );
+
 	const insertShortcode = ( shortcode ) => {
-		// Insert as plain text without any formatting
+		// Create the shortcode text
 		const toInsert = create( { text: shortcode } );
-		onChange( insert( value, toInsert ) );
+
+		// Apply the format to highlight it
+		const formattedValue = applyFormat( toInsert, {
+			type: FORMAT_TYPE,
+		}, 0, shortcode.length );
+
+		// Insert the formatted shortcode
+		onChange( insert( value, formattedValue ) );
 		setIsOpen( false );
 	};
 
@@ -96,7 +110,7 @@ function DynamicDateToolbarButton( { value, onChange } ) {
 			<RichTextToolbarButton
 				icon={ calendar }
 				title={ __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ) }
-				onClick={ () => setIsOpen( ! isOpen ) }
+				onClick={ togglePopover }
 				isActive={ isOpen }
 			/>
 			{ isOpen && (
@@ -180,12 +194,11 @@ function DynamicDateToolbarButton( { value, onChange } ) {
 }
 
 /**
- * Register a format type just to get the toolbar button.
- * The format itself doesn't apply any styling.
+ * Register the format type for the toolbar.
  */
-registerFormatType( 'dmyip/shortcode', {
+registerFormatType( FORMAT_TYPE, {
 	title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
 	tagName: 'span',
-	className: null,
-	edit: DynamicDateToolbarButton,
+	className: 'dmyip-shortcode',
+	edit: DynamicDateFormatEdit,
 } );

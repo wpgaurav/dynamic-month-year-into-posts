@@ -58,7 +58,6 @@ class CoreFilters {
 		'dayssince',
 		'datepublished',
 		'datemodified',
-		'age',
 	];
 
 	/**
@@ -132,5 +131,4 @@ class CoreFilters {
 			'</a>';
 		return $links;
 	}
-
 }

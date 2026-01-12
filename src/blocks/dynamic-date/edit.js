@@ -339,7 +339,7 @@ export default function Edit( { attributes, setAttributes } ) {
 				</PanelBody>
 			</InspectorControls>
 
-			<p { ...blockProps }>{ previewText }</p>
+			<span { ...blockProps }>{ previewText }</span>
 		</>
 	);
 }
