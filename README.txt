@@ -22,6 +22,7 @@ But that's not it.
 
 * New: Add post modified date by using `[datemodified]` and post publication date by using `[datepublished]` shortcodes.
 * New: Ace Black Friday with new dynamic shortcodes. Black Friday and Cyber Monday dates can be inserted anywhere by using `[blackfriday]` and `[cybermonday]`.
+* New: Calculate age with `[age date="1990-05-15"]` shortcode. Supports multiple formats: years only, years & months (`format="ym"`), or full age (`format="ymd"`).
 
 ### Works with popular SEO Plugins
 
@@ -146,6 +147,16 @@ ACF field name => headline
 
 
 == Changelog ==
+= 1.6.0 =
+* New: `[age]` shortcode to calculate and display age from a birth date. Supports three formats:
+  * `[age date="1990-05-15"]` - Years only (e.g., "34")
+  * `[age date="1990-05-15" format="ym"]` - Years and months (e.g., "34 years, 7 months")
+  * `[age date="1990-05-15" format="ymd"]` - Full age (e.g., "34 years, 7 months, 12 days")
+* New: 6 additional Block Patterns - Age Display Card, Birthday Countdown, Experience Badge, New Year Countdown, Days Since Milestone, and Promotional Banner with CTA.
+* New: Shortcodes inserted via toolbar are now highlighted with orange background in the editor for better visibility.
+* New: Toolbar dropdown now shows usage examples for shortcodes with arguments.
+* Improved: Dynamic Date block now supports age calculation with configurable format options.
+
 = 1.5.5 =
 * Fix: Block Editor toolbar using RichTextToolbarButton for proper formatting toolbar integration.
 

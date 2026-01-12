@@ -8,13 +8,19 @@
 import './blocks/dynamic-date';
 import './blocks/countdown';
 
+// Editor styles
+import './editor.css';
+
 // Register the toolbar format type for inserting shortcodes into RichText
-import { registerFormatType, insert, create } from '@wordpress/rich-text';
+import { registerFormatType, insert, create, applyFormat } from '@wordpress/rich-text';
 import { RichTextToolbarButton } from '@wordpress/block-editor';
 import { Popover, Button } from '@wordpress/components';
 import { useState } from '@wordpress/element';
 import { __ } from '@wordpress/i18n';
 import { calendar } from '@wordpress/icons';
+
+// Format type name
+const FORMAT_TYPE = 'dmyip/shortcode';
 
 /**
  * Shortcode categories for the toolbar dropdown.
@@ -63,16 +69,16 @@ const SHORTCODE_CATEGORIES = [
 	{
 		label: __( 'Countdown', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[daysuntil date=""]', desc: __( 'Days until date', 'dynamic-month-year-into-posts' ) },
-			{ code: '[dayssince date=""]', desc: __( 'Days since date', 'dynamic-month-year-into-posts' ) },
+			{ code: '[daysuntil date=""]', desc: __( 'e.g. date="2025-12-25"', 'dynamic-month-year-into-posts' ) },
+			{ code: '[dayssince date=""]', desc: __( 'e.g. date="2020-01-01"', 'dynamic-month-year-into-posts' ) },
 		],
 	},
 	{
 		label: __( 'Age', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[age date=""]', desc: __( 'Age in years', 'dynamic-month-year-into-posts' ) },
-			{ code: '[age date="" format="ym"]', desc: __( 'Years & months', 'dynamic-month-year-into-posts' ) },
-			{ code: '[age date="" format="ymd"]', desc: __( 'Full age', 'dynamic-month-year-into-posts' ) },
+			{ code: '[age date=""]', desc: __( 'e.g. date="1990-05-15"', 'dynamic-month-year-into-posts' ) },
+			{ code: '[age date="" format="ym"]', desc: __( '34 years, 7 months', 'dynamic-month-year-into-posts' ) },
+			{ code: '[age date="" format="ymd"]', desc: __( '34 years, 7 months, 12 days', 'dynamic-month-year-into-posts' ) },
 		],
 	},
 ];
@@ -86,8 +92,16 @@ function DynamicDateFormatEdit( { value, onChange, isActive } ) {
 	const togglePopover = () => setIsOpen( ! isOpen );
 
 	const insertShortcode = ( shortcode ) => {
+		// Create the shortcode text
 		const toInsert = create( { text: shortcode } );
-		onChange( insert( value, toInsert ) );
+
+		// Apply the format to highlight it
+		const formattedValue = applyFormat( toInsert, {
+			type: FORMAT_TYPE,
+		}, 0, shortcode.length );
+
+		// Insert the formatted shortcode
+		onChange( insert( value, formattedValue ) );
 		setIsOpen( false );
 	};
 
@@ -182,7 +196,7 @@ function DynamicDateFormatEdit( { value, onChange, isActive } ) {
 /**
  * Register the format type for the toolbar.
  */
-registerFormatType( 'dmyip/shortcode', {
+registerFormatType( FORMAT_TYPE, {
 	title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
 	tagName: 'span',
 	className: 'dmyip-shortcode',
