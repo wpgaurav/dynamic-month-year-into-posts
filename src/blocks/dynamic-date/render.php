@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string $format Format: 'y', 'ym', or 'ymd'.
  * @return string Formatted age string.
  */
-function dmyip_render_age( $date, $format = 'y' ) {
+function dmyip_block_render_age( $date, $format = 'y' ) {
 	if ( empty( $date ) ) {
 		return '0';
 	}
@@ -58,7 +58,7 @@ function dmyip_render_age( $date, $format = 'y' ) {
 					$diff->d
 				);
 			}
-			return implode( ', ', $parts );
+			return implode( ', ', $parts ) ?: '0 days';
 
 		case 'ym':
 			$parts = [];
@@ -76,7 +76,7 @@ function dmyip_render_age( $date, $format = 'y' ) {
 					$diff->m
 				);
 			}
-			return implode( ', ', $parts );
+			return implode( ', ', $parts ) ?: '0 months';
 
 		case 'y':
 		default:
@@ -84,142 +84,138 @@ function dmyip_render_age( $date, $format = 'y' ) {
 	}
 }
 
-// Wrap in IIFE to avoid global variable pollution.
-call_user_func(
-	static function ( $attributes ) {
-		$dmyip_type   = $attributes['type'] ?? 'year';
-		$dmyip_format = $attributes['format'] ?? '';
-		$dmyip_offset = $attributes['offset'] ?? 0;
-		$dmyip_date   = $attributes['date'] ?? '';
+/**
+ * Get the date output based on type.
+ *
+ * @param string $type   Date type.
+ * @param string $format Custom format.
+ * @param int    $offset Offset value.
+ * @param string $date   Target date.
+ * @return string
+ */
+function dmyip_block_get_output( $type, $format, $offset, $date ) {
+	switch ( $type ) {
+		case 'year':
+			$year = (int) date_i18n( 'Y' ) + (int) $offset;
+			return (string) $year;
 
-		/**
-		 * Get the date output based on type.
-		 *
-		 * @param string $type   Date type.
-		 * @param string $format Custom format.
-		 * @param int    $offset Offset value.
-		 * @param string $date   Target date for countdown.
-		 * @return string
-		 */
-		$dmyip_get_output = static function ( $type, $format, $offset, $date ) {
-			switch ( $type ) {
-				case 'year':
-					$year = (int) date_i18n( 'Y' ) + (int) $offset;
-					return (string) $year;
+		case 'nyear':
+			return (string) ( (int) date_i18n( 'Y' ) + 1 );
 
-				case 'nyear':
-					return (string) ( (int) date_i18n( 'Y' ) + 1 );
+		case 'pyear':
+			return (string) ( (int) date_i18n( 'Y' ) - 1 );
 
-				case 'pyear':
-					return (string) ( (int) date_i18n( 'Y' ) - 1 );
+		case 'month':
+			return date_i18n( 'F' );
 
-				case 'month':
-					return date_i18n( 'F' );
+		case 'month_short':
+			return date_i18n( 'M' );
 
-				case 'month_short':
-					return date_i18n( 'M' );
+		case 'month_number':
+			return date_i18n( 'n' );
 
-				case 'month_number':
-					return date_i18n( 'n' );
+		case 'nmonth':
+			return date_i18n( 'F', strtotime( '+1 month' ) );
 
-				case 'nmonth':
-					return date_i18n( 'F', strtotime( '+1 month' ) );
+		case 'pmonth':
+			return date_i18n( 'F', strtotime( '-1 month' ) );
 
-				case 'pmonth':
-					return date_i18n( 'F', strtotime( '-1 month' ) );
+		case 'date':
+			$date_format = ! empty( $format ) ? $format : 'F j, Y';
+			return date_i18n( $date_format );
 
-				case 'date':
-					$date_format = ! empty( $format ) ? $format : 'F j, Y';
-					return date_i18n( $date_format );
+		case 'monthyear':
+			return date_i18n( 'F Y' );
 
-				case 'monthyear':
-					return date_i18n( 'F Y' );
+		case 'day':
+			return date_i18n( 'j' );
 
-				case 'day':
-					return date_i18n( 'j' );
+		case 'weekday':
+			return date_i18n( 'l' );
 
-				case 'weekday':
-					return date_i18n( 'l' );
+		case 'weekday_short':
+			return date_i18n( 'D' );
 
-				case 'weekday_short':
-					return date_i18n( 'D' );
-
-				case 'published':
-					$timestamp = get_the_time( 'U' );
-					if ( ! $timestamp ) {
-						return '';
-					}
-					return date_i18n( get_option( 'date_format' ), (int) $timestamp );
-
-				case 'modified':
-					$timestamp = get_the_modified_time( 'U' );
-					if ( ! $timestamp ) {
-						return '';
-					}
-					return date_i18n( get_option( 'date_format' ), (int) $timestamp );
-
-				case 'blackfriday':
-					$year         = gmdate( 'Y' );
-					$thanksgiving = strtotime( "fourth thursday of november {$year}" );
-					if ( ! $thanksgiving ) {
-						return '';
-					}
-					return date_i18n( 'F j', strtotime( '+1 day', $thanksgiving ) );
-
-				case 'cybermonday':
-					$year         = gmdate( 'Y' );
-					$thanksgiving = strtotime( "fourth thursday of november {$year}" );
-					if ( ! $thanksgiving ) {
-						return '';
-					}
-					return date_i18n( 'F j', strtotime( '+4 days', $thanksgiving ) );
-
-				case 'daysuntil':
-					if ( empty( $date ) ) {
-						return '0';
-					}
-					$target = strtotime( $date );
-					$today  = strtotime( 'today' );
-					if ( ! $target || ! $today ) {
-						return '0';
-					}
-					$diff = (int) floor( ( $target - $today ) / DAY_IN_SECONDS );
-					return (string) max( 0, $diff );
-
-				case 'dayssince':
-					if ( empty( $date ) ) {
-						return '0';
-					}
-					$target = strtotime( $date );
-					$today  = strtotime( 'today' );
-					if ( ! $target || ! $today ) {
-						return '0';
-					}
-					$diff = (int) floor( ( $today - $target ) / DAY_IN_SECONDS );
-					return (string) max( 0, $diff );
-
-				case 'age':
-					return dmyip_render_age( $date, 'y' );
-
-				case 'age_ym':
-					return dmyip_render_age( $date, 'ym' );
-
-				case 'age_ymd':
-					return dmyip_render_age( $date, 'ymd' );
-
-				default:
-					return date_i18n( 'Y' );
+		case 'published':
+			$timestamp = get_the_time( 'U' );
+			if ( ! $timestamp ) {
+				return '';
 			}
-		};
+			return date_i18n( get_option( 'date_format' ), (int) $timestamp );
 
-		$dmyip_output = $dmyip_get_output( $dmyip_type, $dmyip_format, $dmyip_offset, $dmyip_date );
+		case 'modified':
+			$timestamp = get_the_modified_time( 'U' );
+			if ( ! $timestamp ) {
+				return '';
+			}
+			return date_i18n( get_option( 'date_format' ), (int) $timestamp );
 
-		printf(
-			'<p %s>%s</p>',
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() is safe.
-			get_block_wrapper_attributes(),
-			esc_html( $dmyip_output )
-		);
-	},
-	$attributes
+		case 'blackfriday':
+			$year         = gmdate( 'Y' );
+			$thanksgiving = strtotime( "fourth thursday of november {$year}" );
+			if ( ! $thanksgiving ) {
+				return '';
+			}
+			return date_i18n( 'F j', strtotime( '+1 day', $thanksgiving ) );
+
+		case 'cybermonday':
+			$year         = gmdate( 'Y' );
+			$thanksgiving = strtotime( "fourth thursday of november {$year}" );
+			if ( ! $thanksgiving ) {
+				return '';
+			}
+			return date_i18n( 'F j', strtotime( '+4 days', $thanksgiving ) );
+
+		case 'daysuntil':
+			if ( empty( $date ) ) {
+				return '0';
+			}
+			$target = strtotime( $date );
+			$today  = strtotime( 'today' );
+			if ( ! $target || ! $today ) {
+				return '0';
+			}
+			$diff = (int) floor( ( $target - $today ) / DAY_IN_SECONDS );
+			return (string) max( 0, $diff );
+
+		case 'dayssince':
+			if ( empty( $date ) ) {
+				return '0';
+			}
+			$target = strtotime( $date );
+			$today  = strtotime( 'today' );
+			if ( ! $target || ! $today ) {
+				return '0';
+			}
+			$diff = (int) floor( ( $today - $target ) / DAY_IN_SECONDS );
+			return (string) max( 0, $diff );
+
+		case 'age':
+			return dmyip_block_render_age( $date, 'y' );
+
+		case 'age_ym':
+			return dmyip_block_render_age( $date, 'ym' );
+
+		case 'age_ymd':
+			return dmyip_block_render_age( $date, 'ymd' );
+
+		default:
+			return date_i18n( 'Y' );
+	}
+}
+
+// Get attributes with defaults.
+$type   = $attributes['type'] ?? 'year';
+$format = $attributes['format'] ?? '';
+$offset = $attributes['offset'] ?? 0;
+$date   = $attributes['date'] ?? '';
+
+// Get the output.
+$output = dmyip_block_get_output( $type, $format, $offset, $date );
+
+// Render the block.
+printf(
+	'<p %s>%s</p>',
+	get_block_wrapper_attributes(),
+	esc_html( $output )
 );
