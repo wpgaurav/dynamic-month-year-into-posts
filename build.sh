@@ -53,6 +53,7 @@ cp -r vendor "${BUILD_DIR}/${PLUGIN_SLUG}/"
 cp index.php "${BUILD_DIR}/${PLUGIN_SLUG}/"
 cp uninstall.php "${BUILD_DIR}/${PLUGIN_SLUG}/"
 cp readme.txt "${BUILD_DIR}/${PLUGIN_SLUG}/"
+cp composer.json "${BUILD_DIR}/${PLUGIN_SLUG}/"
 [ -f "LICENSE" ] && cp LICENSE "${BUILD_DIR}/${PLUGIN_SLUG}/"
 [ -f "LICENSE.txt" ] && cp LICENSE.txt "${BUILD_DIR}/${PLUGIN_SLUG}/"
 
