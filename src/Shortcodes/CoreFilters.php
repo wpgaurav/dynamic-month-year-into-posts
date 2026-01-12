@@ -80,11 +80,6 @@ class CoreFilters {
 		// Enable shortcodes in archive titles.
 		add_filter( 'get_the_archive_title', [ $this, 'archive_title_shortcodes' ] );
 
-		// Strip editor-only span wrapper on frontend (before shortcode processing).
-		if ( ! is_admin() ) {
-			add_filter( 'the_content', [ $this, 'strip_editor_wrapper' ], 5 );
-		}
-
 		// Plugin action links.
 		add_filter(
 			'plugin_action_links_dynamic-month-year-into-posts/dynamic-month-year-into-posts.php',
@@ -138,20 +133,4 @@ class CoreFilters {
 		return $links;
 	}
 
-	/**
-	 * Strip editor-only span wrapper from content on frontend.
-	 *
-	 * The block editor wraps shortcodes in <span class="dmyip-shortcode">
-	 * for styling. This removes the wrapper before shortcode processing.
-	 *
-	 * @param string $content Post content.
-	 * @return string
-	 */
-	public function strip_editor_wrapper( string $content ): string {
-		return preg_replace(
-			'/<span[^>]*class="[^"]*dmyip-shortcode[^"]*"[^>]*>(\[.+?\])<\/span>/s',
-			'$1',
-			$content
-		);
-	}
 }

@@ -13,52 +13,9 @@ if ( ! defined( 'WPINC' ) ) {
 }
 
 /**
- * Enqueue block editor assets.
+ * Block editor assets are now enqueued via src/BlockEditor/Assets.php
+ * This file only handles block patterns and other non-asset registrations.
  */
-function dmyip_enqueue_block_editor_assets() {
-    $plugin_url = plugin_dir_url( dirname( __FILE__ ) );
-    $plugin_dir = plugin_dir_path( dirname( __FILE__ ) );
-
-    // Editor JavaScript.
-    wp_enqueue_script(
-        'dmyip-editor',
-        $plugin_url . 'assets/js/editor.js',
-        array(
-            'wp-blocks',
-            'wp-element',
-            'wp-editor',
-            'wp-components',
-            'wp-plugins',
-            'wp-edit-post',
-            'wp-rich-text',
-            'wp-block-editor',
-            'wp-i18n',
-            'wp-data',
-        ),
-        DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION,
-        true
-    );
-
-    // Editor CSS.
-    wp_enqueue_style(
-        'dmyip-editor',
-        $plugin_url . 'assets/css/editor.css',
-        array(),
-        DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION
-    );
-
-    // Pass data to JavaScript.
-    wp_localize_script(
-        'dmyip-editor',
-        'dmyipData',
-        array(
-            'currentYear'  => date_i18n( 'Y' ),
-            'currentMonth' => date_i18n( 'F' ),
-            'currentDate'  => date_i18n( 'F j, Y' ),
-        )
-    );
-}
-add_action( 'enqueue_block_editor_assets', 'dmyip_enqueue_block_editor_assets' );
 
 /**
  * Register block pattern category.

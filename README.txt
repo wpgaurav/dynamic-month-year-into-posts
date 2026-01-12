@@ -154,7 +154,6 @@ ACF field name => headline
   * `[age date="1990-05-15" format="ymd"]` - Full age (e.g., "34 years, 7 months, 12 days")
 * New: 6 additional Block Patterns - Age Display Card, Birthday Countdown, Experience Badge, New Year Countdown, Days Since Milestone, and Promotional Banner with CTA.
 * New: Shortcodes inserted via toolbar are now highlighted with orange background in the editor for better visibility.
-* New: Shortcodes in the Block Editor now show rendered preview values (e.g., "2026") when not being edited.
 * New: Toolbar dropdown now shows usage examples for shortcodes with arguments.
 * Improved: Dynamic Date block now supports age calculation with configurable format options.
 
