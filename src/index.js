@@ -12,7 +12,7 @@ import './blocks/countdown';
 import './editor.css';
 
 // Register the toolbar format type for inserting shortcodes into RichText
-import { registerFormatType, insert, create, applyFormat } from '@wordpress/rich-text';
+import { registerFormatType, insert, create } from '@wordpress/rich-text';
 import { RichTextToolbarButton } from '@wordpress/block-editor';
 import { Popover, Button } from '@wordpress/components';
 import { useState } from '@wordpress/element';
@@ -29,79 +29,150 @@ const SHORTCODE_CATEGORIES = [
 	{
 		label: __( 'Year', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[year]', desc: __( 'Current year', 'dynamic-month-year-into-posts' ) },
-			{ code: '[nyear]', desc: __( 'Next year', 'dynamic-month-year-into-posts' ) },
-			{ code: '[pyear]', desc: __( 'Previous year', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[year]',
+				desc: __( 'Current year', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[nyear]',
+				desc: __( 'Next year', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[pyear]',
+				desc: __( 'Previous year', 'dynamic-month-year-into-posts' ),
+			},
 		],
 	},
 	{
 		label: __( 'Month', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[month]', desc: __( 'Current month', 'dynamic-month-year-into-posts' ) },
-			{ code: '[mon]', desc: __( 'Month (short)', 'dynamic-month-year-into-posts' ) },
-			{ code: '[nmonth]', desc: __( 'Next month', 'dynamic-month-year-into-posts' ) },
-			{ code: '[pmonth]', desc: __( 'Previous month', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[month]',
+				desc: __( 'Current month', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[mon]',
+				desc: __( 'Month (short)', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[nmonth]',
+				desc: __( 'Next month', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[pmonth]',
+				desc: __( 'Previous month', 'dynamic-month-year-into-posts' ),
+			},
 		],
 	},
 	{
 		label: __( 'Date', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[date]', desc: __( "Today's date", 'dynamic-month-year-into-posts' ) },
-			{ code: '[monthyear]', desc: __( 'Month and year', 'dynamic-month-year-into-posts' ) },
-			{ code: '[dt]', desc: __( 'Day of month', 'dynamic-month-year-into-posts' ) },
-			{ code: '[weekday]', desc: __( 'Day of week', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[date]',
+				desc: __( "Today's date", 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[monthyear]',
+				desc: __( 'Month and year', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[dt]',
+				desc: __( 'Day of month', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[weekday]',
+				desc: __( 'Day of week', 'dynamic-month-year-into-posts' ),
+			},
 		],
 	},
 	{
 		label: __( 'Post Dates', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[datepublished]', desc: __( 'Publication date', 'dynamic-month-year-into-posts' ) },
-			{ code: '[datemodified]', desc: __( 'Modified date', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[datepublished]',
+				desc: __( 'Publication date', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[datemodified]',
+				desc: __( 'Modified date', 'dynamic-month-year-into-posts' ),
+			},
 		],
 	},
 	{
 		label: __( 'Events', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[blackfriday]', desc: __( 'Black Friday', 'dynamic-month-year-into-posts' ) },
-			{ code: '[cybermonday]', desc: __( 'Cyber Monday', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[blackfriday]',
+				desc: __( 'Black Friday', 'dynamic-month-year-into-posts' ),
+			},
+			{
+				code: '[cybermonday]',
+				desc: __( 'Cyber Monday', 'dynamic-month-year-into-posts' ),
+			},
 		],
 	},
 	{
 		label: __( 'Countdown', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[daysuntil date=""]', desc: __( 'e.g. date="2025-12-25"', 'dynamic-month-year-into-posts' ) },
-			{ code: '[dayssince date=""]', desc: __( 'e.g. date="2020-01-01"', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[daysuntil date=""]',
+				desc: __(
+					'e.g. date="2025-12-25"',
+					'dynamic-month-year-into-posts'
+				),
+			},
+			{
+				code: '[dayssince date=""]',
+				desc: __(
+					'e.g. date="2020-01-01"',
+					'dynamic-month-year-into-posts'
+				),
+			},
 		],
 	},
 	{
 		label: __( 'Age', 'dynamic-month-year-into-posts' ),
 		shortcodes: [
-			{ code: '[age date=""]', desc: __( 'e.g. date="1990-05-15"', 'dynamic-month-year-into-posts' ) },
-			{ code: '[age date="" format="ym"]', desc: __( '34 years, 7 months', 'dynamic-month-year-into-posts' ) },
-			{ code: '[age date="" format="ymd"]', desc: __( '34 years, 7 months, 12 days', 'dynamic-month-year-into-posts' ) },
+			{
+				code: '[age date=""]',
+				desc: __(
+					'e.g. date="1990-05-15"',
+					'dynamic-month-year-into-posts'
+				),
+			},
+			{
+				code: '[age date="" format="ym"]',
+				desc: __(
+					'34 years, 7 months',
+					'dynamic-month-year-into-posts'
+				),
+			},
+			{
+				code: '[age date="" format="ymd"]',
+				desc: __(
+					'34 years, 7 months, 12 days',
+					'dynamic-month-year-into-posts'
+				),
+			},
 		],
 	},
 ];
 
 /**
  * Format type edit component for the toolbar button.
+ *
+ * @param {Object} props          Component props.
+ * @param {Object} props.value    RichText value.
+ * @param {Function} props.onChange RichText onChange handler.
  */
-function DynamicDateFormatEdit( { value, onChange, isActive } ) {
+function DynamicDateFormatEdit( { value, onChange } ) {
 	const [ isOpen, setIsOpen ] = useState( false );
 
 	const togglePopover = () => setIsOpen( ! isOpen );
 
 	const insertShortcode = ( shortcode ) => {
-		// Create the shortcode text
-		const toInsert = create( { text: shortcode } );
-
-		// Apply the format to highlight it
-		const formattedValue = applyFormat( toInsert, {
-			type: FORMAT_TYPE,
-		}, 0, shortcode.length );
-
-		// Insert the formatted shortcode
-		onChange( insert( value, formattedValue ) );
+		// Insert plain text shortcode without any formatting
+		onChange( insert( value, create( { text: shortcode } ) ) );
 		setIsOpen( false );
 	};
 
@@ -109,7 +180,10 @@ function DynamicDateFormatEdit( { value, onChange, isActive } ) {
 		<>
 			<RichTextToolbarButton
 				icon={ calendar }
-				title={ __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ) }
+				title={ __(
+					'Insert Dynamic Date',
+					'dynamic-month-year-into-posts'
+				) }
 				onClick={ togglePopover }
 				isActive={ isOpen }
 			/>
@@ -135,10 +209,16 @@ function DynamicDateFormatEdit( { value, onChange, isActive } ) {
 								borderBottom: '1px solid #ddd',
 							} }
 						>
-							{ __( 'Insert Dynamic Date', 'dynamic-month-year-into-posts' ) }
+							{ __(
+								'Insert Dynamic Date',
+								'dynamic-month-year-into-posts'
+							) }
 						</div>
 						{ SHORTCODE_CATEGORIES.map( ( category, catIndex ) => (
-							<div key={ `cat-${ catIndex }` } style={ { marginBottom: '10px' } }>
+							<div
+								key={ `cat-${ catIndex }` }
+								style={ { marginBottom: '10px' } }
+							>
 								<div
 									style={ {
 										fontSize: '11px',
@@ -150,40 +230,44 @@ function DynamicDateFormatEdit( { value, onChange, isActive } ) {
 								>
 									{ category.label }
 								</div>
-								{ category.shortcodes.map( ( item, itemIndex ) => (
-									<Button
-										key={ `item-${ catIndex }-${ itemIndex }` }
-										variant="tertiary"
-										onClick={ () => insertShortcode( item.code ) }
-										style={ {
-											display: 'flex',
-											width: '100%',
-											justifyContent: 'space-between',
-											padding: '4px 8px',
-											height: 'auto',
-											marginBottom: '2px',
-										} }
-									>
-										<code
+								{ category.shortcodes.map(
+									( item, itemIndex ) => (
+										<Button
+											key={ `item-${ catIndex }-${ itemIndex }` }
+											variant="tertiary"
+											onClick={ () =>
+												insertShortcode( item.code )
+											}
 											style={ {
-												fontSize: '11px',
-												background: '#f0f0f0',
-												padding: '2px 4px',
-												borderRadius: '2px',
+												display: 'flex',
+												width: '100%',
+												justifyContent: 'space-between',
+												padding: '4px 8px',
+												height: 'auto',
+												marginBottom: '2px',
 											} }
 										>
-											{ item.code }
-										</code>
-										<span
-											style={ {
-												fontSize: '11px',
-												color: '#757575',
-											} }
-										>
-											{ item.desc }
-										</span>
-									</Button>
-								) ) }
+											<code
+												style={ {
+													fontSize: '11px',
+													background: '#f0f0f0',
+													padding: '2px 4px',
+													borderRadius: '2px',
+												} }
+											>
+												{ item.code }
+											</code>
+											<span
+												style={ {
+													fontSize: '11px',
+													color: '#757575',
+												} }
+											>
+												{ item.desc }
+											</span>
+										</Button>
+									)
+								) }
 							</div>
 						) ) }
 					</div>
