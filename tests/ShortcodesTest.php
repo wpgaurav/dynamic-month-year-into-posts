@@ -212,7 +212,7 @@ class ShortcodesTest extends TestCase {
 		$this->assertNotEmpty( $result );
 		// Cyber Monday can be in November or December.
 		$this->assertTrue(
-			str_contains( $result, 'November' ) || str_contains( $result, 'December' )
+			strpos( $result, 'November' ) !== false || strpos( $result, 'December' ) !== false
 		);
 	}
 
