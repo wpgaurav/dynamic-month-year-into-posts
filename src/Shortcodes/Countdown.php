@@ -123,11 +123,14 @@ class Countdown {
 
 		$format = strtolower( (string) $attributes['format'] );
 
-		return match ( $format ) {
-			'ymd' => $this->format_age_ymd( $diff ),
-			'ym'  => $this->format_age_ym( $diff ),
-			default => esc_html( (string) $diff->y ),
-		};
+		switch ( $format ) {
+			case 'ymd':
+				return $this->format_age_ymd( $diff );
+			case 'ym':
+				return $this->format_age_ym( $diff );
+			default:
+				return esc_html( (string) $diff->y );
+		}
 	}
 
 	/**

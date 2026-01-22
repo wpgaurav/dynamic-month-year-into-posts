@@ -33,3 +33,6 @@ coverage/
 # Release artifacts
 *.zip
 build-release/
+
+# Files
+md-section-for-plugin.html

@@ -53,23 +53,12 @@ call_user_func(
 			]
 		);
 
-		?>
-		<span
-			<?php
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- get_block_wrapper_attributes() is safe.
-			echo get_block_wrapper_attributes();
-			?>
-			data-wp-interactive="dmyip/countdown"
-			<?php
-			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- wp_interactivity_data_wp_context() is safe.
-			echo wp_interactivity_data_wp_context( $dmyip_context );
-			?>
-			data-wp-init="callbacks.init"
-			data-wp-text="state.displayText"
-		>
-			<?php echo esc_html( $dmyip_display_text ); ?>
-		</span>
-		<?php
+		printf(
+			'<span %s data-wp-interactive="dmyip/countdown" %s data-wp-init="callbacks.init" data-wp-text="state.displayText">%s</span>',
+			wp_kses_post( get_block_wrapper_attributes() ),
+			wp_kses_data( wp_interactivity_data_wp_context( $dmyip_context ) ),
+			esc_html( $dmyip_display_text )
+		);
 	},
 	$attributes
 );

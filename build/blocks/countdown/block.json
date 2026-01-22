@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "dmyip/countdown",
-  "version": "1.6.0",
+  "version": "1.6.2",
   "title": "Live Countdown",
   "category": "widgets",
   "icon": "clock",

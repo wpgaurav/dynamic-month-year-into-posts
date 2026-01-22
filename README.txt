@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.6.0
+Stable tag: 1.6.2
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -147,6 +147,13 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.6.2 =
+* More PHP 7.4 improvements
+
+= 1.6.1 =
+* Fix: Countdown timer was not compatible with < PHP8
+
 = 1.6.0 =
 * New: `[age]` shortcode to calculate and display age from a birth date. Supports three formats:
   * `[age date="1990-05-15"]` - Years only (e.g., "34")
