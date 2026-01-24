@@ -215,9 +215,10 @@ function DynamicDateFormatEdit( { value, onChange } ) {
 			/>
 			{ isOpen && (
 				<Popover
-					position="bottom center"
+					placement="bottom-start"
 					onClose={ () => setIsOpen( false ) }
 					focusOnMount="container"
+					shift
 				>
 					<div
 						style={ {
