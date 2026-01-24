@@ -17,7 +17,7 @@ final class Plugin {
 	/**
 	 * Plugin version.
 	 */
-	public const VERSION = '1.6.2';
+	public const VERSION = '1.7.0';
 
 	/**
 	 * Plugin instance.
