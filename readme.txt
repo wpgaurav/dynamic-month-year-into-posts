@@ -14,7 +14,16 @@ Automate SEO and content with dynamic shortcodes for dates, years, months, age c
 
 ### Automate your SEO
 
-Add today's date by `[date]`, current year by `[year]`, previous year by `[pyear]`, next year by `[nyear]`, current month (like January) by `[month]`, next month (like February) by `[nmonth]`, previous month (like December) by `[pmonth]`, current/next/previous month shortname (like Jan, Feb and Dec) by `[mon]`, `[nmon]` & `[pmon]` shortcodes anywhere, including content and title. Uses your default WordPress language. Use this plugin to boost your site's SEO, automate your affiliate marketing, automatically updating blogging lists, offer dynamic coupon expiries and more, just by using these variables anywhere.
+Insert dynamic dates anywhere in your WordPress content using simple shortcodes:
+
+* **Years**: `[year]` (current), `[nyear]` (next), `[pyear]` (previous)
+* **Months**: `[month]` (January), `[mon]` (Jan), `[nmonth]`/`[pmonth]` (next/previous)
+* **Dates**: `[date]` (full date), `[dt]` (day number), `[weekday]` (day name)
+* **Age**: `[age date="1990-05-15"]` calculates years from any date
+* **Season**: `[season]` displays current season (supports hemispheres)
+* **Countdowns**: `[daysuntil date="2025-12-25"]` and `[dayssince date="2020-01-01"]`
+
+Works in posts, pages, titles, widgets, and SEO meta. Renders in your WordPress language. Perfect for affiliate marketers, bloggers, and anyone who wants evergreen content that updates automatically.
 
 But that's not it.
 
