@@ -123,6 +123,7 @@ $dmyip_render_dynamic_date = static function ( $attributes ) {
 		case 'age':
 		case 'age_ym':
 		case 'age_ymd':
+		case 'age_ordinal':
 			if ( empty( $date ) ) {
 				$output = '0';
 			} else {
@@ -134,7 +135,30 @@ $dmyip_render_dynamic_date = static function ( $attributes ) {
 					$today = new DateTime( gmdate( 'Y-m-d' ) );
 					$diff  = $today->diff( $birth );
 
-					if ( 'age_ymd' === $type ) {
+					if ( 'age_ordinal' === $type ) {
+						$num     = abs( $diff->y );
+						$mod_100 = $num % 100;
+						$mod_10  = $num % 10;
+						if ( $mod_100 >= 11 && $mod_100 <= 13 ) {
+							$suffix = 'th';
+						} else {
+							switch ( $mod_10 ) {
+								case 1:
+									$suffix = 'st';
+									break;
+								case 2:
+									$suffix = 'nd';
+									break;
+								case 3:
+									$suffix = 'rd';
+									break;
+								default:
+									$suffix = 'th';
+									break;
+							}
+						}
+						$output = $diff->y . $suffix;
+					} elseif ( 'age_ymd' === $type ) {
 						$parts = [];
 						if ( $diff->y > 0 ) {
 							$parts[] = sprintf(
@@ -178,6 +202,34 @@ $dmyip_render_dynamic_date = static function ( $attributes ) {
 					} else {
 						$output = (string) $diff->y;
 					}
+				}
+			}
+			break;
+
+		case 'season':
+		case 'season_south':
+			$month      = (int) gmdate( 'n' );
+			$hemisphere = ( 'season_south' === $type ) ? 'south' : 'north';
+
+			if ( 'south' === $hemisphere ) {
+				if ( $month >= 3 && $month <= 5 ) {
+					$output = __( 'Autumn', 'dynamic-month-year-into-posts' );
+				} elseif ( $month >= 6 && $month <= 8 ) {
+					$output = __( 'Winter', 'dynamic-month-year-into-posts' );
+				} elseif ( $month >= 9 && $month <= 11 ) {
+					$output = __( 'Spring', 'dynamic-month-year-into-posts' );
+				} else {
+					$output = __( 'Summer', 'dynamic-month-year-into-posts' );
+				}
+			} else {
+				if ( $month >= 3 && $month <= 5 ) {
+					$output = __( 'Spring', 'dynamic-month-year-into-posts' );
+				} elseif ( $month >= 6 && $month <= 8 ) {
+					$output = __( 'Summer', 'dynamic-month-year-into-posts' );
+				} elseif ( $month >= 9 && $month <= 11 ) {
+					$output = __( 'Autumn', 'dynamic-month-year-into-posts' );
+				} else {
+					$output = __( 'Winter', 'dynamic-month-year-into-posts' );
 				}
 			}
 			break;

@@ -73,8 +73,16 @@ const DATE_TYPES = [
 		label: __( 'Age', 'dynamic-month-year-into-posts' ),
 		options: [
 			{ value: 'age', label: __( 'Age (Years)', 'dynamic-month-year-into-posts' ) },
+			{ value: 'age_ordinal', label: __( 'Age (Ordinal: 35th)', 'dynamic-month-year-into-posts' ) },
 			{ value: 'age_ym', label: __( 'Age (Years & Months)', 'dynamic-month-year-into-posts' ) },
 			{ value: 'age_ymd', label: __( 'Age (Years, Months & Days)', 'dynamic-month-year-into-posts' ) },
+		],
+	},
+	{
+		label: __( 'Season', 'dynamic-month-year-into-posts' ),
+		options: [
+			{ value: 'season', label: __( 'Current Season (North)', 'dynamic-month-year-into-posts' ) },
+			{ value: 'season_south', label: __( 'Current Season (South)', 'dynamic-month-year-into-posts' ) },
 		],
 	},
 ];
@@ -145,12 +153,19 @@ function getPreviewText( type, offset, date, ageFormat = 'y' ) {
 		case 'age':
 			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
 			return getAge( date, 'y' );
+		case 'age_ordinal':
+			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
+			return getAgeOrdinal( date );
 		case 'age_ym':
 			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
 			return getAge( date, 'ym' );
 		case 'age_ymd':
 			if ( ! date ) return __( 'Set birth date', 'dynamic-month-year-into-posts' );
 			return getAge( date, 'ymd' );
+		case 'season':
+			return getSeason( 'north' );
+		case 'season_south':
+			return getSeason( 'south' );
 		default:
 			return String( now.getFullYear() );
 	}
@@ -261,6 +276,89 @@ function getAge( dateStr, format = 'y' ) {
 		default:
 			return String( years );
 	}
+}
+
+/**
+ * Get age with ordinal suffix.
+ *
+ * @param {string} dateStr Birth date string.
+ * @return {string} Age with ordinal suffix (e.g., "35th").
+ */
+function getAgeOrdinal( dateStr ) {
+	const birth = new Date( dateStr );
+	const today = new Date();
+
+	if ( isNaN( birth.getTime() ) ) {
+		return '';
+	}
+
+	let years = today.getFullYear() - birth.getFullYear();
+	const monthDiff = today.getMonth() - birth.getMonth();
+
+	if ( monthDiff < 0 || ( monthDiff === 0 && today.getDate() < birth.getDate() ) ) {
+		years--;
+	}
+
+	return getOrdinalSuffix( years );
+}
+
+/**
+ * Get ordinal suffix for a number.
+ *
+ * @param {number} num Number to convert.
+ * @return {string} Number with ordinal suffix.
+ */
+function getOrdinalSuffix( num ) {
+	const absNum = Math.abs( num );
+	// Special case for 11, 12, 13
+	if ( absNum % 100 >= 11 && absNum % 100 <= 13 ) {
+		return `${ num }th`;
+	}
+	switch ( absNum % 10 ) {
+		case 1:
+			return `${ num }st`;
+		case 2:
+			return `${ num }nd`;
+		case 3:
+			return `${ num }rd`;
+		default:
+			return `${ num }th`;
+	}
+}
+
+/**
+ * Get current season based on hemisphere.
+ *
+ * @param {string} hemisphere 'north' or 'south'.
+ * @return {string} Current season name.
+ */
+function getSeason( hemisphere = 'north' ) {
+	const now = new Date();
+	const month = now.getMonth() + 1; // 1-12
+
+	let season;
+	if ( month >= 3 && month <= 5 ) {
+		season = 'Spring';
+	} else if ( month >= 6 && month <= 8 ) {
+		season = 'Summer';
+	} else if ( month >= 9 && month <= 11 ) {
+		season = 'Fall';
+	} else {
+		season = 'Winter';
+	}
+
+	// Reverse for southern hemisphere
+	if ( hemisphere === 'south' ) {
+		const opposites = {
+			Spring: 'Fall',
+			Summer: 'Winter',
+			Fall: 'Spring',
+			Winter: 'Summer',
+		};
+		season = opposites[ season ];
+	}
+
+	return season;
 }
 
 /**

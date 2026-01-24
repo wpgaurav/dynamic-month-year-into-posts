@@ -141,6 +141,13 @@ const SHORTCODE_CATEGORIES = [
 				),
 			},
 			{
+				code: '[age date="" ordinal="true"]',
+				desc: __(
+					'e.g. 35th, 21st, 2nd',
+					'dynamic-month-year-into-posts'
+				),
+			},
+			{
 				code: '[age date="" format="ym"]',
 				desc: __(
 					'34 years, 7 months',
@@ -151,6 +158,25 @@ const SHORTCODE_CATEGORIES = [
 				code: '[age date="" format="ymd"]',
 				desc: __(
 					'34 years, 7 months, 12 days',
+					'dynamic-month-year-into-posts'
+				),
+			},
+		],
+	},
+	{
+		label: __( 'Season', 'dynamic-month-year-into-posts' ),
+		shortcodes: [
+			{
+				code: '[season]',
+				desc: __(
+					'Current season (north)',
+					'dynamic-month-year-into-posts'
+				),
+			},
+			{
+				code: '[season region="south"]',
+				desc: __(
+					'Southern hemisphere',
 					'dynamic-month-year-into-posts'
 				),
 			},
