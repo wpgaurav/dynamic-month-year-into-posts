@@ -22,6 +22,9 @@ Insert dynamic dates anywhere in your WordPress content using simple shortcodes:
 * **Age**: `[age date="1990-05-15"]` calculates years from any date
 * **Season**: `[season]` displays current season (supports hemispheres)
 * **Countdowns**: `[daysuntil date="2025-12-25"]` and `[dayssince date="2020-01-01"]`
+* **Post Dates**: `[datemodified]` and `[datepublished]` shortcodes.
+* **Event Dates**: `[blackfriday]` and `[cybermonday]` shortcodes.
+* **Block Editor support**: Toolbar to quickly insert the shortcodes, age and countdown blocks.
 
 Works in posts, pages, titles, widgets, and SEO meta. Renders in your WordPress language. Perfect for affiliate marketers, bloggers, and anyone who wants evergreen content that updates automatically.
 
@@ -33,6 +36,28 @@ But that's not it.
 * New: Calculate age with `[age date="1990-05-15"]` shortcode. Add ordinal suffix with `ordinal="true"` (e.g., "35th").
 * New: Post dates with `[datemodified]` and `[datepublished]` shortcodes.
 * New: Event dates with `[blackfriday]` and `[cybermonday]` shortcodes.
+
+### Gutenberg Blocks
+
+Two dedicated blocks for the Block Editor:
+
+**Dynamic Date Block** - Insert any dynamic date with live preview:
+
+* Select date type from dropdown (year, month, date, age, season, etc.)
+* Configure age format (years only, years & months, full breakdown)
+* Set ordinal suffix for age display
+* Typography and color controls
+* Spacing options (margin, padding)
+
+**Live Countdown Block** - Real-time countdown powered by WordPress Interactivity API:
+
+* Count days until or since any date
+* Auto-updates at midnight without page reload
+* Customizable label text
+* Typography and color styling
+* Perfect for event promotions and milestones
+
+Both blocks are found under "Widgets" category in the Block Inserter. Plus, a toolbar button in the formatting toolbar lets you quickly insert any shortcode into text blocks.
 
 ### Works with popular SEO Plugins
 
