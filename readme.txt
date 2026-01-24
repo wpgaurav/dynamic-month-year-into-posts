@@ -4,11 +4,11 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.6.2
+Stable tag: 1.7.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-Automate SEO and content with dynamic shortcodes for dates, years, months in content, titles and more.
+Automate SEO and content with dynamic shortcodes for dates, years, months, age calculations, seasons and countdowns in content, titles and meta.
 
 == Description ==
 
@@ -20,9 +20,10 @@ But that's not it.
 
 [See Full List of Shortcodes](https://gauravtiwari.org/snippet/dynamic-month-year/#shortcodes)
 
-* New: Add post modified date by using `[datemodified]` and post publication date by using `[datepublished]` shortcodes.
-* New: Ace Black Friday with new dynamic shortcodes. Black Friday and Cyber Monday dates can be inserted anywhere by using `[blackfriday]` and `[cybermonday]`.
-* New: Calculate age with `[age date="1990-05-15"]` shortcode. Supports multiple formats: years only, years & months (`format="ym"`), or full age (`format="ymd"`).
+* New: Display current season with `[season]` shortcode. Supports hemisphere: `[season region="south"]` for Southern hemisphere.
+* New: Calculate age with `[age date="1990-05-15"]` shortcode. Add ordinal suffix with `ordinal="true"` (e.g., "35th").
+* New: Post dates with `[datemodified]` and `[datepublished]` shortcodes.
+* New: Event dates with `[blackfriday]` and `[cybermonday]` shortcodes.
 
 ### Works with popular SEO Plugins
 
@@ -147,6 +148,15 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.7.0 =
+* New: `[season]` shortcode to display current season (Spring, Summer, Fall, Winter)
+  * `[season]` - Northern hemisphere (default)
+  * `[season region="south"]` - Southern hemisphere (reversed seasons)
+* New: Ordinal suffix support for `[age]` shortcode
+  * `[age date="1990-05-15" ordinal="true"]` - Returns "35th"
+  * `[age date="1990-05-15" rank="true"]` - Alias for ordinal
+* Improved: Proper handling of special ordinals (11th, 12th, 13th)
 
 = 1.6.2 =
 * More PHP 7.4 improvements
