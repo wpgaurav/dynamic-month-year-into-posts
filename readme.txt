@@ -24,7 +24,7 @@ Insert dynamic dates anywhere in your WordPress content using simple shortcodes:
 * **Countdowns**: `[daysuntil date="2025-12-25"]` and `[dayssince date="2020-01-01"]`
 * **Post Dates**: `[datemodified]` and `[datepublished]` shortcodes.
 * **Event Dates**: `[blackfriday]` and `[cybermonday]` shortcodes.
-* **Block Editor support**: Toolbar to quickly insert the shortcodes, age and countdown blocks.
+* **Block Editor support**: Toolbar to quickly insert the shortcodes, customizable date and countdown blocks.
 
 Works in posts, pages, titles, widgets, and SEO meta. Renders in your WordPress language. Perfect for affiliate marketers, bloggers, and anyone who wants evergreen content that updates automatically.
 
@@ -67,26 +67,27 @@ Both blocks are found under "Widgets" category in the Block Inserter. Plus, a to
 * Extremely useful for Affiliate Marketers, Amazon Affiliates and Copywriters.
 
 = Tested Support With =
-* Rank Math (100%)
-* Rank Math Pro (100%)
+* Rank Math
+* Rank Math Pro
 * SEOPress
 * SEOPress Premium
 * Yoast SEO
 * Yoast SEO Premium
+* SureRank
 * Gutenberg and Block Editor Content, Headings and Buttons
 * [All popular Block Editor Addons](https://gauravtiwari.org/best-gutenberg-blocks-plugins-for-wordpress/), including Greenshift, GenerateBlocks, Ultimate Blocks, Kadence Blocks, Spectra, Otter Blocks.
-* Elementor Page Builder (100%)
+* Elementor Page Builder
 * WP Bakery Page Builder
 * Visual Composer
 * Beaver Builder
 * Brizy Builder
 * Oxygen Builder
 * Bricks Builder
-* Jetpack
+* Jetpack Related Posts
 * Intelly Related Posts a.k.a. Inline Related Posts (IRP)
 * Advanced Custom Fields (Manual: please see the FAQs)
 * Lightweight Accordion (including Schema)
-* All major themes like default WordPress themes, Astra, Neve, Hello, Kadence, GeneratePress and Blocksy.
+* All major themes including Twenty Twenty-Five, Twenty Twenty-Four, Twenty Twenty-Three, Twenty Twenty-Two, Twenty Twenty-One, Twenty Twenty, Astra, Neve, Hello (Elementor), Kadence, GeneratePress, Blocksy, and OceanWP.
 
 Tested to be totally working with Yoast SEO, SEOPress and Rank Math's breadcrumbs, custom meta titles, excerpt etc.
 

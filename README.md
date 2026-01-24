@@ -249,7 +249,7 @@ wp dmyip test
 
 ### Themes
 
-Works with all major themes including default WordPress themes, Astra, Neve, Hello (Elementor), Kadence, GeneratePress, and Blocksy.
+Works with all major themes including Twenty Twenty-Five, Twenty Twenty-Four, Twenty Twenty-Three, Twenty Twenty-Two, Twenty Twenty-One, Twenty Twenty, Astra, Neve, Hello (Elementor), Kadence, GeneratePress, Blocksy, and OceanWP.
 
 ### Additional Plugins
 
