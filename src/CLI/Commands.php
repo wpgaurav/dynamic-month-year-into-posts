@@ -96,6 +96,7 @@ class Commands {
 			'cybermonday'   => '[cybermonday]',
 			'datepublished' => '[datepublished]',
 			'datemodified'  => '[datemodified]',
+			'season'        => '[season]',
 		];
 
 		// Handle special cases.
@@ -311,6 +312,30 @@ class Commands {
 				'description' => 'Modified date',
 				'example'     => 'Requires post',
 			],
+			[
+				'shortcode'   => '[age date="X"]',
+				'category'    => 'Age',
+				'description' => 'Age from date',
+				'example'     => 'Requires date',
+			],
+			[
+				'shortcode'   => '[age date="X" ordinal="true"]',
+				'category'    => 'Age',
+				'description' => 'Age with suffix',
+				'example'     => 'e.g., 35th',
+			],
+			[
+				'shortcode'   => '[season]',
+				'category'    => 'Season',
+				'description' => 'Current season',
+				'example'     => do_shortcode( '[season]' ),
+			],
+			[
+				'shortcode'   => '[season region="south"]',
+				'category'    => 'Season',
+				'description' => 'Season (south)',
+				'example'     => do_shortcode( '[season region="south"]' ),
+			],
 		];
 
 		Utils\format_items( $format, $shortcodes, [ 'shortcode', 'category', 'description', 'example' ] );
@@ -332,22 +357,24 @@ class Commands {
 		WP_CLI::line( '' );
 
 		$tests = [
-			'[year]'        => 'Current year',
-			'[year n=5]'    => 'Year +5',
-			'[nyear]'       => 'Next year',
-			'[pyear]'       => 'Previous year',
-			'[month]'       => 'Current month',
-			'[mon]'         => 'Month (short)',
-			'[mm]'          => 'Month number',
-			'[nmonth]'      => 'Next month',
-			'[pmonth]'      => 'Previous month',
-			'[date]'        => 'Full date',
-			'[monthyear]'   => 'Month and year',
-			'[dt]'          => 'Day of month',
-			'[weekday]'     => 'Weekday',
-			'[wd]'          => 'Weekday (short)',
-			'[blackfriday]' => 'Black Friday',
-			'[cybermonday]' => 'Cyber Monday',
+			'[year]'                  => 'Current year',
+			'[year n=5]'              => 'Year +5',
+			'[nyear]'                 => 'Next year',
+			'[pyear]'                 => 'Previous year',
+			'[month]'                 => 'Current month',
+			'[mon]'                   => 'Month (short)',
+			'[mm]'                    => 'Month number',
+			'[nmonth]'                => 'Next month',
+			'[pmonth]'                => 'Previous month',
+			'[date]'                  => 'Full date',
+			'[monthyear]'             => 'Month and year',
+			'[dt]'                    => 'Day of month',
+			'[weekday]'               => 'Weekday',
+			'[wd]'                    => 'Weekday (short)',
+			'[blackfriday]'           => 'Black Friday',
+			'[cybermonday]'           => 'Cyber Monday',
+			'[season]'                => 'Season (north)',
+			'[season region="south"]' => 'Season (south)',
 		];
 
 		$all_passed = true;

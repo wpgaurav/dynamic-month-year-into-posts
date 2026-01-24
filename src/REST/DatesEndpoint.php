@@ -123,6 +123,10 @@ class DatesEndpoint {
 				'blackfriday' => do_shortcode( '[blackfriday]' ),
 				'cybermonday' => do_shortcode( '[cybermonday]' ),
 			],
+			'season'      => [
+				'north' => do_shortcode( '[season]' ),
+				'south' => do_shortcode( '[season region="south"]' ),
+			],
 			'timezone'    => wp_timezone_string(),
 			'timestamp'   => time(),
 			'gmt_offset'  => get_option( 'gmt_offset' ),
@@ -177,6 +181,7 @@ class DatesEndpoint {
 			'cybermonday'   => '[cybermonday]',
 			'datepublished' => '[datepublished]',
 			'datemodified'  => '[datemodified]',
+			'season'        => '[season]',
 		];
 
 		// Handle special cases.
@@ -312,6 +317,28 @@ class DatesEndpoint {
 					'description' => 'Days since a date',
 					'example'     => 'Requires date parameter',
 				],
+				[
+					'shortcode'   => '[age date="YYYY-MM-DD"]',
+					'description' => 'Age from a date (years)',
+					'example'     => 'Requires date parameter',
+				],
+				[
+					'shortcode'   => '[age date="YYYY-MM-DD" ordinal="true"]',
+					'description' => 'Age with ordinal suffix (1st, 2nd, 3rd)',
+					'example'     => 'Requires date parameter',
+				],
+			],
+			'season'     => [
+				[
+					'shortcode'   => '[season]',
+					'description' => 'Current season (Northern hemisphere)',
+					'example'     => do_shortcode( '[season]' ),
+				],
+				[
+					'shortcode'   => '[season region="south"]',
+					'description' => 'Current season (Southern hemisphere)',
+					'example'     => do_shortcode( '[season region="south"]' ),
+				],
 			],
 			'post_dates' => [
 				[
@@ -372,6 +399,8 @@ class DatesEndpoint {
 			'dayssince',
 			'datepublished',
 			'datemodified',
+			'age',
+			'season',
 		];
 
 		return in_array( $value, $valid_types, true );

@@ -101,13 +101,36 @@ Calculate and display age from any date. Perfect for "years of experience", pers
 | Shortcode | Example Output | Description |
 |-----------|----------------|-------------|
 | `[age date="1990-05-15"]` | 35 | Age in years only |
+| `[age date="1990-05-15" ordinal="true"]` | 35th | Age with ordinal suffix (st/nd/rd/th) |
+| `[age date="1990-05-15" rank="true"]` | 35th | Same as ordinal (alias) |
 | `[age date="1990-05-15" format="ym"]` | 35 years, 7 months | Years and months |
 | `[age date="1990-05-15" format="ymd"]` | 35 years, 7 months, 28 days | Full age breakdown |
 
 **Use cases:**
 - Display years of experience: `[age date="2010-06-01"]+ years of experience`
+- Display ordinal anniversary: `Celebrating our [age date="2015-08-20" ordinal="true"] anniversary`
 - Personal profiles: `Age: [age date="1990-05-15"]`
 - Anniversary tracking: `Married for [age date="2015-08-20" format="ym"]`
+- Ranking content: `My [age date="2020-01-01" rank="true"] year blogging`
+
+### Season Shortcodes
+
+Display the current season with hemisphere support.
+
+| Shortcode | Example Output | Description |
+|-----------|----------------|-------------|
+| `[season]` | Winter | Current season (Northern hemisphere) |
+| `[season region="north"]` | Winter | Northern hemisphere (explicit) |
+| `[season region="south"]` | Summer | Southern hemisphere (reversed) |
+
+**Season mapping:**
+- **Northern hemisphere**: Spring (Mar-May), Summer (Jun-Aug), Fall (Sep-Nov), Winter (Dec-Feb)
+- **Southern hemisphere**: Seasons are reversed (Summer when North has Winter, etc.)
+
+**Use cases:**
+- Seasonal content: `[season] Sale - Shop Now!`
+- Regional targeting: `Enjoy [season region="south"] in Australia`
+- Dynamic promotions: `Get ready for [season] with our latest collection`
 
 ## Block Editor Features
 
@@ -338,6 +361,15 @@ This plugin:
 - [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ## Changelog
+
+### 1.7.0
+- New: `[season]` shortcode to display current season
+  - `[season]` - Northern hemisphere (default)
+  - `[season region="south"]` - Southern hemisphere
+- New: Ordinal suffix support for `[age]` shortcode
+  - `[age date="1990-05-15" ordinal="true"]` - Returns "35th"
+  - `[age date="1990-05-15" rank="true"]` - Alias for ordinal
+- Improvement: Proper handling of special ordinals (11th, 12th, 13th)
 
 ### 1.6.0
 - New: `[age]` shortcode to calculate and display age from a birth date

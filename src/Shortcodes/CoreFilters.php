@@ -58,6 +58,8 @@ class CoreFilters {
 		'dayssince',
 		'datepublished',
 		'datemodified',
+		'age',
+		'season',
 	];
 
 	/**

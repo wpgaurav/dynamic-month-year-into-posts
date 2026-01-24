@@ -15,6 +15,7 @@ use DMYIP\Shortcodes\Day;
 use DMYIP\Shortcodes\Date;
 use DMYIP\Shortcodes\Events;
 use DMYIP\Shortcodes\Countdown;
+use DMYIP\Shortcodes\Season;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -65,6 +66,13 @@ class ShortcodesTest extends TestCase {
 	private Countdown $countdown;
 
 	/**
+	 * Season shortcode instance.
+	 *
+	 * @var Season
+	 */
+	private Season $season;
+
+	/**
 	 * Set up test fixtures.
 	 */
 	protected function setUp(): void {
@@ -75,6 +83,7 @@ class ShortcodesTest extends TestCase {
 		$this->date      = new Date();
 		$this->events    = new Events();
 		$this->countdown = new Countdown();
+		$this->season    = new Season();
 	}
 
 	/**
@@ -275,5 +284,130 @@ class ShortcodesTest extends TestCase {
 		$this->assertEquals( htmlspecialchars( $year_result, ENT_QUOTES, 'UTF-8' ), $year_result );
 		$this->assertEquals( htmlspecialchars( $month_result, ENT_QUOTES, 'UTF-8' ), $month_result );
 		$this->assertEquals( htmlspecialchars( $day_result, ENT_QUOTES, 'UTF-8' ), $day_result );
+	}
+
+	/**
+	 * Test age shortcode with ordinal suffix.
+	 */
+	public function test_age_ordinal(): void {
+		// Test with a date that would give age of 35.
+		$birth_date = date( 'Y-m-d', strtotime( '-35 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
+		$this->assertEquals( '35th', $result );
+	}
+
+	/**
+	 * Test age shortcode with rank attribute (alias for ordinal).
+	 */
+	public function test_age_rank(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-21 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'rank' => 'true' ] );
+		$this->assertEquals( '21st', $result );
+	}
+
+	/**
+	 * Test age ordinal with 2nd.
+	 */
+	public function test_age_ordinal_2nd(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-2 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
+		$this->assertEquals( '2nd', $result );
+	}
+
+	/**
+	 * Test age ordinal with 3rd.
+	 */
+	public function test_age_ordinal_3rd(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-3 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
+		$this->assertEquals( '3rd', $result );
+	}
+
+	/**
+	 * Test age ordinal with 11th (special case).
+	 */
+	public function test_age_ordinal_11th(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-11 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
+		$this->assertEquals( '11th', $result );
+	}
+
+	/**
+	 * Test age ordinal with 12th (special case).
+	 */
+	public function test_age_ordinal_12th(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-12 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
+		$this->assertEquals( '12th', $result );
+	}
+
+	/**
+	 * Test age ordinal with 13th (special case).
+	 */
+	public function test_age_ordinal_13th(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-13 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
+		$this->assertEquals( '13th', $result );
+	}
+
+	/**
+	 * Test age without ordinal returns number only.
+	 */
+	public function test_age_without_ordinal(): void {
+		$birth_date = date( 'Y-m-d', strtotime( '-25 years' ) );
+		$result     = $this->countdown->age( [ 'date' => $birth_date ] );
+		$this->assertEquals( '25', $result );
+	}
+
+	/**
+	 * Test current season returns valid season name.
+	 */
+	public function test_current_season(): void {
+		$result        = $this->season->current_season( [] );
+		$valid_seasons = [ 'Spring', 'Summer', 'Fall', 'Winter' ];
+		$this->assertContains( $result, $valid_seasons );
+	}
+
+	/**
+	 * Test season for northern hemisphere.
+	 */
+	public function test_season_north(): void {
+		$result        = $this->season->current_season( [ 'region' => 'north' ] );
+		$valid_seasons = [ 'Spring', 'Summer', 'Fall', 'Winter' ];
+		$this->assertContains( $result, $valid_seasons );
+	}
+
+	/**
+	 * Test season for southern hemisphere.
+	 */
+	public function test_season_south(): void {
+		$result        = $this->season->current_season( [ 'region' => 'south' ] );
+		$valid_seasons = [ 'Spring', 'Summer', 'Fall', 'Winter' ];
+		$this->assertContains( $result, $valid_seasons );
+	}
+
+	/**
+	 * Test that northern and southern seasons are opposite.
+	 */
+	public function test_season_hemispheres_opposite(): void {
+		$north = $this->season->current_season( [ 'region' => 'north' ] );
+		$south = $this->season->current_season( [ 'region' => 'south' ] );
+
+		$opposites = [
+			'Spring' => 'Fall',
+			'Summer' => 'Winter',
+			'Fall'   => 'Spring',
+			'Winter' => 'Summer',
+		];
+
+		$this->assertEquals( $opposites[ $north ], $south );
+	}
+
+	/**
+	 * Test season output is escaped.
+	 */
+	public function test_season_is_escaped(): void {
+		$result = $this->season->current_season( [] );
+		$this->assertEquals( htmlspecialchars( $result, ENT_QUOTES, 'UTF-8' ), $result );
 	}
 }

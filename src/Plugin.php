@@ -90,6 +90,7 @@ final class Plugin {
 		( new Shortcodes\PostDate() )->register();
 		( new Shortcodes\Events() )->register();
 		( new Shortcodes\Countdown() )->register();
+		( new Shortcodes\Season() )->register();
 		( new Shortcodes\CoreFilters() )->register();
 	}
 

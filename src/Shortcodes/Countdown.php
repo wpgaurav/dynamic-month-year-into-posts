@@ -95,14 +95,19 @@ class Countdown {
 	 * - 'ym': Years and months (e.g., "34 years, 5 months")
 	 * - 'ymd': Years, months, and days (e.g., "34 years, 5 months, 12 days")
 	 *
+	 * Ordinal suffix:
+	 * - 'ordinal' or 'rank': When "true", adds st/nd/rd/th suffix (e.g., "34th")
+	 *
 	 * @param array<string, mixed>|string $atts Shortcode attributes.
 	 * @return string
 	 */
 	public function age( $atts ): string {
 		$attributes = shortcode_atts(
 			[
-				'date'   => '',
-				'format' => 'y',
+				'date'    => '',
+				'format'  => 'y',
+				'ordinal' => '',
+				'rank'    => '',
 			],
 			$atts
 		);
@@ -123,13 +128,46 @@ class Countdown {
 
 		$format = strtolower( (string) $attributes['format'] );
 
+		// Check if ordinal suffix is requested (supports both "ordinal" and "rank" attributes).
+		$show_ordinal = 'true' === strtolower( (string) $attributes['ordinal'] )
+			|| 'true' === strtolower( (string) $attributes['rank'] );
+
 		switch ( $format ) {
 			case 'ymd':
 				return $this->format_age_ymd( $diff );
 			case 'ym':
 				return $this->format_age_ym( $diff );
 			default:
+				if ( $show_ordinal ) {
+					return esc_html( $this->get_ordinal_suffix( $diff->y ) );
+				}
 				return esc_html( (string) $diff->y );
+		}
+	}
+
+	/**
+	 * Get ordinal suffix for a number (1st, 2nd, 3rd, 4th, etc.).
+	 *
+	 * @param int $number The number to add suffix to.
+	 * @return string Number with ordinal suffix.
+	 */
+	private function get_ordinal_suffix( int $number ): string {
+		$abs_number = abs( $number );
+
+		// Special case for 11, 12, 13 - always use "th".
+		if ( $abs_number % 100 >= 11 && $abs_number % 100 <= 13 ) {
+			return $number . 'th';
+		}
+
+		switch ( $abs_number % 10 ) {
+			case 1:
+				return $number . 'st';
+			case 2:
+				return $number . 'nd';
+			case 3:
+				return $number . 'rd';
+			default:
+				return $number . 'th';
 		}
 	}
 
