@@ -62,5 +62,19 @@ class DynamicDateBlock {
 		if ( file_exists( $countdown_dir . '/block.json' ) ) {
 			register_block_type( $countdown_dir );
 		}
+
+		// Register Published Date block.
+		$published_date_dir = $this->plugin_dir . 'build/blocks/published-date';
+
+		if ( file_exists( $published_date_dir . '/block.json' ) ) {
+			register_block_type( $published_date_dir );
+		}
+
+		// Register Modified Date block.
+		$modified_date_dir = $this->plugin_dir . 'build/blocks/modified-date';
+
+		if ( file_exists( $modified_date_dir . '/block.json' ) ) {
+			register_block_type( $modified_date_dir );
+		}
 	}
 }

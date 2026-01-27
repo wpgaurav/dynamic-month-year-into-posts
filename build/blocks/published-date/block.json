@@ -1,0 +1,58 @@
+{
+  "$schema": "https://schemas.wp.org/trunk/block.json",
+  "apiVersion": 3,
+  "name": "dmyip/published-date",
+  "version": "1.7.0",
+  "title": "Published Date",
+  "category": "widgets",
+  "icon": "calendar",
+  "description": "Display the post's publication date dynamically.",
+  "keywords": [
+    "date",
+    "published",
+    "created",
+    "posted",
+    "time"
+  ],
+  "textdomain": "dynamic-month-year-into-posts",
+  "usesContext": [
+    "postId",
+    "postType"
+  ],
+  "attributes": {
+    "format": {
+      "type": "string",
+      "default": ""
+    },
+    "prefix": {
+      "type": "string",
+      "default": ""
+    },
+    "suffix": {
+      "type": "string",
+      "default": ""
+    }
+  },
+  "supports": {
+    "html": false,
+    "align": [
+      "left",
+      "center",
+      "right"
+    ],
+    "typography": {
+      "fontSize": true,
+      "lineHeight": true
+    },
+    "color": {
+      "text": true,
+      "background": true
+    },
+    "spacing": {
+      "margin": true,
+      "padding": true
+    }
+  },
+  "editorScript": "file:./index.js",
+  "render": "file:./render.php"
+}

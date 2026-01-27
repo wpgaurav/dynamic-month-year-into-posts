@@ -7,6 +7,8 @@
 // Register blocks
 import './blocks/dynamic-date';
 import './blocks/countdown';
+import './blocks/published-date';
+import './blocks/modified-date';
 
 // Editor styles
 import './editor.css';
