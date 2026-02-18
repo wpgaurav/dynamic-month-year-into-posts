@@ -143,6 +143,20 @@ A dedicated Gutenberg block for inserting dynamic dates with:
 - Age calculation with format selection
 - Typography and color controls
 
+### Published Date Block
+
+Display the post's publication date dynamically:
+- Uses WordPress date format from Settings
+- Custom date format support
+- Typography and color controls
+
+### Modified Date Block
+
+Display the post's last modified date dynamically:
+- Uses WordPress date format from Settings
+- Custom date format support
+- Typography and color controls
+
 ### Live Countdown Block
 
 Interactive countdown block powered by the WordPress Interactivity API:
@@ -322,6 +336,23 @@ Yes! Shortcodes work in both editors. In the Block Editor, you also get:
 ### Will this plugin work in my language?
 
 Yes. All shortcode outputs use WordPress's `date_i18n()` function and render in your site's configured language.
+
+### How can I disable shortcode processing in titles or excerpts?
+
+Since 1.7.1, use the `dmyip_core_filters` filter to selectively disable shortcode processing:
+
+```php
+// Disable all core filters (shortcodes only work in post content and blocks)
+add_filter( 'dmyip_core_filters', '__return_empty_array' );
+
+// Disable only title processing
+add_filter( 'dmyip_core_filters', function ( $filters ) {
+    $filters['the_title'] = false;
+    return $filters;
+} );
+```
+
+Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `get_the_excerpt`, `get_the_archive_title`. All default to `true`.
 
 ### Does it affect site performance?
 

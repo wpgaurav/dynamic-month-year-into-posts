@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.7.0
+Stable tag: 1.7.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -39,7 +39,7 @@ But that's not it.
 
 ### Gutenberg Blocks
 
-Two dedicated blocks for the Block Editor:
+Four dedicated blocks for the Block Editor:
 
 **Dynamic Date Block** - Insert any dynamic date with live preview:
 
@@ -57,7 +57,19 @@ Two dedicated blocks for the Block Editor:
 * Typography and color styling
 * Perfect for event promotions and milestones
 
-Both blocks are found under "Widgets" category in the Block Inserter. Plus, a toolbar button in the formatting toolbar lets you quickly insert any shortcode into text blocks.
+**Published Date Block** - Display the post's publication date:
+
+* Uses WordPress date format from Settings
+* Custom format support
+* Typography and color controls
+
+**Modified Date Block** - Display the post's last modified date:
+
+* Uses WordPress date format from Settings
+* Custom format support
+* Typography and color controls
+
+All blocks are found under "Widgets" category in the Block Inserter. Plus, a toolbar button in the formatting toolbar lets you quickly insert any shortcode into text blocks.
 
 ### Works with popular SEO Plugins
 
@@ -154,8 +166,8 @@ Yes. The shortcode outputs are WPML ready and render as per the language set in 
 You can use `<?php echo do_shortcode('[year]');?>`, `<?php echo do_shortcode('[month]');?>` etc. in themes or in functionality plugins to use these shortcodes.
 
 = How can I render shortcodes in ACF fields? =
-This plugin doesn’t render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you really need to render [year] etc., shortcodes, you can enable selective rendering.
-Just add this code in your theme’s functions.php file or in the Code Snippets plugin:
+This plugin doesn't render shortcodes in ACF fields by default (due to various reasons, security being the first). But if you really need to render [year] etc., shortcodes, you can enable selective rendering.
+Just add this code in your theme's functions.php file or in the Code Snippets plugin:
 
 ACF field type => text
 	```
@@ -166,6 +178,24 @@ ACF field name => headline
 	```
 	add_filter('acf/format_value/name=headline', 'do_shortcode');
 	```
+
+= How can I disable shortcode processing in titles or excerpts? =
+Since 1.7.1, you can use the `dmyip_core_filters` filter to selectively disable shortcode processing. Add this to your theme's `functions.php` or a code snippets plugin:
+
+Disable all core filters:
+	```
+	add_filter( 'dmyip_core_filters', '__return_empty_array' );
+	```
+
+Disable only title processing:
+	```
+	add_filter( 'dmyip_core_filters', function ( $filters ) {
+	    $filters['the_title'] = false;
+	    return $filters;
+	} );
+	```
+
+Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `get_the_excerpt`, `get_the_archive_title`. All default to `true`.
 
 == Installation ==
 
@@ -183,6 +213,12 @@ ACF field name => headline
 
 
 == Changelog ==
+
+= 1.7.1 =
+* New: Published Date and Modified Date Gutenberg blocks
+* New: `dmyip_core_filters` filter to selectively disable shortcode processing on WordPress core filters (titles, excerpts, archive titles). Props @meteorlxy.
+* Fix: `[year]` shortcode with large negative offsets (e.g., `[year n=-2003]`) now returns correct results instead of wrong/empty values.
+* Fix: `[year]` shortcode no longer zero-pads results (e.g., `[year n=-1100]` returns `926` instead of `0926`).
 
 = 1.7.0 =
 * New: `[season]` shortcode to display current season (Spring, Summer, Fall, Winter)

@@ -21,7 +21,12 @@ phpstan.neon
 webpack.config.js
 package.json
 package-lock.json
+composer.json
 composer.lock
+vendor/
+
+# Scripts
+build.sh
 
 # IDE
 .idea/
@@ -35,8 +40,20 @@ Thumbs.db
 # Claude Code
 CLAUDE.md
 PLAN.md
+.claude/
+
+# Temp
+tmp/
+
+# JS source (compiled to build/)
+src/index.js
+src/blocks/*/edit.js
+src/blocks/*/index.js
+src/blocks/*/view.js
+src/blocks/*/block.json
 
 # Misc
 *.zip
 build-release/
 md-section-for-plugin.html
+SECURITY.md
