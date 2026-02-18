@@ -162,35 +162,69 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
       - name: Install npm dependencies
         run: npm ci
 
       - name: Build JavaScript
         run: npm run build
 
-      - name: Create release package
+      - name: Generate production vendor
         run: |
-          mkdir -p release/dynamic-month-year-into-posts
-          rsync -av --progress . release/dynamic-month-year-into-posts/ \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='.gitignore' \
-            --exclude='node_modules' \
-            --exclude='vendor' \
-            --exclude='release' \
-            --exclude='tests' \
-            --exclude='src/blocks' \
-            --exclude='src/index.js' \
-            --exclude='phpcs.xml' \
-            --exclude='phpstan.neon' \
-            --exclude='phpunit.xml' \
-            --exclude='composer.json' \
-            --exclude='composer.lock' \
-            --exclude='package.json' \
-            --exclude='package-lock.json' \
-            --exclude='CLAUDE.md' \
-            --exclude='PLAN.md' \
-            --exclude='*.log'
+          VENDOR_TMP=$(mktemp -d)
+          cp composer.json composer.lock "$VENDOR_TMP/"
+          composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$VENDOR_TMP"
+          echo "VENDOR_TMP=$VENDOR_TMP" >> "$GITHUB_ENV"
 
-      - name: List release contents
-        run: ls -laR release/
+      - name: Assemble release package
+        run: |
+          SLUG="dynamic-month-year-into-posts"
+          mkdir -p "release/${SLUG}"
+          rsync -a \
+            --exclude-from=".distignore" \
+            --exclude="release" \
+            . "release/${SLUG}/"
+          cp -r "$VENDOR_TMP/vendor" "release/${SLUG}/"
+          cp composer.json "release/${SLUG}/"
+          find release -name ".DS_Store" -delete 2>/dev/null || true
+          find release -name "*.map" -delete 2>/dev/null || true
+          find release -type d -empty -delete 2>/dev/null || true
+
+      - name: Verify release package
+        run: |
+          SLUG="dynamic-month-year-into-posts"
+          DIST="release/${SLUG}"
+          ERRORS=0
+          for f in \
+            "${SLUG}.php" \
+            "index.php" \
+            "uninstall.php" \
+            "readme.txt" \
+            "composer.json" \
+            "vendor/autoload.php" \
+            "build/index.js" \
+            "includes/shortcodes.php" \
+            "src/Plugin.php" \
+            "src/blocks/dynamic-date/render.php"; do
+            if [ ! -f "$DIST/$f" ]; then
+              echo "::warning::Missing: $f"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          if [ -d "$DIST/vendor/phpstan" ] || \
+             [ -d "$DIST/vendor/phpunit" ] || \
+             [ -d "$DIST/vendor/squizlabs" ]; then
+            echo "::error::Dev dependencies leaked into vendor/"
+            ERRORS=$((ERRORS + 1))
+          fi
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "::error::Release package has $ERRORS issue(s)"
+            exit 1
+          fi
+          echo "Release package OK"
+          find "$DIST" -type f | wc -l | xargs -I{} echo "File count: {}"

@@ -32,20 +32,20 @@ jobs:
         id: get_version
         run: |
           TAG_VERSION=${GITHUB_REF#refs/tags/}
-          # Remove 'v' prefix if present
           VERSION=${TAG_VERSION#v}
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-          echo "TAG=$TAG_VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "TAG=$TAG_VERSION" >> "$GITHUB_OUTPUT"
 
       - name: Verify version matches plugin
+        env:
+          TAG_VERSION: ${{ steps.get_version.outputs.VERSION }}
         run: |
-          PLUGIN_VERSION=$(grep "Version:" ${PLUGIN_SLUG}.php | head -1 | sed 's/.*Version:[[:space:]]*//' | tr -d '[:space:]')
-          TAG_VERSION=${{ steps.get_version.outputs.VERSION }}
+          PLUGIN_VERSION=$(grep "Version:" "${PLUGIN_SLUG}.php" | head -1 | sed 's/.*Version:[[:space:]]*//' | tr -d '[:space:]')
           if [ "$PLUGIN_VERSION" != "$TAG_VERSION" ]; then
             echo "::error::Plugin version ($PLUGIN_VERSION) does not match tag version ($TAG_VERSION)"
             exit 1
           fi
-          echo "✓ Version verified: $PLUGIN_VERSION"
+          echo "Version verified: $PLUGIN_VERSION"
 
       - name: Install npm dependencies
         run: npm ci
@@ -53,74 +53,89 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Install Composer dependencies (production)
-        run: composer install --no-dev --optimize-autoloader --no-interaction
-
-      - name: Create plugin directory
+      - name: Generate production vendor
         run: |
-          mkdir -p build-release/${PLUGIN_SLUG}
+          VENDOR_TMP=$(mktemp -d)
+          cp composer.json composer.lock "$VENDOR_TMP/"
+          composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$VENDOR_TMP"
+          echo "VENDOR_TMP=$VENDOR_TMP" >> "$GITHUB_ENV"
 
-          # Copy main plugin file
-          cp ${PLUGIN_SLUG}.php build-release/${PLUGIN_SLUG}/
-
-          # Copy required directories
-          cp -r build build-release/${PLUGIN_SLUG}/
-          cp -r includes build-release/${PLUGIN_SLUG}/
-          cp -r src build-release/${PLUGIN_SLUG}/
-          cp -r vendor build-release/${PLUGIN_SLUG}/
-
-          # Copy optional directories
-          [ -d "assets" ] && cp -r assets build-release/${PLUGIN_SLUG}/ || true
-          [ -d "languages" ] && cp -r languages build-release/${PLUGIN_SLUG}/ || true
-
-          # Copy required files
-          cp index.php build-release/${PLUGIN_SLUG}/
-          cp uninstall.php build-release/${PLUGIN_SLUG}/
-          cp README.txt build-release/${PLUGIN_SLUG}/
-          cp composer.json build-release/${PLUGIN_SLUG}/
-          [ -f "LICENSE" ] && cp LICENSE build-release/${PLUGIN_SLUG}/ || true
-          [ -f "LICENSE.txt" ] && cp LICENSE.txt build-release/${PLUGIN_SLUG}/ || true
-
-      - name: Clean up development files
+      - name: Assemble distribution
         run: |
-          # Remove source maps
-          find build-release -name "*.map" -delete
+          mkdir -p "build-release/${PLUGIN_SLUG}"
 
-          # Remove OS files
-          find build-release -name ".DS_Store" -delete
-          find build-release -name "Thumbs.db" -delete
-          find build-release -name ".gitkeep" -delete
+          # Use .distignore as single source of truth.
+          rsync -a \
+            --exclude-from=".distignore" \
+            --exclude="build-release" \
+            . "build-release/${PLUGIN_SLUG}/"
 
-          # Remove git directories
-          find build-release -type d -name ".git" -exec rm -rf {} + 2>/dev/null || true
+          # Inject production vendor + composer.json (excluded by .distignore).
+          cp -r "$VENDOR_TMP/vendor" "build-release/${PLUGIN_SLUG}/"
+          cp composer.json "build-release/${PLUGIN_SLUG}/"
 
-          # Remove markdown files (not needed in distribution)
-          find build-release -name "*.md" -delete
+          # Clean artifacts.
+          find build-release -name ".DS_Store" -delete 2>/dev/null || true
+          find build-release -name "*.map" -delete 2>/dev/null || true
+          find build-release -type d -empty -delete 2>/dev/null || true
 
-          # Remove JS/CSS source files from src (keep only PHP and block.json)
-          find build-release/${PLUGIN_SLUG}/src -name "*.js" -delete 2>/dev/null || true
-          find build-release/${PLUGIN_SLUG}/src -name "*.css" -delete 2>/dev/null || true
-          find build-release/${PLUGIN_SLUG}/src -name "*.json" ! -name "block.json" -delete 2>/dev/null || true
+      - name: Verify distribution
+        run: |
+          DIST="build-release/${PLUGIN_SLUG}"
+          MISSING=0
 
-          # Remove empty directories
-          find build-release -type d -empty -delete
+          for f in \
+            "${PLUGIN_SLUG}.php" \
+            "index.php" \
+            "uninstall.php" \
+            "readme.txt" \
+            "composer.json" \
+            "vendor/autoload.php" \
+            "build/index.js" \
+            "includes/shortcodes.php" \
+            "src/Plugin.php" \
+            "src/blocks/dynamic-date/render.php"; do
+            if [ ! -f "$DIST/$f" ]; then
+              echo "::error::Missing critical file: $f"
+              MISSING=$((MISSING + 1))
+            fi
+          done
+
+          if [ "$MISSING" -gt 0 ]; then
+            echo "::error::Distribution is incomplete"
+            exit 1
+          fi
+
+          # Check for dev dependency leaks.
+          if [ -d "$DIST/vendor/phpstan" ] || \
+             [ -d "$DIST/vendor/phpunit" ] || \
+             [ -d "$DIST/vendor/squizlabs" ]; then
+            echo "::error::Dev dependencies leaked into vendor/"
+            exit 1
+          fi
+
+          echo "Distribution verified"
+          find "$DIST" -type f | wc -l | xargs -I{} echo "File count: {}"
 
       - name: Create zip file
         id: zip
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
         run: |
           cd build-release
-          ZIP_NAME="${PLUGIN_SLUG}-${{ steps.get_version.outputs.VERSION }}.zip"
-          zip -rq "../${ZIP_NAME}" ${PLUGIN_SLUG}
+          ZIP_NAME="${PLUGIN_SLUG}-${VERSION}.zip"
+          zip -rq "../${ZIP_NAME}" "${PLUGIN_SLUG}"
           cd ..
-          echo "ZIP_NAME=${ZIP_NAME}" >> $GITHUB_OUTPUT
-          echo "ZIP_PATH=${ZIP_NAME}" >> $GITHUB_OUTPUT
-          ls -lh ${ZIP_NAME}
+          echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_OUTPUT"
+          ls -lh "${ZIP_NAME}"
 
       - name: Generate checksums
+        env:
+          ZIP_NAME: ${{ steps.zip.outputs.ZIP_NAME }}
         run: |
-          sha256sum ${{ steps.zip.outputs.ZIP_NAME }} > ${{ steps.zip.outputs.ZIP_NAME }}.sha256
-          md5sum ${{ steps.zip.outputs.ZIP_NAME }} > ${{ steps.zip.outputs.ZIP_NAME }}.md5
-          echo "SHA256: $(cat ${{ steps.zip.outputs.ZIP_NAME }}.sha256)"
+          sha256sum "$ZIP_NAME" > "${ZIP_NAME}.sha256"
+          md5sum "$ZIP_NAME" > "${ZIP_NAME}.md5"
+          echo "SHA256: $(cat "${ZIP_NAME}.sha256")"
 
       - name: Upload plugin zip to release
         uses: softprops/action-gh-release@v2
