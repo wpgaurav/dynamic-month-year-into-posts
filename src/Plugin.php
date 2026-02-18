@@ -17,7 +17,7 @@ final class Plugin {
 	/**
 	 * Plugin version.
 	 */
-	public const VERSION = '1.7.0';
+	public const VERSION = '1.7.1';
 
 	/**
 	 * Plugin instance.
@@ -75,7 +75,6 @@ final class Plugin {
 		$this->register_rest_api();
 		$this->register_cli();
 		$this->register_block_bindings();
-		$this->register_license_manager();
 	}
 
 	/**
@@ -146,15 +145,6 @@ final class Plugin {
 	 */
 	private function register_block_bindings(): void {
 		( new BlockEditor\BlockBindings() )->register();
-	}
-
-	/**
-	 * Register license manager.
-	 *
-	 * @return void
-	 */
-	private function register_license_manager(): void {
-		( new LicenseManager( DMYIP_PLUGIN_FILE ) )->register();
 	}
 
 	/**

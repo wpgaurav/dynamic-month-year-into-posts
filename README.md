@@ -11,7 +11,7 @@ Automate SEO and content with dynamic shortcodes for dates, years, months, age c
 **Tags:** dynamic content, shortcode, seo, dates, year
 **Requires at least:** 6.0
 **Tested up to:** 6.9
-**Stable tag:** 1.7.0
+**Stable tag:** 1.7.1
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -361,6 +361,12 @@ This plugin:
 - [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ## Changelog
+
+### 1.7.1
+- New: Published Date and Modified Date Gutenberg blocks
+- New: `dmyip_core_filters` filter to selectively disable shortcode processing on WordPress core filters (titles, excerpts, archive titles). Props @meteorlxy.
+- Fix: `[year]` shortcode with large negative offsets (e.g., `[year n=-2003]`) now returns correct results instead of wrong/empty values.
+- Fix: `[year]` shortcode no longer zero-pads results (e.g., `[year n=-1100]` returns `926` instead of `0926`).
 
 ### 1.7.0
 - New: `[season]` shortcode to display current season

@@ -68,24 +68,58 @@ class CoreFilters {
 	 * @return void
 	 */
 	public function register(): void {
-		// Enable shortcodes in titles and excerpts.
-		add_filter( 'the_title', 'do_shortcode' );
-		add_filter( 'single_post_title', 'do_shortcode' );
-		add_filter( 'wp_title', 'do_shortcode' );
-		add_filter( 'the_excerpt', 'do_shortcode' );
-		add_filter( 'get_the_excerpt', [ $this, 'render_shortcodes_in_excerpt' ] );
+		add_action( 'init', [ $this, 'register_core_filters' ] );
 
-		// Prevent shortcodes from being stripped.
+		// Always register — not context-sensitive.
 		add_filter( 'strip_shortcodes_tagnames', [ $this, 'preserve_shortcodes' ] );
-
-		// Enable shortcodes in archive titles.
-		add_filter( 'get_the_archive_title', [ $this, 'archive_title_shortcodes' ] );
-
-		// Plugin action links.
 		add_filter(
 			'plugin_action_links_dynamic-month-year-into-posts/dynamic-month-year-into-posts.php',
 			[ $this, 'add_action_links' ]
 		);
+	}
+
+	/**
+	 * Register core filters for shortcode processing.
+	 *
+	 * Deferred to `init` so themes can filter via `dmyip_core_filters`.
+	 *
+	 * @return void
+	 */
+	public function register_core_filters(): void {
+		$enabled_filters = apply_filters(
+			'dmyip_core_filters',
+			[
+				'the_title'             => true,
+				'single_post_title'     => true,
+				'wp_title'              => true,
+				'the_excerpt'           => true,
+				'get_the_excerpt'       => true,
+				'get_the_archive_title' => true,
+			]
+		);
+
+		if ( ! is_array( $enabled_filters ) ) {
+			return;
+		}
+
+		if ( ! empty( $enabled_filters['the_title'] ) ) {
+			add_filter( 'the_title', 'do_shortcode' );
+		}
+		if ( ! empty( $enabled_filters['single_post_title'] ) ) {
+			add_filter( 'single_post_title', 'do_shortcode' );
+		}
+		if ( ! empty( $enabled_filters['wp_title'] ) ) {
+			add_filter( 'wp_title', 'do_shortcode' );
+		}
+		if ( ! empty( $enabled_filters['the_excerpt'] ) ) {
+			add_filter( 'the_excerpt', 'do_shortcode' );
+		}
+		if ( ! empty( $enabled_filters['get_the_excerpt'] ) ) {
+			add_filter( 'get_the_excerpt', [ $this, 'render_shortcodes_in_excerpt' ] );
+		}
+		if ( ! empty( $enabled_filters['get_the_archive_title'] ) ) {
+			add_filter( 'get_the_archive_title', [ $this, 'archive_title_shortcodes' ] );
+		}
 	}
 
 	/**

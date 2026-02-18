@@ -37,9 +37,7 @@ const { state, actions } = store( 'dmyip/countdown', {
 			today.setHours( 0, 0, 0, 0 );
 			target.setHours( 0, 0, 0, 0 );
 
-			const diffMs = mode === 'until'
-				? target - today
-				: today - target;
+			const diffMs = mode === 'until' ? target - today : today - target;
 
 			const diffDays = Math.floor( diffMs / ( 1000 * 60 * 60 * 24 ) );
 			context.days = Math.max( 0, diffDays );
@@ -66,9 +64,12 @@ const { state, actions } = store( 'dmyip/countdown', {
 				actions.updateCountdown();
 
 				// Set up daily interval
-				setInterval( () => {
-					actions.updateCountdown();
-				}, 24 * 60 * 60 * 1000 );
+				setInterval(
+					() => {
+						actions.updateCountdown();
+					},
+					24 * 60 * 60 * 1000
+				);
 			}, msUntilMidnight );
 		},
 	},

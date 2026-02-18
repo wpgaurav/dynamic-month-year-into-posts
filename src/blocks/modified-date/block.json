@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "dmyip/modified-date",
-	"version": "1.7.0",
+	"version": "1.7.1",
 	"title": "Modified Date",
 	"category": "widgets",
 	"icon": "update",

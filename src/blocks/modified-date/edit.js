@@ -9,6 +9,10 @@ import { useEntityProp } from '@wordpress/core-data';
 
 /**
  * Edit component.
+ * @param root0
+ * @param root0.attributes
+ * @param root0.setAttributes
+ * @param root0.context
  */
 export default function Edit( { attributes, setAttributes, context } ) {
 	const { format, prefix, suffix } = attributes;
@@ -16,7 +20,12 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	const blockProps = useBlockProps();
 
 	// Get post modified date from entity.
-	const [ modified ] = useEntityProp( 'postType', postType, 'modified', postId );
+	const [ modified ] = useEntityProp(
+		'postType',
+		postType,
+		'modified',
+		postId
+	);
 
 	// Format the date for preview.
 	let previewText = __( '(Modified date)', 'dynamic-month-year-into-posts' );
@@ -36,24 +45,47 @@ export default function Edit( { attributes, setAttributes, context } ) {
 	return (
 		<>
 			<InspectorControls>
-				<PanelBody title={ __( 'Date Settings', 'dynamic-month-year-into-posts' ) }>
+				<PanelBody
+					title={ __(
+						'Date Settings',
+						'dynamic-month-year-into-posts'
+					) }
+				>
 					<TextControl
-						label={ __( 'Date Format', 'dynamic-month-year-into-posts' ) }
+						label={ __(
+							'Date Format',
+							'dynamic-month-year-into-posts'
+						) }
 						value={ format }
-						onChange={ ( newFormat ) => setAttributes( { format: newFormat } ) }
+						onChange={ ( newFormat ) =>
+							setAttributes( { format: newFormat } )
+						}
 						placeholder="F j, Y"
-						help={ __( 'PHP date format. Leave empty for WordPress default.', 'dynamic-month-year-into-posts' ) }
+						help={ __(
+							'PHP date format. Leave empty for WordPress default.',
+							'dynamic-month-year-into-posts'
+						) }
 					/>
 					<TextControl
-						label={ __( 'Prefix', 'dynamic-month-year-into-posts' ) }
+						label={ __(
+							'Prefix',
+							'dynamic-month-year-into-posts'
+						) }
 						value={ prefix }
-						onChange={ ( newPrefix ) => setAttributes( { prefix: newPrefix } ) }
+						onChange={ ( newPrefix ) =>
+							setAttributes( { prefix: newPrefix } )
+						}
 						placeholder="e.g., Last updated "
 					/>
 					<TextControl
-						label={ __( 'Suffix', 'dynamic-month-year-into-posts' ) }
+						label={ __(
+							'Suffix',
+							'dynamic-month-year-into-posts'
+						) }
 						value={ suffix }
-						onChange={ ( newSuffix ) => setAttributes( { suffix: newSuffix } ) }
+						onChange={ ( newSuffix ) =>
+							setAttributes( { suffix: newSuffix } )
+						}
 						placeholder="e.g., by Editor"
 					/>
 				</PanelBody>

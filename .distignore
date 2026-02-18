@@ -1,0 +1,42 @@
+# Development
+.git
+.github
+.gitignore
+.distignore
+plan/
+node_modules/
+tests/
+coverage/
+
+# Config
+.phpunit.result.cache
+phpunit.xml
+phpcs.xml
+phpstan.neon
+.eslintrc.js
+.prettierrc
+.editorconfig
+
+# Build tools
+webpack.config.js
+package.json
+package-lock.json
+composer.lock
+
+# IDE
+.idea/
+.vscode/
+*.sublime-*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Claude Code
+CLAUDE.md
+PLAN.md
+
+# Misc
+*.zip
+build-release/
+md-section-for-plugin.html

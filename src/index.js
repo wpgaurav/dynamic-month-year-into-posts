@@ -119,14 +119,14 @@ const SHORTCODE_CATEGORIES = [
 			{
 				code: '[daysuntil date=""]',
 				desc: __(
-					'e.g. date="2025-12-25"',
+					'e.g. date="2025–12–25"',
 					'dynamic-month-year-into-posts'
 				),
 			},
 			{
 				code: '[dayssince date=""]',
 				desc: __(
-					'e.g. date="2020-01-01"',
+					'e.g. date="2020–01–01"',
 					'dynamic-month-year-into-posts'
 				),
 			},
@@ -138,7 +138,7 @@ const SHORTCODE_CATEGORIES = [
 			{
 				code: '[age date=""]',
 				desc: __(
-					'e.g. date="1990-05-15"',
+					'e.g. date="1990–05–15"',
 					'dynamic-month-year-into-posts'
 				),
 			},
@@ -189,8 +189,8 @@ const SHORTCODE_CATEGORIES = [
 /**
  * Format type edit component for the toolbar button.
  *
- * @param {Object} props          Component props.
- * @param {Object} props.value    RichText value.
+ * @param {Object}   props          Component props.
+ * @param {Object}   props.value    RichText value.
  * @param {Function} props.onChange RichText onChange handler.
  */
 function DynamicDateFormatEdit( { value, onChange } ) {

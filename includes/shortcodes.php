@@ -11,11 +11,10 @@ if ( ! defined( 'WPINC' ) ) {
 // [year] shortcode.
 add_shortcode('year', 'dmyip_rmd_current_year');
 function dmyip_rmd_current_year($atts) {
-    $attributes = shortcode_atts( array( 'n' => 0 ), $atts );
-    $current_year  = intval( date_i18n( 'Y' ) );
-    $modified_year = $current_year + intval( $attributes['n'] );
-    $new_year      = date_i18n( 'Y', strtotime( $modified_year . '-01-01' ) );
-    return esc_html( $new_year );
+    $attributes   = shortcode_atts( array( 'n' => 0 ), $atts );
+    $current_year = intval( date_i18n( 'Y' ) );
+    $result       = $current_year + intval( $attributes['n'] );
+    return esc_html( strval( $result ) );
 }
 
 // [month] shortcode.

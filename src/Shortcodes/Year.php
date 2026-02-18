@@ -34,12 +34,11 @@ class Year {
 	 * @return string
 	 */
 	public function current_year( $atts ): string {
-		$attributes    = shortcode_atts( [ 'n' => 0 ], $atts );
-		$current_year  = (int) date_i18n( 'Y' );
-		$modified_year = $current_year + (int) $attributes['n'];
-		$new_year      = date_i18n( 'Y', strtotime( $modified_year . '-01-01' ) );
+		$attributes   = shortcode_atts( [ 'n' => 0 ], $atts );
+		$current_year = (int) date_i18n( 'Y' );
+		$result       = $current_year + (int) $attributes['n'];
 
-		return esc_html( (string) $new_year );
+		return esc_html( (string) $result );
 	}
 
 	/**

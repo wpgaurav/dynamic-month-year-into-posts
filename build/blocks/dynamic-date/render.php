@@ -181,7 +181,8 @@ $dmyip_render_dynamic_date = static function ( $attributes ) {
 								$diff->d
 							);
 						}
-						$output = implode( ', ', $parts ) ?: '0 days';
+						$joined = implode( ', ', $parts );
+						$output = ! empty( $joined ) ? $joined : '0 days';
 					} elseif ( 'age_ym' === $type ) {
 						$parts = [];
 						if ( $diff->y > 0 ) {
@@ -198,7 +199,8 @@ $dmyip_render_dynamic_date = static function ( $attributes ) {
 								$diff->m
 							);
 						}
-						$output = implode( ', ', $parts ) ?: '0 months';
+						$joined = implode( ', ', $parts );
+						$output = ! empty( $joined ) ? $joined : '0 months';
 					} else {
 						$output = (string) $diff->y;
 					}
@@ -221,16 +223,14 @@ $dmyip_render_dynamic_date = static function ( $attributes ) {
 				} else {
 					$output = __( 'Summer', 'dynamic-month-year-into-posts' );
 				}
+			} elseif ( $month >= 3 && $month <= 5 ) {
+				$output = __( 'Spring', 'dynamic-month-year-into-posts' );
+			} elseif ( $month >= 6 && $month <= 8 ) {
+				$output = __( 'Summer', 'dynamic-month-year-into-posts' );
+			} elseif ( $month >= 9 && $month <= 11 ) {
+				$output = __( 'Autumn', 'dynamic-month-year-into-posts' );
 			} else {
-				if ( $month >= 3 && $month <= 5 ) {
-					$output = __( 'Spring', 'dynamic-month-year-into-posts' );
-				} elseif ( $month >= 6 && $month <= 8 ) {
-					$output = __( 'Summer', 'dynamic-month-year-into-posts' );
-				} elseif ( $month >= 9 && $month <= 11 ) {
-					$output = __( 'Autumn', 'dynamic-month-year-into-posts' );
-				} else {
-					$output = __( 'Winter', 'dynamic-month-year-into-posts' );
-				}
+				$output = __( 'Winter', 'dynamic-month-year-into-posts' );
 			}
 			break;
 
