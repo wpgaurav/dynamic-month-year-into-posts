@@ -276,3 +276,4 @@ jobs:
           SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
           SLUG: ${{ env.PLUGIN_SLUG }}
           VERSION: ${{ github.event.release.tag_name }}
+          ASSETS_DIR: '.wordpress-org'
