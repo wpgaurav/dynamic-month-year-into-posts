@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -214,9 +214,11 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 == Changelog ==
 
-= 1.7.1 =
-* New: Published Date and Modified Date Gutenberg blocks
+= 1.7.2 =
+* New: Bricks Builder integration — shortcodes now render inside Bricks dynamic data elements.
+* New: Published Date and Modified Date Gutenberg blocks.
 * New: `dmyip_core_filters` filter to selectively disable shortcode processing on WordPress core filters (titles, excerpts, archive titles). Props @meteorlxy.
+* Improved: Release workflow auto-generates changelogs and attaches them to GitHub releases.
 * Fix: `[year]` shortcode with large negative offsets (e.g., `[year n=-2003]`) now returns correct results instead of wrong/empty values.
 * Fix: `[year]` shortcode no longer zero-pads results (e.g., `[year n=-1100]` returns `926` instead of `0926`).
 

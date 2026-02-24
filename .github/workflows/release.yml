@@ -4,17 +4,22 @@ on:
   release:
     types: [published]
 
+permissions:
+  contents: write
+
 env:
   PLUGIN_SLUG: dynamic-month-year-into-posts
 
 jobs:
   build:
-    name: Build Plugin Zip
+    name: Build & Release
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for changelog generation
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -45,8 +50,52 @@ jobs:
             echo "::error::Plugin version ($PLUGIN_VERSION) does not match tag version ($TAG_VERSION)"
             exit 1
           fi
-          echo "Version verified: $PLUGIN_VERSION"
+          echo "✓ Version verified: $PLUGIN_VERSION"
 
+      # ── Generate Changelog ──────────────────────────────────────
+      - name: Generate changelog
+        id: changelog
+        env:
+          TAG: ${{ steps.get_version.outputs.TAG }}
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+        run: |
+          # Find the previous tag.
+          PREV_TAG=$(git tag --sort=-version:refname | grep -v "^${TAG}$" | head -1)
+
+          CHANGELOG_FILE=$(mktemp)
+
+          if [ -n "$PREV_TAG" ]; then
+            echo "Generating changelog: ${PREV_TAG}..${TAG}"
+
+            # Extract changelog from readme.txt for this version.
+            SECTION=$(sed -n "/^= ${VERSION} =/,/^= [0-9]/p" readme.txt | sed '$d' | tail -n +2)
+
+            if [ -n "$SECTION" ]; then
+              echo "## What's Changed" >> "$CHANGELOG_FILE"
+              echo "" >> "$CHANGELOG_FILE"
+              echo "$SECTION" | sed 's/^\* /- /' >> "$CHANGELOG_FILE"
+              echo "" >> "$CHANGELOG_FILE"
+            fi
+
+            # Commit log between tags.
+            echo "## Commits" >> "$CHANGELOG_FILE"
+            echo "" >> "$CHANGELOG_FILE"
+            git log "${PREV_TAG}..${TAG}" --pretty=format:"- %s (%h)" --no-merges >> "$CHANGELOG_FILE"
+            echo "" >> "$CHANGELOG_FILE"
+            echo "" >> "$CHANGELOG_FILE"
+            echo "**Full Changelog**: https://github.com/${{ github.repository }}/compare/${PREV_TAG}...${TAG}" >> "$CHANGELOG_FILE"
+          else
+            echo "## Initial Release" >> "$CHANGELOG_FILE"
+            echo "" >> "$CHANGELOG_FILE"
+            echo "First release of Dynamic Month & Year into Posts v${VERSION}." >> "$CHANGELOG_FILE"
+          fi
+
+          echo "CHANGELOG_FILE=$CHANGELOG_FILE" >> "$GITHUB_OUTPUT"
+
+          echo "--- Generated changelog ---"
+          cat "$CHANGELOG_FILE"
+
+      # ── Build Assets ────────────────────────────────────────────
       - name: Install npm dependencies
         run: npm ci
 
@@ -60,6 +109,7 @@ jobs:
           composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$VENDOR_TMP"
           echo "VENDOR_TMP=$VENDOR_TMP" >> "$GITHUB_ENV"
 
+      # ── Assemble Distribution ───────────────────────────────────
       - name: Assemble distribution
         run: |
           mkdir -p "build-release/${PLUGIN_SLUG}"
@@ -95,10 +145,10 @@ jobs:
             "includes/shortcodes.php" \
             "src/Plugin.php" \
             "src/blocks/dynamic-date/render.php"; do
-            if [ ! -f "$DIST/$f" ]; then
-              echo "::error::Missing critical file: $f"
-              MISSING=$((MISSING + 1))
-            fi
+              if [ ! -f "$DIST/$f" ]; then
+                echo "::error::Missing critical file: $f"
+                MISSING=$((MISSING + 1))
+              fi
           done
 
           if [ "$MISSING" -gt 0 ]; then
@@ -114,9 +164,11 @@ jobs:
             exit 1
           fi
 
-          echo "Distribution verified"
-          find "$DIST" -type f | wc -l | xargs -I{} echo "File count: {}"
+          echo "✓ Distribution verified"
+          FILE_COUNT=$(find "$DIST" -type f | wc -l | tr -d ' ')
+          echo "  Files: ${FILE_COUNT}"
 
+      # ── Package & Upload ────────────────────────────────────────
       - name: Create zip file
         id: zip
         env:
@@ -127,7 +179,11 @@ jobs:
           zip -rq "../${ZIP_NAME}" "${PLUGIN_SLUG}"
           cd ..
           echo "ZIP_NAME=${ZIP_NAME}" >> "$GITHUB_OUTPUT"
-          ls -lh "${ZIP_NAME}"
+
+          ZIP_SIZE=$(du -h "${ZIP_NAME}" | cut -f1)
+          FILE_COUNT=$(zipinfo -t "${ZIP_NAME}" 2>/dev/null | sed 's/[^0-9]*\([0-9]*\) file.*/\1/' || echo "?")
+          echo "ZIP_SIZE=${ZIP_SIZE}" >> "$GITHUB_OUTPUT"
+          echo "FILE_COUNT=${FILE_COUNT}" >> "$GITHUB_OUTPUT"
 
       - name: Generate checksums
         env:
@@ -137,9 +193,10 @@ jobs:
           md5sum "$ZIP_NAME" > "${ZIP_NAME}.md5"
           echo "SHA256: $(cat "${ZIP_NAME}.sha256")"
 
-      - name: Upload plugin zip to release
+      - name: Update release with changelog and assets
         uses: softprops/action-gh-release@v2
         with:
+          body_path: ${{ steps.changelog.outputs.CHANGELOG_FILE }}
           files: |
             ${{ steps.zip.outputs.ZIP_NAME }}
             ${{ steps.zip.outputs.ZIP_NAME }}.sha256
@@ -153,3 +210,22 @@ jobs:
           name: ${{ env.PLUGIN_SLUG }}-${{ steps.get_version.outputs.VERSION }}
           path: ${{ steps.zip.outputs.ZIP_NAME }}
           retention-days: 90
+
+      # ── Summary ─────────────────────────────────────────────────
+      - name: Job summary
+        env:
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+          ZIP_NAME: ${{ steps.zip.outputs.ZIP_NAME }}
+          ZIP_SIZE: ${{ steps.zip.outputs.ZIP_SIZE }}
+          FILE_COUNT: ${{ steps.zip.outputs.FILE_COUNT }}
+        run: |
+          echo "## 🚀 Release v${VERSION}" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "| Item | Value |" >> "$GITHUB_STEP_SUMMARY"
+          echo "|------|-------|" >> "$GITHUB_STEP_SUMMARY"
+          echo "| **Zip** | \`${ZIP_NAME}\` |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| **Size** | ${ZIP_SIZE} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "| **Files** | ${FILE_COUNT} |" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Changelog" >> "$GITHUB_STEP_SUMMARY"
+          cat "${{ steps.changelog.outputs.CHANGELOG_FILE }}" >> "$GITHUB_STEP_SUMMARY"

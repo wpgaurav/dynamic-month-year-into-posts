@@ -1,6 +1,6 @@
 {
 	"name": "dynamic-month-year-into-posts",
-	"version": "1.7.1",
+	"version": "1.7.2",
 	"description": "Insert dynamic year, month, dates into content and meta using shortcodes and blocks.",
 	"author": "Gaurav Tiwari",
 	"license": "GPL-3.0-or-later",

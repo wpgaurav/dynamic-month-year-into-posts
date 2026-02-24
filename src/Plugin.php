@@ -17,7 +17,7 @@ final class Plugin {
 	/**
 	 * Plugin version.
 	 */
-	public const VERSION = '1.7.1';
+	public const VERSION = '1.7.2';
 
 	/**
 	 * Plugin instance.
@@ -104,6 +104,7 @@ final class Plugin {
 		( new Integrations\Yoast() )->register();
 		( new Integrations\SEOPress() )->register();
 		( new Integrations\Elementor() )->register();
+		( new Integrations\Bricks() )->register();
 		( new Integrations\RelatedPosts() )->register();
 	}
 
