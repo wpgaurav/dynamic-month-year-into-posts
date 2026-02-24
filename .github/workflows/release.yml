@@ -105,7 +105,7 @@ jobs:
       - name: Generate production vendor
         run: |
           VENDOR_TMP=$(mktemp -d)
-          cp composer.json composer.lock "$VENDOR_TMP/"
+          cp composer.json "$VENDOR_TMP/"
           composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$VENDOR_TMP"
           echo "VENDOR_TMP=$VENDOR_TMP" >> "$GITHUB_ENV"
 
