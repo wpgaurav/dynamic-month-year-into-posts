@@ -229,3 +229,50 @@ jobs:
           echo "" >> "$GITHUB_STEP_SUMMARY"
           echo "### Changelog" >> "$GITHUB_STEP_SUMMARY"
           cat "${{ steps.changelog.outputs.CHANGELOG_FILE }}" >> "$GITHUB_STEP_SUMMARY"
+
+  # ════════════════════════════════════════════════════════════════
+  # Deploy to WordPress.org
+  # ════════════════════════════════════════════════════════════════
+  deploy:
+    name: Deploy to WordPress.org
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          tools: composer:v2
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Build assets
+        run: npm run build
+
+      - name: Generate production vendor
+        run: |
+          VENDOR_TMP=$(mktemp -d)
+          cp composer.json "$VENDOR_TMP/"
+          composer install --no-dev --optimize-autoloader --no-interaction --working-dir="$VENDOR_TMP"
+          cp -r "$VENDOR_TMP/vendor" ./vendor
+
+      - name: WordPress.org plugin deploy
+        uses: 10up/action-wordpress-plugin-deploy@stable
+        with:
+          generate-zip: false
+        env:
+          SVN_USERNAME: ${{ secrets.SVN_USERNAME }}
+          SVN_PASSWORD: ${{ secrets.SVN_PASSWORD }}
+          SLUG: ${{ env.PLUGIN_SLUG }}
+          VERSION: ${{ github.event.release.tag_name }}
