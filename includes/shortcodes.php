@@ -265,6 +265,7 @@ add_shortcode( 'age', 'dmyip_rmd_age' );
  * Usage: [age date="1990-05-15"] - shows years only
  *        [age date="1990-05-15" format="ym"] - shows years and months
  *        [age date="1990-05-15" format="ymd"] - shows years, months, and days
+ *        [age date="1990-05-15" ordinal="true"] - shows years with ordinal suffix (e.g., "34th")
  *
  * @param array $atts Shortcode attributes.
  * @return string Formatted age string.
@@ -272,8 +273,10 @@ add_shortcode( 'age', 'dmyip_rmd_age' );
 function dmyip_rmd_age( $atts ) {
     $attributes = shortcode_atts(
         array(
-            'date'   => '',
-            'format' => 'y',
+            'date'    => '',
+            'format'  => 'y',
+            'ordinal' => '',
+            'rank'    => '',
         ),
         $atts
     );
@@ -291,7 +294,9 @@ function dmyip_rmd_age( $atts ) {
     $today = new DateTime( gmdate( 'Y-m-d' ) );
     $diff  = $today->diff( $birth );
 
-    $format = strtolower( $attributes['format'] );
+    $format       = strtolower( $attributes['format'] );
+    $show_ordinal = 'true' === strtolower( $attributes['ordinal'] )
+        || 'true' === strtolower( $attributes['rank'] );
 
     switch ( $format ) {
         case 'ymd':
@@ -339,7 +344,35 @@ function dmyip_rmd_age( $atts ) {
 
         case 'y':
         default:
+            if ( $show_ordinal ) {
+                return esc_html( dmyip_get_ordinal_suffix( $diff->y ) );
+            }
             return esc_html( (string) $diff->y );
+    }
+}
+
+/**
+ * Get ordinal suffix for a number (1st, 2nd, 3rd, 4th, etc.).
+ *
+ * @param int $number The number to add suffix to.
+ * @return string Number with ordinal suffix.
+ */
+function dmyip_get_ordinal_suffix( $number ) {
+    $abs_number = abs( $number );
+
+    if ( $abs_number % 100 >= 11 && $abs_number % 100 <= 13 ) {
+        return $number . 'th';
+    }
+
+    switch ( $abs_number % 10 ) {
+        case 1:
+            return $number . 'st';
+        case 2:
+            return $number . 'nd';
+        case 3:
+            return $number . 'rd';
+        default:
+            return $number . 'th';
     }
 }
 
@@ -356,6 +389,69 @@ function dmyip_rmd_modified() {
     $last_modified_timestamp = get_the_modified_time( 'U' );
     $date_format             = get_option( 'date_format' );
     return date_i18n( $date_format, $last_modified_timestamp );
+}
+
+// [season] shortcode.
+add_shortcode( 'season', 'dmyip_rmd_season' );
+/**
+ * Get current season with hemisphere support.
+ * Usage: [season] (Northern hemisphere, default)
+ *        [season region="south"] (Southern hemisphere, reversed)
+ *
+ * @param array $atts Shortcode attributes.
+ * @return string Current season name.
+ */
+function dmyip_rmd_season( $atts ) {
+    $attributes = shortcode_atts(
+        array(
+            'region' => 'north',
+        ),
+        $atts
+    );
+
+    $region = strtolower( $attributes['region'] );
+    $month  = (int) date_i18n( 'n' );
+
+    switch ( $month ) {
+        case 3:
+        case 4:
+        case 5:
+            $season = 'spring';
+            break;
+        case 6:
+        case 7:
+        case 8:
+            $season = 'summer';
+            break;
+        case 9:
+        case 10:
+        case 11:
+            $season = 'fall';
+            break;
+        default:
+            $season = 'winter';
+            break;
+    }
+
+    // Reverse seasons for Southern hemisphere.
+    if ( 'south' === $region || 'southern' === $region ) {
+        $opposites = array(
+            'spring' => 'fall',
+            'summer' => 'winter',
+            'fall'   => 'spring',
+            'winter' => 'summer',
+        );
+        $season = isset( $opposites[ $season ] ) ? $opposites[ $season ] : $season;
+    }
+
+    $names = array(
+        'spring' => __( 'Spring', 'dynamic-month-year-into-posts' ),
+        'summer' => __( 'Summer', 'dynamic-month-year-into-posts' ),
+        'fall'   => __( 'Fall', 'dynamic-month-year-into-posts' ),
+        'winter' => __( 'Winter', 'dynamic-month-year-into-posts' ),
+    );
+
+    return esc_html( isset( $names[ $season ] ) ? $names[ $season ] : '' );
 }
 
 // Settings link for plugin action links.

@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.0
 Tested up to: 6.9
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -213,6 +213,12 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 
 == Changelog ==
+
+= 1.7.3 =
+* Fix: `[season]` shortcode not working in legacy (non-Composer) installations.
+* Fix: `[age]` shortcode missing `ordinal`/`rank` attributes in legacy installations.
+* Fix: Duplicate Open Graph filter registrations in legacy Rank Math integration.
+* Fix: Duplicate Elementor and CRP filter registrations in legacy SEOPress file.
 
 = 1.7.2 =
 * New: Bricks Builder integration — shortcodes now render inside Bricks dynamic data elements.

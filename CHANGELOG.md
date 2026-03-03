@@ -2,6 +2,14 @@
 
 All notable changes to the **Dynamic Month & Year into Posts** plugin will be documented in this file.
 
+## [1.7.3] - 2026-03-03
+
+### Fixed
+- `[season]` shortcode not working in legacy (non-Composer) installations.
+- `[age]` shortcode missing `ordinal`/`rank` attributes in legacy installations.
+- Duplicate Open Graph filter registrations in legacy Rank Math integration.
+- Duplicate Elementor and CRP filter registrations in legacy SEOPress file.
+
 ## [1.7.2] - 2026-02-24
 
 ### Added
