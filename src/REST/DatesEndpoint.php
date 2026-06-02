@@ -28,6 +28,91 @@ class DatesEndpoint {
 	private const NAMESPACE = 'dmyip/v1';
 
 	/**
+	 * REST date types.
+	 */
+	private const VALID_TYPES = [
+		'year',
+		'nyear',
+		'nnyear',
+		'pyear',
+		'ppyear',
+		'month',
+		'cmonth',
+		'mon',
+		'cmon',
+		'mm',
+		'mn',
+		'nmonth',
+		'cnmonth',
+		'nmon',
+		'cnmon',
+		'pmonth',
+		'cpmonth',
+		'pmon',
+		'cpmon',
+		'date',
+		'monthyear',
+		'nmonthyear',
+		'pmonthyear',
+		'dt',
+		'nd',
+		'pd',
+		'weekday',
+		'wd',
+		'blackfriday',
+		'cybermonday',
+		'daysuntil',
+		'dayssince',
+		'datepublished',
+		'datemodified',
+		'age',
+		'season',
+		'season_south',
+	];
+
+	/**
+	 * Shortcodes allowed through the public render endpoint.
+	 */
+	private const RENDERABLE_SHORTCODES = [
+		'year',
+		'month',
+		'cmonth',
+		'mon',
+		'cmon',
+		'mm',
+		'mn',
+		'nmonth',
+		'cnmonth',
+		'pmonth',
+		'cpmonth',
+		'nmon',
+		'cnmon',
+		'pmon',
+		'cpmon',
+		'date',
+		'monthyear',
+		'nmonthyear',
+		'pmonthyear',
+		'nyear',
+		'nnyear',
+		'pyear',
+		'ppyear',
+		'dt',
+		'nd',
+		'pd',
+		'weekday',
+		'wd',
+		'blackfriday',
+		'cybermonday',
+		'daysuntil',
+		'dayssince',
+		'datepublished',
+		'datemodified',
+		'age',
+		'season',
+	];
+
+	/**
 	 * Register the endpoint.
 	 *
 	 * @return void
@@ -66,7 +151,7 @@ class DatesEndpoint {
 					],
 					'offset' => [
 						'default'           => 0,
-						'sanitize_callback' => 'absint',
+						'sanitize_callback' => [ $this, 'sanitize_offset' ],
 					],
 					'date'   => [
 						'default'           => '',
@@ -83,6 +168,23 @@ class DatesEndpoint {
 				'methods'             => WP_REST_Server::READABLE,
 				'callback'            => [ $this, 'get_shortcodes_list' ],
 				'permission_callback' => '__return_true',
+			]
+		);
+
+		register_rest_route(
+			self::NAMESPACE,
+			'/render',
+			[
+				'methods'             => WP_REST_Server::READABLE,
+				'callback'            => [ $this, 'render_shortcode' ],
+				'permission_callback' => '__return_true',
+				'args'                => [
+					'shortcode' => [
+						'required'          => true,
+						'sanitize_callback' => 'sanitize_text_field',
+						'validate_callback' => [ $this, 'validate_shortcode' ],
+					],
+				],
 			]
 		);
 	}
@@ -144,9 +246,9 @@ class DatesEndpoint {
 	 * @return WP_REST_Response
 	 */
 	public function get_single_date( WP_REST_Request $request ): WP_REST_Response {
-		$type   = $request->get_param( 'type' );
-		$offset = $request->get_param( 'offset' );
-		$date   = $request->get_param( 'date' );
+		$type   = (string) $request->get_param( 'type' );
+		$offset = (int) $request->get_param( 'offset' );
+		$date   = (string) $request->get_param( 'date' );
 
 		$shortcode_map = [
 			'year'          => '[year]',
@@ -182,20 +284,23 @@ class DatesEndpoint {
 			'datepublished' => '[datepublished]',
 			'datemodified'  => '[datemodified]',
 			'season'        => '[season]',
+			'season_south'  => '[season region="south"]',
 		];
 
 		// Handle special cases.
-		if ( 'year' === $type && $offset > 0 ) {
+		if ( 'year' === $type && 0 !== $offset ) {
 			$value = do_shortcode( '[year n="' . $offset . '"]' );
-		} elseif ( 'daysuntil' === $type && ! empty( $date ) ) {
+		} elseif ( 'daysuntil' === $type && '' !== $date ) {
 			$value = do_shortcode( '[daysuntil date="' . esc_attr( $date ) . '"]' );
-		} elseif ( 'dayssince' === $type && ! empty( $date ) ) {
+		} elseif ( 'dayssince' === $type && '' !== $date ) {
 			$value = do_shortcode( '[dayssince date="' . esc_attr( $date ) . '"]' );
+		} elseif ( 'age' === $type && '' !== $date ) {
+			$value = do_shortcode( '[age date="' . esc_attr( $date ) . '"]' );
 		} elseif ( isset( $shortcode_map[ $type ] ) ) {
 			$value = do_shortcode( $shortcode_map[ $type ] );
 		} else {
 			return new WP_REST_Response(
-				[ 'error' => 'Invalid date type' ],
+				[ 'error' => __( 'Invalid date type or missing required parameter.', 'dynamic-month-year-into-posts' ) ],
 				400
 			);
 		}
@@ -204,6 +309,31 @@ class DatesEndpoint {
 			[
 				'type'  => $type,
 				'value' => $value,
+			],
+			200
+		);
+	}
+
+	/**
+	 * Render one plugin shortcode.
+	 *
+	 * @param WP_REST_Request $request Request object.
+	 * @return WP_REST_Response
+	 */
+	public function render_shortcode( WP_REST_Request $request ): WP_REST_Response {
+		$shortcode = trim( (string) $request->get_param( 'shortcode' ) );
+
+		if ( '' === $shortcode || ! $this->is_renderable_shortcode( $shortcode ) ) {
+			return new WP_REST_Response(
+				[ 'error' => __( 'Invalid shortcode.', 'dynamic-month-year-into-posts' ) ],
+				400
+			);
+		}
+
+		return new WP_REST_Response(
+			[
+				'shortcode' => $shortcode,
+				'value'     => do_shortcode( $shortcode ),
 			],
 			200
 		);
@@ -364,45 +494,52 @@ class DatesEndpoint {
 	 * @return bool
 	 */
 	public function validate_type( string $value ): bool {
-		$valid_types = [
-			'year',
-			'nyear',
-			'nnyear',
-			'pyear',
-			'ppyear',
-			'month',
-			'cmonth',
-			'mon',
-			'cmon',
-			'mm',
-			'mn',
-			'nmonth',
-			'cnmonth',
-			'nmon',
-			'cnmon',
-			'pmonth',
-			'cpmonth',
-			'pmon',
-			'cpmon',
-			'date',
-			'monthyear',
-			'nmonthyear',
-			'pmonthyear',
-			'dt',
-			'nd',
-			'pd',
-			'weekday',
-			'wd',
-			'blackfriday',
-			'cybermonday',
-			'daysuntil',
-			'dayssince',
-			'datepublished',
-			'datemodified',
-			'age',
-			'season',
-		];
+		return in_array( $value, self::VALID_TYPES, true );
+	}
 
-		return in_array( $value, $valid_types, true );
+	/**
+	 * Sanitize a signed year offset.
+	 *
+	 * @param mixed $value Offset value.
+	 * @return int
+	 */
+	public function sanitize_offset( $value ): int {
+		return (int) $value;
+	}
+
+	/**
+	 * Validate render endpoint shortcode.
+	 *
+	 * @param mixed $value Shortcode string.
+	 * @return bool
+	 */
+	public function validate_shortcode( $value ): bool {
+		return is_string( $value ) && $this->is_renderable_shortcode( trim( $value ) );
+	}
+
+	/**
+	 * Check whether a shortcode is safe to render through REST.
+	 *
+	 * @param string $shortcode Shortcode string.
+	 * @return bool
+	 */
+	private function is_renderable_shortcode( string $shortcode ): bool {
+		$tag = $this->get_shortcode_tag( $shortcode );
+
+		return null !== $tag && in_array( $tag, self::RENDERABLE_SHORTCODES, true );
+	}
+
+	/**
+	 * Extract a shortcode tag from a single shortcode string.
+	 *
+	 * @param string $shortcode Shortcode string.
+	 * @return string|null
+	 */
+	private function get_shortcode_tag( string $shortcode ): ?string {
+		if ( 1 !== preg_match( '/^\[([A-Za-z0-9_-]+)(?:\s[^\]]*)?\]$/', $shortcode, $matches ) ) {
+			return null;
+		}
+
+		return strtolower( $matches[1] );
 	}
 }

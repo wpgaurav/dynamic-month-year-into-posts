@@ -94,6 +94,7 @@ mkdir -p "${BUILD_DIR}/${PLUGIN_SLUG}"
 rsync -a \
 	--exclude-from=".distignore" \
 	--exclude="${BUILD_DIR}" \
+	--exclude="vendor" \
 	. "${BUILD_DIR}/${PLUGIN_SLUG}/"
 
 # Inject production vendor + composer.json (excluded by .distignore to prevent dev deps leaking).

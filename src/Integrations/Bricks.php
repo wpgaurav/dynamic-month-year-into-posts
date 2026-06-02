@@ -39,6 +39,8 @@ class Bricks {
 	 * @return string
 	 */
 	public function render_shortcodes( $content, $post, $context ): string {
+		unset( $post, $context );
+
 		if ( ! is_string( $content ) || strpos( $content, '[' ) === false ) {
 			return $content;
 		}

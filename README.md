@@ -10,8 +10,8 @@ Automate SEO and content with dynamic shortcodes for dates, years, months, age c
 **Donate link:** https://gauravtiwari.org/donate/
 **Tags:** dynamic content, shortcode, seo, dates, year
 **Requires at least:** 6.0
-**Tested up to:** 6.9
-**Stable tag:** 1.7.3
+**Tested up to:** 7.0
+**Stable tag:** 1.7.4
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -223,7 +223,8 @@ Access dynamic dates programmatically:
 ```
 GET /wp-json/dmyip/v1/dates
 GET /wp-json/dmyip/v1/shortcodes
-GET /wp-json/dmyip/v1/render?shortcode=[year]
+GET /wp-json/dmyip/v1/date/year?offset=-3
+GET /wp-json/dmyip/v1/render?shortcode=%5Byear%20n%3D-3%5D
 ```
 
 ## WP-CLI Commands
@@ -392,6 +393,9 @@ This plugin:
 - [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ## Changelog
+
+### 1.7.4
+- Changed: Tested up to WordPress 7.0
 
 ### 1.7.3
 - Fix: `[season]` shortcode not working in legacy (non-Composer) installations

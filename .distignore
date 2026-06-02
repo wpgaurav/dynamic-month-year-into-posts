@@ -22,7 +22,6 @@ webpack.config.js
 package.json
 package-lock.json
 composer.lock
-vendor/
 
 # Scripts
 build.sh

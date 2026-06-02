@@ -16,6 +16,7 @@ use DMYIP\Shortcodes\Date;
 use DMYIP\Shortcodes\Events;
 use DMYIP\Shortcodes\Countdown;
 use DMYIP\Shortcodes\Season;
+use DMYIP\REST\DatesEndpoint;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -111,6 +112,36 @@ class ShortcodesTest extends TestCase {
 		$result   = $this->year->current_year( [ 'n' => -3 ] );
 		$expected = (string) ( (int) date( 'Y' ) - 3 );
 		$this->assertEquals( $expected, $result );
+	}
+
+	/**
+	 * Test REST year offset sanitizer preserves negative values.
+	 */
+	public function test_rest_sanitize_offset_preserves_negative_values(): void {
+		$endpoint = new DatesEndpoint();
+		$this->assertEquals( -3, $endpoint->sanitize_offset( '-3' ) );
+		$this->assertEquals( 5, $endpoint->sanitize_offset( '5' ) );
+	}
+
+	/**
+	 * Test REST type validation supports documented date types.
+	 */
+	public function test_rest_validate_type(): void {
+		$endpoint = new DatesEndpoint();
+		$this->assertTrue( $endpoint->validate_type( 'year' ) );
+		$this->assertTrue( $endpoint->validate_type( 'season_south' ) );
+		$this->assertFalse( $endpoint->validate_type( 'not_real' ) );
+	}
+
+	/**
+	 * Test REST render endpoint accepts only plugin shortcodes.
+	 */
+	public function test_rest_validate_shortcode(): void {
+		$endpoint = new DatesEndpoint();
+		$this->assertTrue( $endpoint->validate_shortcode( '[year n="-3"]' ) );
+		$this->assertTrue( $endpoint->validate_shortcode( '[daysuntil date="2026-12-25"]' ) );
+		$this->assertFalse( $endpoint->validate_shortcode( '[gallery]' ) );
+		$this->assertFalse( $endpoint->validate_shortcode( 'plain text [year]' ) );
 	}
 
 	/**

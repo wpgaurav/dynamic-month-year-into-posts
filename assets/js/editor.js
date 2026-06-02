@@ -21,218 +21,363 @@
 		const Popover = wp.components.Popover;
 		const Button = wp.components.Button;
 
-		// Shortcode categories
+		// Shortcode categories.
 		const shortcodeCategories = [
 			{
-				label: 'Year',
+				label: __( 'Year', 'dynamic-month-year-into-posts' ),
 				shortcodes: [
-					{ code: '[year]', desc: 'Current year' },
-					{ code: '[nyear]', desc: 'Next year' },
-					{ code: '[pyear]', desc: 'Previous year' },
+					{
+						code: '[year]',
+						desc: __(
+							'Current year',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[nyear]',
+						desc: __(
+							'Next year',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[pyear]',
+						desc: __(
+							'Previous year',
+							'dynamic-month-year-into-posts'
+						),
+					},
 				],
 			},
 			{
-				label: 'Month',
+				label: __( 'Month', 'dynamic-month-year-into-posts' ),
 				shortcodes: [
-					{ code: '[month]', desc: 'Current month' },
-					{ code: '[mon]', desc: 'Month (short)' },
-					{ code: '[nmonth]', desc: 'Next month' },
-					{ code: '[pmonth]', desc: 'Previous month' },
+					{
+						code: '[month]',
+						desc: __(
+							'Current month',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[mon]',
+						desc: __(
+							'Month (short)',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[nmonth]',
+						desc: __(
+							'Next month',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[pmonth]',
+						desc: __(
+							'Previous month',
+							'dynamic-month-year-into-posts'
+						),
+					},
 				],
 			},
 			{
-				label: 'Date',
+				label: __( 'Date', 'dynamic-month-year-into-posts' ),
 				shortcodes: [
-					{ code: '[date]', desc: "Today's date" },
-					{ code: '[monthyear]', desc: 'Month and year' },
-					{ code: '[dt]', desc: 'Day of month' },
-					{ code: '[weekday]', desc: 'Day of week' },
+					{
+						code: '[date]',
+						desc: __(
+							"Today's date",
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[monthyear]',
+						desc: __(
+							'Month and year',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[dt]',
+						desc: __(
+							'Day of month',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[weekday]',
+						desc: __(
+							'Day of week',
+							'dynamic-month-year-into-posts'
+						),
+					},
 				],
 			},
 			{
-				label: 'Post Dates',
+				label: __( 'Post Dates', 'dynamic-month-year-into-posts' ),
 				shortcodes: [
-					{ code: '[datepublished]', desc: 'Publication date' },
-					{ code: '[datemodified]', desc: 'Modified date' },
+					{
+						code: '[datepublished]',
+						desc: __(
+							'Publication date',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[datemodified]',
+						desc: __(
+							'Modified date',
+							'dynamic-month-year-into-posts'
+						),
+					},
 				],
 			},
 			{
-				label: 'Events',
+				label: __( 'Events', 'dynamic-month-year-into-posts' ),
 				shortcodes: [
-					{ code: '[blackfriday]', desc: 'Black Friday' },
-					{ code: '[cybermonday]', desc: 'Cyber Monday' },
+					{
+						code: '[blackfriday]',
+						desc: __(
+							'Black Friday',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[cybermonday]',
+						desc: __(
+							'Cyber Monday',
+							'dynamic-month-year-into-posts'
+						),
+					},
 				],
 			},
 			{
-				label: 'Countdown',
+				label: __( 'Countdown', 'dynamic-month-year-into-posts' ),
 				shortcodes: [
-					{ code: '[daysuntil date=""]', desc: 'Days until date' },
-					{ code: '[dayssince date=""]', desc: 'Days since date' },
+					{
+						code: '[daysuntil date=""]',
+						desc: __(
+							'Days until date',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[dayssince date=""]',
+						desc: __(
+							'Days since date',
+							'dynamic-month-year-into-posts'
+						),
+					},
+				],
+			},
+			{
+				label: __( 'Age', 'dynamic-month-year-into-posts' ),
+				shortcodes: [
+					{
+						code: '[age date=""]',
+						desc: __(
+							'Age in years',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[age date="" ordinal="true"]',
+						desc: __(
+							'Age with suffix',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[age date="" format="ym"]',
+						desc: __(
+							'Years and months',
+							'dynamic-month-year-into-posts'
+						),
+					},
+				],
+			},
+			{
+				label: __( 'Season', 'dynamic-month-year-into-posts' ),
+				shortcodes: [
+					{
+						code: '[season]',
+						desc: __(
+							'Current season',
+							'dynamic-month-year-into-posts'
+						),
+					},
+					{
+						code: '[season region="south"]',
+						desc: __(
+							'Southern hemisphere',
+							'dynamic-month-year-into-posts'
+						),
+					},
 				],
 			},
 		];
 
-		// Unregister if already registered (for hot reload)
+		// Unregister if already registered (for hot reload).
 		try {
 			unregisterFormatType( 'dmyip/shortcode' );
-		} catch ( e ) {
-			// Ignore if not registered
+		} catch {
+			// Ignore if not registered.
 		}
 
-		// Register the format type
-		registerFormatType( 'dmyip/shortcode', {
-			title: 'Dynamic Date',
-			tagName: 'span',
-			className: 'dmyip-shortcode',
-			edit( props ) {
-				const value = props.value;
-				const onChange = props.onChange;
-				const isActive = props.isActive;
+		function DynamicDateFormatEdit( props ) {
+			const value = props.value;
+			const onChange = props.onChange;
+			const stateArray = useState( false );
+			const isOpen = stateArray[ 0 ];
+			const setIsOpen = stateArray[ 1 ];
 
-				const stateArray = useState( false );
-				const isOpen = stateArray[ 0 ];
-				const setIsOpen = stateArray[ 1 ];
+			const insertShortcode = function ( shortcode ) {
+				const toInsert = create( { text: shortcode } );
+				onChange( insert( value, toInsert ) );
+				setIsOpen( false );
+			};
 
-				const togglePopover = function () {
-					setIsOpen( ! isOpen );
-				};
-
-				const insertShortcode = function ( shortcode ) {
-					const toInsert = create( { text: shortcode } );
-					onChange( insert( value, toInsert ) );
-					setIsOpen( false );
-				};
-
-				return createElement(
-					Fragment,
-					null,
-					createElement( RichTextToolbarButton, {
-						icon: 'calendar-alt',
-						title: 'Insert Dynamic Date',
-						onClick: togglePopover,
-						isActive: isOpen,
-					} ),
-					isOpen &&
+			return createElement(
+				Fragment,
+				null,
+				createElement( RichTextToolbarButton, {
+					icon: 'calendar-alt',
+					title: __(
+						'Insert Dynamic Date',
+						'dynamic-month-year-into-posts'
+					),
+					onClick() {
+						setIsOpen( ! isOpen );
+					},
+					isActive: isOpen,
+				} ),
+				isOpen &&
+					createElement(
+						Popover,
+						{
+							position: 'bottom center',
+							onClose() {
+								setIsOpen( false );
+							},
+							focusOnMount: 'container',
+						},
 						createElement(
-							Popover,
+							'div',
 							{
-								position: 'bottom center',
-								onClose() {
-									setIsOpen( false );
+								style: {
+									padding: '12px',
+									minWidth: '260px',
+									maxHeight: '350px',
+									overflowY: 'auto',
 								},
-								focusOnMount: 'container',
 							},
 							createElement(
 								'div',
 								{
 									style: {
-										padding: '12px',
-										minWidth: '240px',
-										maxHeight: '350px',
-										overflowY: 'auto',
+										fontWeight: '600',
+										marginBottom: '12px',
+										paddingBottom: '8px',
+										borderBottom: '1px solid #ddd',
 									},
 								},
-								createElement(
-									'div',
-									{
-										style: {
-											fontWeight: '600',
-											marginBottom: '12px',
-											paddingBottom: '8px',
-											borderBottom: '1px solid #ddd',
+								__(
+									'Insert Dynamic Date',
+									'dynamic-month-year-into-posts'
+								)
+							),
+							shortcodeCategories.map(
+								function ( category, catIndex ) {
+									return createElement(
+										'div',
+										{
+											key: 'cat-' + catIndex,
+											style: { marginBottom: '10px' },
 										},
-									},
-									'Insert Dynamic Date'
-								),
-								shortcodeCategories.map(
-									function ( category, catIndex ) {
-										return createElement(
+										createElement(
 											'div',
 											{
-												key: 'cat-' + catIndex,
-												style: { marginBottom: '10px' },
-											},
-											createElement(
-												'div',
-												{
-													style: {
-														fontSize: '11px',
-														fontWeight: '600',
-														textTransform:
-															'uppercase',
-														color: '#757575',
-														marginBottom: '4px',
-													},
+												style: {
+													fontSize: '11px',
+													fontWeight: '600',
+													textTransform: 'uppercase',
+													color: '#757575',
+													marginBottom: '4px',
 												},
-												category.label
-											),
-											category.shortcodes.map(
-												function ( item, itemIndex ) {
-													return createElement(
-														Button,
+											},
+											category.label
+										),
+										category.shortcodes.map(
+											function ( item, itemIndex ) {
+												return createElement(
+													Button,
+													{
+														key:
+															'item-' +
+															catIndex +
+															'-' +
+															itemIndex,
+														variant: 'tertiary',
+														onClick() {
+															insertShortcode(
+																item.code
+															);
+														},
+														style: {
+															display: 'flex',
+															width: '100%',
+															justifyContent:
+																'space-between',
+															padding: '4px 8px',
+															height: 'auto',
+															marginBottom: '2px',
+														},
+													},
+													createElement(
+														'code',
 														{
-															key:
-																'item-' +
-																catIndex +
-																'-' +
-																itemIndex,
-															variant: 'tertiary',
-															onClick() {
-																insertShortcode(
-																	item.code
-																);
-															},
 															style: {
-																display: 'flex',
-																width: '100%',
-																justifyContent:
-																	'space-between',
+																fontSize:
+																	'11px',
+																background:
+																	'#f0f0f0',
 																padding:
-																	'4px 8px',
-																height: 'auto',
-																marginBottom:
+																	'2px 4px',
+																borderRadius:
 																	'2px',
 															},
 														},
-														createElement(
-															'code',
-															{
-																style: {
-																	fontSize:
-																		'11px',
-																	background:
-																		'#f0f0f0',
-																	padding:
-																		'2px 4px',
-																	borderRadius:
-																		'2px',
-																},
+														item.code
+													),
+													createElement(
+														'span',
+														{
+															style: {
+																fontSize:
+																	'11px',
+																color: '#757575',
 															},
-															item.code
-														),
-														createElement(
-															'span',
-															{
-																style: {
-																	fontSize:
-																		'11px',
-																	color: '#757575',
-																},
-															},
-															item.desc
-														)
-													);
-												}
-											)
-										);
-									}
-								)
+														},
+														item.desc
+													)
+												);
+											}
+										)
+									);
+								}
 							)
 						)
-				);
-			},
-		} );
+					)
+			);
+		}
 
-		console.log( 'DMYIP: Dynamic Date shortcode format registered' );
+		registerFormatType( 'dmyip/shortcode', {
+			title: __( 'Dynamic Date', 'dynamic-month-year-into-posts' ),
+			tagName: 'span',
+			className: 'dmyip-shortcode',
+			edit: DynamicDateFormatEdit,
+		} );
 	} );
 } )();

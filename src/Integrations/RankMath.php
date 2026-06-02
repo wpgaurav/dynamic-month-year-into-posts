@@ -52,6 +52,8 @@ class RankMath {
 	 * @return array<string, mixed>
 	 */
 	public function process_json_ld( array $data, $context ): array {
+		unset( $context );
+
 		array_walk_recursive(
 			$data,
 			function ( &$value ) {

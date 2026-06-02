@@ -14,8 +14,10 @@ import { useState, useEffect } from '@wordpress/element';
 
 /**
  * Calculate days between two dates.
- * @param targetDate
- * @param mode
+ *
+ * @param {string} targetDate Target date string.
+ * @param {string} mode       Countdown mode.
+ * @return {number} Number of days.
  */
 function calculateDays( targetDate, mode ) {
 	if ( ! targetDate ) {
@@ -37,9 +39,11 @@ function calculateDays( targetDate, mode ) {
 
 /**
  * Edit component.
- * @param root0
- * @param root0.attributes
- * @param root0.setAttributes
+ *
+ * @param {Object}   root0               Component props.
+ * @param {Object}   root0.attributes    Block attributes.
+ * @param {Function} root0.setAttributes Attribute updater.
+ * @return {Element} Edit component.
  */
 export default function Edit( { attributes, setAttributes } ) {
 	const { mode, targetDate, label, showLabel } = attributes;

@@ -57,6 +57,8 @@ class BlockBindings {
 	 * @return string|null
 	 */
 	public function get_binding_value( array $source_args, $block_instance, string $attribute_name ): ?string {
+		unset( $block_instance, $attribute_name );
+
 		$type = $source_args['type'] ?? 'year';
 
 		// Map binding types to shortcodes.

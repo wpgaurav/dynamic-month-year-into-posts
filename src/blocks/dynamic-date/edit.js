@@ -4,12 +4,7 @@
 
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
-import {
-	PanelBody,
-	SelectControl,
-	TextControl,
-	__experimentalNumberControl as NumberControl,
-} from '@wordpress/components';
+import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
 
 /**
  * Date type options organized by category.
@@ -187,30 +182,14 @@ const DATE_TYPES = [
 ];
 
 /**
- * Age format options.
- */
-const AGE_FORMATS = [
-	{ value: 'y', label: __( 'Years only', 'dynamic-month-year-into-posts' ) },
-	{
-		value: 'ym',
-		label: __( 'Years and Months', 'dynamic-month-year-into-posts' ),
-	},
-	{
-		value: 'ymd',
-		label: __( 'Years, Months, and Days', 'dynamic-month-year-into-posts' ),
-	},
-];
-
-/**
  * Get preview text for a date type.
  *
- * @param {string} type      Date type.
- * @param {number} offset    Year offset.
- * @param {string} date      Target date.
- * @param {string} ageFormat Age format (y, ym, ymd).
+ * @param {string} type   Date type.
+ * @param {number} offset Year offset.
+ * @param {string} date   Target date.
  * @return {string} Preview text.
  */
-function getPreviewText( type, offset, date, ageFormat = 'y' ) {
+function getPreviewText( type, offset, date ) {
 	const now = new Date();
 
 	switch ( type ) {
@@ -305,12 +284,13 @@ function getPreviewText( type, offset, date, ageFormat = 'y' ) {
 
 /**
  * Get Black Friday date string.
- * @param year
+ *
+ * @param {number} year Year.
+ * @return {string} Black Friday date.
  */
 function getBlackFriday( year ) {
 	// Fourth Thursday of November + 1 day
 	const nov = new Date( year, 10, 1 ); // November
-	const thursday = 1;
 	while ( nov.getDay() !== 4 ) {
 		nov.setDate( nov.getDate() + 1 );
 	}
@@ -326,7 +306,9 @@ function getBlackFriday( year ) {
 
 /**
  * Get Cyber Monday date string.
- * @param year
+ *
+ * @param {number} year Year.
+ * @return {string} Cyber Monday date.
  */
 function getCyberMonday( year ) {
 	const nov = new Date( year, 10, 1 );
@@ -344,7 +326,9 @@ function getCyberMonday( year ) {
 
 /**
  * Calculate days until a date.
- * @param dateStr
+ *
+ * @param {string} dateStr Date string.
+ * @return {string} Days until the date.
  */
 function getDaysUntil( dateStr ) {
 	const target = new Date( dateStr );
@@ -357,7 +341,9 @@ function getDaysUntil( dateStr ) {
 
 /**
  * Calculate days since a date.
- * @param dateStr
+ *
+ * @param {string} dateStr Date string.
+ * @return {string} Days since the date.
  */
 function getDaysSince( dateStr ) {
 	const target = new Date( dateStr );
@@ -518,15 +504,17 @@ function getSeason( hemisphere = 'north' ) {
 
 /**
  * Edit component.
- * @param root0
- * @param root0.attributes
- * @param root0.setAttributes
+ *
+ * @param {Object}   root0               Component props.
+ * @param {Object}   root0.attributes    Block attributes.
+ * @param {Function} root0.setAttributes Attribute updater.
+ * @return {Element} Edit component.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { type, format, offset, date, ageFormat } = attributes;
+	const { type, format, offset, date } = attributes;
 	const blockProps = useBlockProps();
 
-	const previewText = getPreviewText( type, offset, date, ageFormat );
+	const previewText = getPreviewText( type, offset, date );
 	const showOffsetControl = type === 'year';
 	const showDateControl =
 		type === 'daysuntil' ||
@@ -567,7 +555,7 @@ export default function Edit( { attributes, setAttributes } ) {
 					/>
 
 					{ showOffsetControl && (
-						<NumberControl
+						<TextControl
 							label={ __(
 								'Year Offset',
 								'dynamic-month-year-into-posts'
@@ -578,6 +566,7 @@ export default function Edit( { attributes, setAttributes } ) {
 									offset: parseInt( newOffset, 10 ) || 0,
 								} )
 							}
+							type="number"
 							help={ __(
 								'Add or subtract years from current year.',
 								'dynamic-month-year-into-posts'

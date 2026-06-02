@@ -25,10 +25,6 @@ parameters:
 		-
 			message: '#Function dmyip_.* has no return type specified#'
 			path: dynamic-month-year-into-posts.php
-		# WP_REST_Request generic
-		-
-			message: '#generic class WP_REST_Request#'
-			path: src/REST/DatesEndpoint.php
 		# Iterable value types
 		-
 			identifier: missingType.iterableValue

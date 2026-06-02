@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.0
-Tested up to: 6.9
-Stable tag: 1.7.3
+Tested up to: 7.0
+Stable tag: 1.7.4
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -213,6 +213,9 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 
 == Changelog ==
+
+= 1.7.4 =
+* Changed: Tested up to WordPress 7.0.
 
 = 1.7.3 =
 * Fix: `[season]` shortcode not working in legacy (non-Composer) installations.

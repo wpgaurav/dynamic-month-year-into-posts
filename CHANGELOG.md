@@ -2,6 +2,11 @@
 
 All notable changes to the **Dynamic Month & Year into Posts** plugin will be documented in this file.
 
+## [1.7.4] - 2026-06-02
+
+### Changed
+- Tested up to WordPress 7.0.
+
 ## [1.7.3] - 2026-03-03
 
 ### Fixed

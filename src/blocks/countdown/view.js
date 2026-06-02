@@ -6,7 +6,7 @@
 
 import { store, getContext } from '@wordpress/interactivity';
 
-const { state, actions } = store( 'dmyip/countdown', {
+const { actions } = store( 'dmyip/countdown', {
 	state: {
 		get displayText() {
 			const context = getContext();

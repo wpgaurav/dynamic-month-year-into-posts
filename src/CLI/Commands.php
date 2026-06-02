@@ -353,6 +353,8 @@ class Commands {
 	 * @return void
 	 */
 	public function test( array $args, array $assoc_args ): void {
+		unset( $args, $assoc_args );
+
 		WP_CLI::line( 'Testing all shortcodes...' );
 		WP_CLI::line( '' );
 
@@ -411,6 +413,8 @@ class Commands {
 	 * @return void
 	 */
 	public function info( array $args, array $assoc_args ): void {
+		unset( $args, $assoc_args );
+
 		WP_CLI::line( 'Dynamic Month & Year into Posts' );
 		WP_CLI::line( '================================' );
 		WP_CLI::line( '' );
