@@ -4,7 +4,7 @@ Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.5
 Tested up to: 7.0
-Stable tag: 1.8.0-beta
+Stable tag: 1.8.0
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -215,7 +215,7 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 == Changelog ==
 
-= 1.8.0-beta =
+= 1.8.0 =
 * Added: Recurring, cache-aware Live Countdown block with leap-day handling and Block Bindings presets.
 * Improved: All date calculations now use the WordPress site timezone and calendar-day arithmetic across daylight-saving changes.
 * Improved: Searchable shortcode picker, block previews, toolbar accessibility, responsive editor controls and theme-neutral patterns.

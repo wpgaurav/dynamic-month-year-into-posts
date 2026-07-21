@@ -2,7 +2,7 @@
 
 All notable changes to the **Dynamic Month & Year into Posts** plugin will be documented in this file.
 
-## [1.8.0-beta] - 2026-07-20
+## [1.8.0] - 2026-07-21
 
 ### Added
 - Recurring, cache-aware Live Countdown behavior with leap-day handling.

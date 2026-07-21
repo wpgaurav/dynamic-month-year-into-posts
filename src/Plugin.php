@@ -19,7 +19,7 @@ final class Plugin {
 	/**
 	 * Plugin version.
 	 */
-	public const VERSION = '1.8.0-beta';
+	public const VERSION = '1.8.0';
 
 	/**
 	 * Plugin instance.

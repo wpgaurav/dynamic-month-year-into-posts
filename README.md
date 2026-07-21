@@ -11,7 +11,7 @@ Automate SEO and content with dynamic shortcodes for dates, years, months, age c
 **Tags:** dynamic content, shortcode, seo, dates, year
 **Requires at least:** 6.5
 **Tested up to:** 7.0
-**Stable tag:** 1.8.0-beta
+**Stable tag:** 1.8.0
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -394,7 +394,7 @@ This plugin:
 
 ## Changelog
 
-### 1.8.0-beta
+### 1.8.0
 
 - Added recurring, cache-aware countdowns with leap-day handling and Block Bindings presets.
 - Made date calculations site-timezone and daylight-saving safe.
