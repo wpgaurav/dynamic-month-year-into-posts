@@ -5,502 +5,130 @@
 import { __ } from '@wordpress/i18n';
 import { useBlockProps, InspectorControls } from '@wordpress/block-editor';
 import { PanelBody, SelectControl, TextControl } from '@wordpress/components';
+import ServerSideRender from '@wordpress/server-side-render';
 
-/**
- * Date type options organized by category.
- */
+import metadata from './block.json';
+
 const DATE_TYPES = [
 	{
-		label: __( 'Year', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'year',
-				label: __( 'Current Year', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'nyear',
-				label: __( 'Next Year', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'pyear',
-				label: __( 'Previous Year', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'year',
+		label: __( 'Current Year', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Month', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'month',
-				label: __(
-					'Current Month (Full)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-			{
-				value: 'month_short',
-				label: __(
-					'Current Month (Short)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-			{
-				value: 'month_number',
-				label: __(
-					'Current Month (Number)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-			{
-				value: 'nmonth',
-				label: __( 'Next Month', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'pmonth',
-				label: __( 'Previous Month', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'nyear',
+		label: __( 'Next Year', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Date', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'date',
-				label: __( 'Full Date', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'monthyear',
-				label: __( 'Month and Year', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'pyear',
+		label: __( 'Previous Year', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Day', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'day',
-				label: __( 'Day of Month', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'weekday',
-				label: __( 'Weekday (Full)', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'weekday_short',
-				label: __( 'Weekday (Short)', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'month',
+		label: __( 'Current Month', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Post Dates', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'published',
-				label: __( 'Published Date', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'modified',
-				label: __( 'Modified Date', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'month_short',
+		label: __( 'Current Month (Short)', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Events', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'blackfriday',
-				label: __( 'Black Friday', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'cybermonday',
-				label: __( 'Cyber Monday', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'month_number',
+		label: __( 'Current Month (Number)', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Countdown', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'daysuntil',
-				label: __( 'Days Until Date', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'dayssince',
-				label: __( 'Days Since Date', 'dynamic-month-year-into-posts' ),
-			},
-		],
+		value: 'nmonth',
+		label: __( 'Next Month', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Age', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'age',
-				label: __( 'Age (Years)', 'dynamic-month-year-into-posts' ),
-			},
-			{
-				value: 'age_ordinal',
-				label: __(
-					'Age (Ordinal: 35th)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-			{
-				value: 'age_ym',
-				label: __(
-					'Age (Years & Months)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-			{
-				value: 'age_ymd',
-				label: __(
-					'Age (Years, Months & Days)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-		],
+		value: 'pmonth',
+		label: __( 'Previous Month', 'dynamic-month-year-into-posts' ),
 	},
 	{
-		label: __( 'Season', 'dynamic-month-year-into-posts' ),
-		options: [
-			{
-				value: 'season',
-				label: __(
-					'Current Season (North)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-			{
-				value: 'season_south',
-				label: __(
-					'Current Season (South)',
-					'dynamic-month-year-into-posts'
-				),
-			},
-		],
+		value: 'date',
+		label: __( 'Current Date', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'monthyear',
+		label: __( 'Month and Year', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'day',
+		label: __( 'Day of Month', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'weekday',
+		label: __( 'Weekday', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'weekday_short',
+		label: __( 'Weekday (Short)', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'published',
+		label: __( 'Published Date', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'modified',
+		label: __( 'Modified Date', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'blackfriday',
+		label: __( 'Black Friday', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'cybermonday',
+		label: __( 'Cyber Monday', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'daysuntil',
+		label: __( 'Days Until Date', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'dayssince',
+		label: __( 'Days Since Date', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'age',
+		label: __( 'Age (Years)', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'age_ordinal',
+		label: __( 'Age (Ordinal)', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'age_ym',
+		label: __( 'Age (Years and Months)', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'age_ymd',
+		label: __(
+			'Age (Years, Months and Days)',
+			'dynamic-month-year-into-posts'
+		),
+	},
+	{
+		value: 'season',
+		label: __( 'Season (North)', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'season_south',
+		label: __( 'Season (South)', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'nextoccurrence',
+		label: __( 'Next Annual Occurrence', 'dynamic-month-year-into-posts' ),
+	},
+	{
+		value: 'daysuntilnext',
+		label: __(
+			'Days Until Annual Occurrence',
+			'dynamic-month-year-into-posts'
+		),
+	},
+	{
+		value: 'occurrenceyear',
+		label: __( 'Annual Occurrence Year', 'dynamic-month-year-into-posts' ),
 	},
 ];
-
-/**
- * Get preview text for a date type.
- *
- * @param {string} type   Date type.
- * @param {number} offset Year offset.
- * @param {string} date   Target date.
- * @return {string} Preview text.
- */
-function getPreviewText( type, offset, date ) {
-	const now = new Date();
-
-	switch ( type ) {
-		case 'year':
-			return String( now.getFullYear() + offset );
-		case 'nyear':
-			return String( now.getFullYear() + 1 );
-		case 'pyear':
-			return String( now.getFullYear() - 1 );
-		case 'month':
-			return now.toLocaleDateString( undefined, { month: 'long' } );
-		case 'month_short':
-			return now.toLocaleDateString( undefined, { month: 'short' } );
-		case 'month_number':
-			return String( now.getMonth() + 1 );
-		case 'nmonth':
-			const nextMonth = new Date(
-				now.getFullYear(),
-				now.getMonth() + 1,
-				1
-			);
-			return nextMonth.toLocaleDateString( undefined, { month: 'long' } );
-		case 'pmonth':
-			const prevMonth = new Date(
-				now.getFullYear(),
-				now.getMonth() - 1,
-				1
-			);
-			return prevMonth.toLocaleDateString( undefined, { month: 'long' } );
-		case 'date':
-			return now.toLocaleDateString( undefined, {
-				month: 'long',
-				day: 'numeric',
-				year: 'numeric',
-			} );
-		case 'monthyear':
-			return now.toLocaleDateString( undefined, {
-				month: 'long',
-				year: 'numeric',
-			} );
-		case 'day':
-			return String( now.getDate() );
-		case 'weekday':
-			return now.toLocaleDateString( undefined, { weekday: 'long' } );
-		case 'weekday_short':
-			return now.toLocaleDateString( undefined, { weekday: 'short' } );
-		case 'published':
-		case 'modified':
-			return __( '(Post date)', 'dynamic-month-year-into-posts' );
-		case 'blackfriday':
-			return getBlackFriday( now.getFullYear() );
-		case 'cybermonday':
-			return getCyberMonday( now.getFullYear() );
-		case 'daysuntil':
-			if ( ! date ) {
-				return __( 'Set date', 'dynamic-month-year-into-posts' );
-			}
-			return getDaysUntil( date );
-		case 'dayssince':
-			if ( ! date ) {
-				return __( 'Set date', 'dynamic-month-year-into-posts' );
-			}
-			return getDaysSince( date );
-		case 'age':
-			if ( ! date ) {
-				return __( 'Set birth date', 'dynamic-month-year-into-posts' );
-			}
-			return getAge( date, 'y' );
-		case 'age_ordinal':
-			if ( ! date ) {
-				return __( 'Set birth date', 'dynamic-month-year-into-posts' );
-			}
-			return getAgeOrdinal( date );
-		case 'age_ym':
-			if ( ! date ) {
-				return __( 'Set birth date', 'dynamic-month-year-into-posts' );
-			}
-			return getAge( date, 'ym' );
-		case 'age_ymd':
-			if ( ! date ) {
-				return __( 'Set birth date', 'dynamic-month-year-into-posts' );
-			}
-			return getAge( date, 'ymd' );
-		case 'season':
-			return getSeason( 'north' );
-		case 'season_south':
-			return getSeason( 'south' );
-		default:
-			return String( now.getFullYear() );
-	}
-}
-
-/**
- * Get Black Friday date string.
- *
- * @param {number} year Year.
- * @return {string} Black Friday date.
- */
-function getBlackFriday( year ) {
-	// Fourth Thursday of November + 1 day
-	const nov = new Date( year, 10, 1 ); // November
-	while ( nov.getDay() !== 4 ) {
-		nov.setDate( nov.getDate() + 1 );
-	}
-	// Find 4th Thursday
-	const fourthThursday = new Date( year, 10, nov.getDate() + 21 );
-	const blackFriday = new Date( fourthThursday );
-	blackFriday.setDate( blackFriday.getDate() + 1 );
-	return blackFriday.toLocaleDateString( undefined, {
-		month: 'long',
-		day: 'numeric',
-	} );
-}
-
-/**
- * Get Cyber Monday date string.
- *
- * @param {number} year Year.
- * @return {string} Cyber Monday date.
- */
-function getCyberMonday( year ) {
-	const nov = new Date( year, 10, 1 );
-	while ( nov.getDay() !== 4 ) {
-		nov.setDate( nov.getDate() + 1 );
-	}
-	const fourthThursday = new Date( year, 10, nov.getDate() + 21 );
-	const cyberMonday = new Date( fourthThursday );
-	cyberMonday.setDate( cyberMonday.getDate() + 4 );
-	return cyberMonday.toLocaleDateString( undefined, {
-		month: 'long',
-		day: 'numeric',
-	} );
-}
-
-/**
- * Calculate days until a date.
- *
- * @param {string} dateStr Date string.
- * @return {string} Days until the date.
- */
-function getDaysUntil( dateStr ) {
-	const target = new Date( dateStr );
-	const today = new Date();
-	today.setHours( 0, 0, 0, 0 );
-	target.setHours( 0, 0, 0, 0 );
-	const diff = Math.floor( ( target - today ) / ( 1000 * 60 * 60 * 24 ) );
-	return String( Math.max( 0, diff ) );
-}
-
-/**
- * Calculate days since a date.
- *
- * @param {string} dateStr Date string.
- * @return {string} Days since the date.
- */
-function getDaysSince( dateStr ) {
-	const target = new Date( dateStr );
-	const today = new Date();
-	today.setHours( 0, 0, 0, 0 );
-	target.setHours( 0, 0, 0, 0 );
-	const diff = Math.floor( ( today - target ) / ( 1000 * 60 * 60 * 24 ) );
-	return String( Math.max( 0, diff ) );
-}
-
-/**
- * Calculate age from a birth date.
- *
- * @param {string} dateStr Birth date string.
- * @param {string} format  Format: 'y', 'ym', or 'ymd'.
- * @return {string} Formatted age string.
- */
-function getAge( dateStr, format = 'y' ) {
-	const birth = new Date( dateStr );
-	const today = new Date();
-
-	if ( isNaN( birth.getTime() ) ) {
-		return '';
-	}
-
-	let years = today.getFullYear() - birth.getFullYear();
-	let months = today.getMonth() - birth.getMonth();
-	let days = today.getDate() - birth.getDate();
-
-	// Adjust for negative days
-	if ( days < 0 ) {
-		months--;
-		const prevMonth = new Date( today.getFullYear(), today.getMonth(), 0 );
-		days += prevMonth.getDate();
-	}
-
-	// Adjust for negative months
-	if ( months < 0 ) {
-		years--;
-		months += 12;
-	}
-
-	switch ( format ) {
-		case 'ymd': {
-			const parts = [];
-			if ( years > 0 ) {
-				parts.push( `${ years } year${ years !== 1 ? 's' : '' }` );
-			}
-			if ( months > 0 ) {
-				parts.push( `${ months } month${ months !== 1 ? 's' : '' }` );
-			}
-			if ( days > 0 ) {
-				parts.push( `${ days } day${ days !== 1 ? 's' : '' }` );
-			}
-			return parts.join( ', ' ) || '0 days';
-		}
-		case 'ym': {
-			const parts = [];
-			if ( years > 0 ) {
-				parts.push( `${ years } year${ years !== 1 ? 's' : '' }` );
-			}
-			if ( months > 0 ) {
-				parts.push( `${ months } month${ months !== 1 ? 's' : '' }` );
-			}
-			return parts.join( ', ' ) || '0 months';
-		}
-		case 'y':
-		default:
-			return String( years );
-	}
-}
-
-/**
- * Get age with ordinal suffix.
- *
- * @param {string} dateStr Birth date string.
- * @return {string} Age with ordinal suffix (e.g., "35th").
- */
-function getAgeOrdinal( dateStr ) {
-	const birth = new Date( dateStr );
-	const today = new Date();
-
-	if ( isNaN( birth.getTime() ) ) {
-		return '';
-	}
-
-	let years = today.getFullYear() - birth.getFullYear();
-	const monthDiff = today.getMonth() - birth.getMonth();
-
-	if (
-		monthDiff < 0 ||
-		( monthDiff === 0 && today.getDate() < birth.getDate() )
-	) {
-		years--;
-	}
-
-	return getOrdinalSuffix( years );
-}
-
-/**
- * Get ordinal suffix for a number.
- *
- * @param {number} num Number to convert.
- * @return {string} Number with ordinal suffix.
- */
-function getOrdinalSuffix( num ) {
-	const absNum = Math.abs( num );
-	// Special case for 11, 12, 13
-	if ( absNum % 100 >= 11 && absNum % 100 <= 13 ) {
-		return `${ num }th`;
-	}
-	switch ( absNum % 10 ) {
-		case 1:
-			return `${ num }st`;
-		case 2:
-			return `${ num }nd`;
-		case 3:
-			return `${ num }rd`;
-		default:
-			return `${ num }th`;
-	}
-}
-
-/**
- * Get current season based on hemisphere.
- *
- * @param {string} hemisphere 'north' or 'south'.
- * @return {string} Current season name.
- */
-function getSeason( hemisphere = 'north' ) {
-	const now = new Date();
-	const month = now.getMonth() + 1; // 1-12
-
-	let season;
-	if ( month >= 3 && month <= 5 ) {
-		season = 'Spring';
-	} else if ( month >= 6 && month <= 8 ) {
-		season = 'Summer';
-	} else if ( month >= 9 && month <= 11 ) {
-		season = 'Fall';
-	} else {
-		season = 'Winter';
-	}
-
-	// Reverse for southern hemisphere
-	if ( hemisphere === 'south' ) {
-		const opposites = {
-			Spring: 'Fall',
-			Summer: 'Winter',
-			Fall: 'Spring',
-			Winter: 'Summer',
-		};
-		season = opposites[ season ];
-	}
-
-	return season;
-}
 
 /**
  * Edit component.
@@ -511,27 +139,49 @@ function getSeason( hemisphere = 'north' ) {
  * @return {Element} Edit component.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { type, format, offset, date } = attributes;
+	const {
+		type,
+		format,
+		offset,
+		date,
+		rule,
+		case: textCase,
+		rolloverDay,
+	} = attributes;
 	const blockProps = useBlockProps();
-
-	const previewText = getPreviewText( type, offset, date );
-	const showOffsetControl = type === 'year';
-	const showDateControl =
-		type === 'daysuntil' ||
-		type === 'dayssince' ||
-		type.startsWith( 'age' );
-	const showFormatControl = type === 'date';
-	const isAgeType = type.startsWith( 'age' );
-
-	// Flatten options for SelectControl
-	const flatOptions = DATE_TYPES.reduce( ( acc, group ) => {
-		acc.push( {
-			value: '',
-			label: `— ${ group.label } —`,
-			disabled: true,
-		} );
-		return acc.concat( group.options );
-	}, [] );
+	const requiresDate = [
+		'daysuntil',
+		'dayssince',
+		'age',
+		'age_ordinal',
+		'age_ym',
+		'age_ymd',
+		'nextoccurrence',
+		'daysuntilnext',
+		'occurrenceyear',
+	].includes( type );
+	const supportsRule = [
+		'nextoccurrence',
+		'daysuntilnext',
+		'occurrenceyear',
+	].includes( type );
+	const supportsFormat = [
+		'date',
+		'published',
+		'modified',
+		'blackfriday',
+		'cybermonday',
+		'nextoccurrence',
+	].includes( type );
+	const supportsRollover = [
+		'month',
+		'month_short',
+		'month_number',
+		'monthyear',
+	].includes( type );
+	const dateLabel = type.startsWith( 'age' )
+		? __( 'Birth Date', 'dynamic-month-year-into-posts' )
+		: __( 'Date', 'dynamic-month-year-into-posts' );
 
 	return (
 		<>
@@ -548,108 +198,170 @@ export default function Edit( { attributes, setAttributes } ) {
 							'dynamic-month-year-into-posts'
 						) }
 						value={ type }
-						options={ flatOptions }
-						onChange={ ( newType ) =>
-							setAttributes( { type: newType } )
+						options={ DATE_TYPES }
+						onChange={ ( value ) =>
+							setAttributes( { type: value } )
 						}
 					/>
 
-					{ showOffsetControl && (
+					{ type === 'year' && (
 						<TextControl
 							label={ __(
 								'Year Offset',
 								'dynamic-month-year-into-posts'
 							) }
 							value={ offset }
-							onChange={ ( newOffset ) =>
+							onChange={ ( value ) =>
 								setAttributes( {
-									offset: parseInt( newOffset, 10 ) || 0,
+									offset: Number.parseInt( value, 10 ) || 0,
 								} )
 							}
 							type="number"
+						/>
+					) }
+
+					{ supportsRollover && (
+						<TextControl
+							label={ __(
+								'Rollover Day',
+								'dynamic-month-year-into-posts'
+							) }
+							value={ rolloverDay || '' }
+							onChange={ ( value ) =>
+								setAttributes( {
+									rolloverDay: Math.max(
+										0,
+										Math.min(
+											31,
+											Number.parseInt( value, 10 ) || 0
+										)
+									),
+								} )
+							}
+							type="number"
+							min="0"
+							max="31"
 							help={ __(
-								'Add or subtract years from current year.',
+								'Use 20 to switch to the next month on the 20th. Use 0 to disable.',
 								'dynamic-month-year-into-posts'
 							) }
 						/>
 					) }
 
-					{ showDateControl && (
+					{ requiresDate && (
 						<TextControl
-							label={
-								isAgeType
-									? __(
-											'Birth Date',
-											'dynamic-month-year-into-posts'
-									  )
-									: __(
-											'Target Date',
-											'dynamic-month-year-into-posts'
-									  )
-							}
+							label={ dateLabel }
 							value={ date }
-							onChange={ ( newDate ) =>
-								setAttributes( { date: newDate } )
+							onChange={ ( value ) =>
+								setAttributes( { date: value } )
 							}
-							placeholder="YYYY-MM-DD"
+							placeholder={
+								supportsRule
+									? 'MM-DD or YYYY-MM-DD'
+									: 'YYYY-MM-DD'
+							}
 							help={
-								isAgeType
+								supportsRule
 									? __(
-											'Enter birth date in YYYY-MM-DD format.',
+											'Use a month and day for an annual event, or enter a rule below.',
 											'dynamic-month-year-into-posts'
 									  )
-									: __(
-											'Enter date in YYYY-MM-DD format.',
-											'dynamic-month-year-into-posts'
-									  )
+									: undefined
 							}
 						/>
 					) }
 
-					{ showFormatControl && (
+					{ supportsRule && (
 						<TextControl
 							label={ __(
-								'Custom Format',
+								'Annual Rule',
+								'dynamic-month-year-into-posts'
+							) }
+							value={ rule }
+							onChange={ ( value ) =>
+								setAttributes( { rule: value } )
+							}
+							placeholder="last sunday of january"
+							help={ __(
+								'A rule overrides the date. First, second, third, fourth and last weekdays are supported.',
+								'dynamic-month-year-into-posts'
+							) }
+						/>
+					) }
+
+					{ supportsFormat && (
+						<TextControl
+							label={ __(
+								'Date Format',
 								'dynamic-month-year-into-posts'
 							) }
 							value={ format }
-							onChange={ ( newFormat ) =>
-								setAttributes( { format: newFormat } )
+							onChange={ ( value ) =>
+								setAttributes( { format: value } )
 							}
 							placeholder="F j, Y"
 							help={ __(
-								'PHP date format. Leave empty for default.',
+								'PHP date format. Leave empty for the default.',
 								'dynamic-month-year-into-posts'
 							) }
 						/>
 					) }
-				</PanelBody>
 
-				<PanelBody
-					title={ __( 'Preview', 'dynamic-month-year-into-posts' ) }
-					initialOpen={ false }
-				>
-					<p>
-						<strong>
-							{ __(
-								'Current output:',
-								'dynamic-month-year-into-posts'
-							) }
-						</strong>
-					</p>
-					<p style={ { fontSize: '1.5em', fontWeight: 'bold' } }>
-						{ previewText }
-					</p>
-					<p style={ { fontSize: '0.85em', color: '#757575' } }>
-						{ __(
-							'This is a live preview. Actual output may vary based on server settings.',
+					<SelectControl
+						label={ __(
+							'Text Case',
 							'dynamic-month-year-into-posts'
 						) }
-					</p>
+						value={ textCase }
+						options={ [
+							{
+								value: 'none',
+								label: __(
+									'Unchanged',
+									'dynamic-month-year-into-posts'
+								),
+							},
+							{
+								value: 'title',
+								label: __(
+									'Title Case',
+									'dynamic-month-year-into-posts'
+								),
+							},
+							{
+								value: 'upper',
+								label: __(
+									'UPPERCASE',
+									'dynamic-month-year-into-posts'
+								),
+							},
+							{
+								value: 'lower',
+								label: __(
+									'lowercase',
+									'dynamic-month-year-into-posts'
+								),
+							},
+						] }
+						onChange={ ( value ) =>
+							setAttributes( { case: value } )
+						}
+					/>
 				</PanelBody>
 			</InspectorControls>
 
-			<span { ...blockProps }>{ previewText }</span>
+			<div { ...blockProps }>
+				<ServerSideRender
+					block={ metadata.name }
+					attributes={ attributes }
+					EmptyResponsePlaceholder={ () =>
+						__(
+							'Complete the date settings to see a preview.',
+							'dynamic-month-year-into-posts'
+						)
+					}
+				/>
+			</div>
 		</>
 	);
 }

@@ -13,43 +13,26 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Wrap in closure to avoid global variable pollution.
-$dmyip_render_modified_date = static function ( $attributes, $block ) {
-	$dmyip_format = $attributes['format'] ?? '';
-	$dmyip_prefix = $attributes['prefix'] ?? '';
-	$dmyip_suffix = $attributes['suffix'] ?? '';
+$dmyip_renderer = new \DMYIP\Date\DateRenderer();
+$dmyip_post_id  = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : 0;
+$dmyip_output   = $dmyip_renderer->render(
+	'modified',
+	[
+		'format' => isset( $attributes['format'] ) ? sanitize_text_field( (string) $attributes['format'] ) : '',
+	],
+	$dmyip_post_id
+);
 
-	// Get post ID from context or current post.
-	$dmyip_post_id = $block->context['postId'] ?? get_the_ID();
-
-	if ( ! $dmyip_post_id ) {
-		return '';
-	}
-
-	// Get the modified date.
-	$dmyip_timestamp = get_the_modified_time( 'U', $dmyip_post_id );
-
-	if ( ! $dmyip_timestamp ) {
-		return '';
-	}
-
-	// Use custom format or WordPress default.
-	$dmyip_date_format = ! empty( $dmyip_format ) ? $dmyip_format : get_option( 'date_format' );
-	$dmyip_output      = date_i18n( $dmyip_date_format, (int) $dmyip_timestamp );
-
-	// Add prefix and suffix.
-	return esc_html( $dmyip_prefix ) . esc_html( $dmyip_output ) . esc_html( $dmyip_suffix );
-};
-
-$dmyip_display = $dmyip_render_modified_date( $attributes, $block );
-
-if ( empty( $dmyip_display ) ) {
+if ( '' === $dmyip_output ) {
 	return;
 }
 
-// Render the block.
+$dmyip_prefix  = isset( $attributes['prefix'] ) ? (string) $attributes['prefix'] : '';
+$dmyip_suffix  = isset( $attributes['suffix'] ) ? (string) $attributes['suffix'] : '';
+$dmyip_display = $dmyip_prefix . $dmyip_output . $dmyip_suffix;
+
 printf(
 	'<p %s>%s</p>',
-	wp_kses_post( get_block_wrapper_attributes() ),
-	wp_kses_post( $dmyip_display )
+	wp_kses_data( get_block_wrapper_attributes() ),
+	esc_html( $dmyip_display )
 );

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DMYIP\Integrations;
 
+use DMYIP\Shortcodes\Registry;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,20 +27,17 @@ class RankMath {
 	 */
 	public function register(): void {
 		// Title and description.
-		add_filter( 'rank_math/frontend/title', 'do_shortcode' );
-		add_filter( 'rank_math/frontend/description', 'do_shortcode' );
-
-		// Product descriptions.
-		add_filter( 'rank_math/product_description/apply_shortcode', '__return_true' );
+		add_filter( 'rank_math/frontend/title', [ Registry::class, 'render' ] );
+		add_filter( 'rank_math/frontend/description', [ Registry::class, 'render' ] );
 
 		// Breadcrumbs.
-		add_filter( 'rank_math/frontend/breadcrumb/html', 'do_shortcode' );
+		add_filter( 'rank_math/frontend/breadcrumb/html', [ Registry::class, 'render' ] );
 
 		// Open Graph.
-		add_filter( 'rank_math/opengraph/facebook/og_title', 'do_shortcode' );
-		add_filter( 'rank_math/opengraph/facebook/og_description', 'do_shortcode' );
-		add_filter( 'rank_math/opengraph/twitter/title', 'do_shortcode' );
-		add_filter( 'rank_math/opengraph/twitter/description', 'do_shortcode' );
+		add_filter( 'rank_math/opengraph/facebook/og_title', [ Registry::class, 'render' ] );
+		add_filter( 'rank_math/opengraph/facebook/og_description', [ Registry::class, 'render' ] );
+		add_filter( 'rank_math/opengraph/twitter/title', [ Registry::class, 'render' ] );
+		add_filter( 'rank_math/opengraph/twitter/description', [ Registry::class, 'render' ] );
 
 		// JSON-LD Schema.
 		add_filter( 'rank_math/json_ld', [ $this, 'process_json_ld' ], PHP_INT_MAX, 2 );
@@ -58,7 +57,7 @@ class RankMath {
 			$data,
 			function ( &$value ) {
 				if ( is_string( $value ) ) {
-					$value = do_shortcode( $value );
+					$value = Registry::render( $value );
 				}
 			}
 		);

@@ -9,10 +9,28 @@ declare(strict_types=1);
 
 namespace DMYIP\Shortcodes;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Year-related shortcodes.
  */
 class Year {
+
+	/**
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
+	 */
+	private DateRenderer $renderer;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
 
 	/**
 	 * Register shortcodes.
@@ -34,11 +52,8 @@ class Year {
 	 * @return string
 	 */
 	public function current_year( $atts ): string {
-		$attributes   = shortcode_atts( [ 'n' => 0 ], $atts );
-		$current_year = (int) date_i18n( 'Y' );
-		$result       = $current_year + (int) $attributes['n'];
-
-		return esc_html( (string) $result );
+		$attributes = shortcode_atts( [ 'n' => 0 ], $atts );
+		return esc_html( $this->renderer->render( 'year', $attributes ) );
 	}
 
 	/**
@@ -47,7 +62,7 @@ class Year {
 	 * @return string
 	 */
 	public function next_year(): string {
-		return esc_html( (string) ( (int) date_i18n( 'Y' ) + 1 ) );
+		return esc_html( $this->renderer->render( 'nyear' ) );
 	}
 
 	/**
@@ -56,7 +71,7 @@ class Year {
 	 * @return string
 	 */
 	public function next_next_year(): string {
-		return esc_html( (string) ( (int) date_i18n( 'Y' ) + 2 ) );
+		return esc_html( $this->renderer->render( 'nnyear' ) );
 	}
 
 	/**
@@ -65,7 +80,7 @@ class Year {
 	 * @return string
 	 */
 	public function previous_year(): string {
-		return esc_html( (string) ( (int) date_i18n( 'Y' ) - 1 ) );
+		return esc_html( $this->renderer->render( 'pyear' ) );
 	}
 
 	/**
@@ -74,6 +89,6 @@ class Year {
 	 * @return string
 	 */
 	public function previous_previous_year(): string {
-		return esc_html( (string) ( (int) date_i18n( 'Y' ) - 2 ) );
+		return esc_html( $this->renderer->render( 'ppyear' ) );
 	}
 }

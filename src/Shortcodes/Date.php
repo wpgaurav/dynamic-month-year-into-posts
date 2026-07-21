@@ -9,10 +9,28 @@ declare(strict_types=1);
 
 namespace DMYIP\Shortcodes;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Combined date shortcodes.
  */
 class Date {
+
+	/**
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
+	 */
+	private DateRenderer $renderer;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
 
 	/**
 	 * Register shortcodes.
@@ -32,7 +50,7 @@ class Date {
 	 * @return string
 	 */
 	public function current_date(): string {
-		return esc_html( date_i18n( 'F j, Y' ) );
+		return esc_html( $this->renderer->render( 'date' ) );
 	}
 
 	/**
@@ -41,7 +59,7 @@ class Date {
 	 * @return string
 	 */
 	public function month_year(): string {
-		return esc_html( ucfirst( date_i18n( 'F Y' ) ) );
+		return esc_html( $this->renderer->render( 'monthyear', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -50,7 +68,7 @@ class Date {
 	 * @return string
 	 */
 	public function next_month_year(): string {
-		return esc_html( ucfirst( date_i18n( 'F Y', strtotime( '+1 month' ) ) ) );
+		return esc_html( $this->renderer->render( 'next_month_year', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -59,6 +77,6 @@ class Date {
 	 * @return string
 	 */
 	public function prev_month_year(): string {
-		return esc_html( ucfirst( date_i18n( 'F Y', strtotime( '-1 month' ) ) ) );
+		return esc_html( $this->renderer->render( 'previous_month_year', [ 'case' => 'title' ] ) );
 	}
 }

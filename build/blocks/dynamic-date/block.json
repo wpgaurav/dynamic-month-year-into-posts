@@ -2,7 +2,7 @@
   "$schema": "https://schemas.wp.org/trunk/block.json",
   "apiVersion": 3,
   "name": "dmyip/dynamic-date",
-  "version": "1.7.4",
+  "version": "1.8.0-beta",
   "title": "Dynamic Date",
   "category": "widgets",
   "icon": "calendar-alt",
@@ -33,16 +33,28 @@
       "type": "string",
       "default": ""
     },
-    "ageFormat": {
+    "rule": {
       "type": "string",
-      "default": "y",
+      "default": ""
+    },
+    "case": {
+      "type": "string",
+      "default": "none",
       "enum": [
-        "y",
-        "ym",
-        "ymd"
+        "none",
+        "title",
+        "upper",
+        "lower"
       ]
+    },
+    "rolloverDay": {
+      "type": "number",
+      "default": 0
     }
   },
+  "usesContext": [
+    "postId"
+  ],
   "supports": {
     "html": false,
     "align": [

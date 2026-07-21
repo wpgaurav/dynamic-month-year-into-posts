@@ -44,7 +44,7 @@ if [ "$SKIP_CHECKS" = false ]; then
 
 	V_PLUGIN=$(sed -n "s/.*VERSION = '\([^']*\)'.*/\1/p" src/Plugin.php | head -1)
 	V_PKG=$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' package.json | head -1)
-	V_README=$(sed -n 's/Stable tag: *\([0-9.]*\).*/\1/p' readme.txt | head -1)
+	V_README=$(sed -n 's/Stable tag: *\([^[:space:]]*\).*/\1/p' readme.txt | head -1)
 
 	for pair in "src/Plugin.php:${V_PLUGIN}" "package.json:${V_PKG}" "readme.txt:${V_README}"; do
 		label="${pair%%:*}"
@@ -119,8 +119,10 @@ for f in \
 	"composer.json" \
 	"vendor/autoload.php" \
 	"build/index.js" \
-	"includes/shortcodes.php" \
+	"build/blocks/countdown/view.js" \
 	"src/Plugin.php" \
+	"src/Date/DateEngine.php" \
+	"src/Date/DateRenderer.php" \
 	"src/blocks/dynamic-date/render.php"; do
 	if [ ! -f "${BUILD_DIR}/${PLUGIN_SLUG}/${f}" ]; then
 		echo "  ✗ Missing: ${f}"

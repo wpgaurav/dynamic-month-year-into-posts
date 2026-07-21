@@ -32,14 +32,18 @@
 		"phpunit/phpunit": "^9.6"
 	},
 	"scripts": {
-		"phpstan": "phpstan analyse --memory-limit=512M",
+		"phpstan": "phpstan analyse --memory-limit=1G",
 		"phpcs": "phpcs",
 		"phpcbf": "phpcbf",
-		"test": "phpunit"
+		"test": "phpunit --configuration phpunit-unit.xml",
+		"test:integration": "phpunit --configuration phpunit.xml"
 	},
 	"config": {
 		"allow-plugins": {
 			"dealerdirect/phpcodesniffer-composer-installer": true
+		},
+		"platform": {
+			"php": "7.4.0"
 		}
 	}
 }

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <phpunit
-	bootstrap="tests/bootstrap.php"
+	bootstrap="tests/bootstrap-unit.php"
 	backupGlobals="false"
 	colors="true"
 	convertErrorsToExceptions="true"
@@ -8,7 +8,7 @@
 	convertWarningsToExceptions="true"
 >
 	<testsuites>
-		<testsuite name="DMYIP Test Suite">
+		<testsuite name="DMYIP Standalone Unit Tests">
 			<directory suffix="Test.php">./tests/</directory>
 		</testsuite>
 	</testsuites>

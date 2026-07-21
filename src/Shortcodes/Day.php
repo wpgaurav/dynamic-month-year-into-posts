@@ -9,10 +9,28 @@ declare(strict_types=1);
 
 namespace DMYIP\Shortcodes;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Day-related shortcodes.
  */
 class Day {
+
+	/**
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
+	 */
+	private DateRenderer $renderer;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
 
 	/**
 	 * Register shortcodes.
@@ -33,7 +51,7 @@ class Day {
 	 * @return string
 	 */
 	public function current_day(): string {
-		return esc_html( date_i18n( 'j' ) );
+		return esc_html( $this->renderer->render( 'day' ) );
 	}
 
 	/**
@@ -42,7 +60,7 @@ class Day {
 	 * @return string
 	 */
 	public function next_day(): string {
-		return esc_html( date_i18n( 'j', strtotime( '+1 day' ) ) );
+		return esc_html( $this->renderer->render( 'next_day' ) );
 	}
 
 	/**
@@ -51,7 +69,7 @@ class Day {
 	 * @return string
 	 */
 	public function prev_day(): string {
-		return esc_html( date_i18n( 'j', strtotime( '-1 day' ) ) );
+		return esc_html( $this->renderer->render( 'previous_day' ) );
 	}
 
 	/**
@@ -60,7 +78,7 @@ class Day {
 	 * @return string
 	 */
 	public function current_weekday(): string {
-		return esc_html( date_i18n( 'l' ) );
+		return esc_html( $this->renderer->render( 'weekday' ) );
 	}
 
 	/**
@@ -69,6 +87,6 @@ class Day {
 	 * @return string
 	 */
 	public function current_weekday_short(): string {
-		return esc_html( date_i18n( 'D' ) );
+		return esc_html( $this->renderer->render( 'weekday_short' ) );
 	}
 }

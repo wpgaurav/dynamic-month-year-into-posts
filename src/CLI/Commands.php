@@ -9,16 +9,17 @@ declare(strict_types=1);
 
 namespace DMYIP\CLI;
 
+use DMYIP\Date\DateRenderer;
 use WP_CLI;
 use WP_CLI\Utils;
 
 /**
- * Dynamic Month Year Into Posts CLI commands.
+ * Dynamic Month & Year WP-CLI commands.
  */
 class Commands {
 
 	/**
-	 * Register CLI commands.
+	 * Register commands.
 	 *
 	 * @return void
 	 */
@@ -27,326 +28,135 @@ class Commands {
 	}
 
 	/**
-	 * Get a specific date shortcode output.
+	 * Render a date type through the same engine used by blocks and shortcodes.
 	 *
 	 * ## OPTIONS
 	 *
 	 * <type>
-	 * : The shortcode type (year, month, date, etc.)
+	 * : Date type, for example year, month, or daysuntil.
 	 *
 	 * [--offset=<offset>]
-	 * : Offset for year shortcode.
-	 * ---
-	 * default: 0
-	 * ---
+	 * : Signed year or month offset.
 	 *
 	 * [--date=<date>]
-	 * : Target date for countdown shortcodes (YYYY-MM-DD format).
+	 * : Target date in YYYY-MM-DD or recurring MM-DD format.
 	 *
-	 * ## EXAMPLES
+	 * [--rule=<rule>]
+	 * : Recurring rule, for example "last sunday of january".
 	 *
-	 *     # Get current year
-	 *     wp dmyip shortcode year
+	 * [--format=<format>]
+	 * : PHP date format.
 	 *
-	 *     # Get year with offset
-	 *     wp dmyip shortcode year --offset=5
+	 * [--case=<case>]
+	 * : none, title, upper, or lower.
 	 *
-	 *     # Get days until a date
-	 *     wp dmyip shortcode daysuntil --date=2025-12-31
+	 * [--rollover-day=<day>]
+	 * : Switch month output after this day of the month.
 	 *
 	 * @param array<int, string>   $args       Positional arguments.
 	 * @param array<string, mixed> $assoc_args Associative arguments.
 	 * @return void
 	 */
 	public function shortcode( array $args, array $assoc_args ): void {
-		$type   = $args[0] ?? 'year';
-		$offset = (int) ( $assoc_args['offset'] ?? 0 );
-		$date   = $assoc_args['date'] ?? '';
-
-		$shortcode_map = [
-			'year'          => '[year]',
-			'nyear'         => '[nyear]',
-			'nnyear'        => '[nnyear]',
-			'pyear'         => '[pyear]',
-			'ppyear'        => '[ppyear]',
-			'month'         => '[month]',
-			'cmonth'        => '[cmonth]',
-			'mon'           => '[mon]',
-			'cmon'          => '[cmon]',
-			'mm'            => '[mm]',
-			'mn'            => '[mn]',
-			'nmonth'        => '[nmonth]',
-			'cnmonth'       => '[cnmonth]',
-			'nmon'          => '[nmon]',
-			'cnmon'         => '[cnmon]',
-			'pmonth'        => '[pmonth]',
-			'cpmonth'       => '[cpmonth]',
-			'pmon'          => '[pmon]',
-			'cpmon'         => '[cpmon]',
-			'date'          => '[date]',
-			'monthyear'     => '[monthyear]',
-			'nmonthyear'    => '[nmonthyear]',
-			'pmonthyear'    => '[pmonthyear]',
-			'dt'            => '[dt]',
-			'nd'            => '[nd]',
-			'pd'            => '[pd]',
-			'weekday'       => '[weekday]',
-			'wd'            => '[wd]',
-			'blackfriday'   => '[blackfriday]',
-			'cybermonday'   => '[cybermonday]',
-			'datepublished' => '[datepublished]',
-			'datemodified'  => '[datemodified]',
-			'season'        => '[season]',
+		$type  = isset( $args[0] ) ? sanitize_key( $args[0] ) : 'year';
+		$data  = [
+			'offset'       => isset( $assoc_args['offset'] ) ? (int) $assoc_args['offset'] : 0,
+			'date'         => isset( $assoc_args['date'] ) ? (string) $assoc_args['date'] : '',
+			'rule'         => isset( $assoc_args['rule'] ) ? (string) $assoc_args['rule'] : '',
+			'format'       => isset( $assoc_args['format'] ) ? (string) $assoc_args['format'] : '',
+			'case'         => isset( $assoc_args['case'] ) ? (string) $assoc_args['case'] : 'none',
+			'rollover_day' => isset( $assoc_args['rollover-day'] ) ? (int) $assoc_args['rollover-day'] : 0,
 		];
+		$value = ( new DateRenderer() )->render( $type, $data );
 
-		// Handle special cases.
-		if ( 'year' === $type && 0 !== $offset ) {
-			$output = do_shortcode( '[year n="' . $offset . '"]' );
-		} elseif ( 'daysuntil' === $type ) {
-			if ( empty( $date ) ) {
-				WP_CLI::error( 'The --date parameter is required for daysuntil shortcode.' );
-				return;
-			}
-			$output = do_shortcode( '[daysuntil date="' . esc_attr( $date ) . '"]' );
-		} elseif ( 'dayssince' === $type ) {
-			if ( empty( $date ) ) {
-				WP_CLI::error( 'The --date parameter is required for dayssince shortcode.' );
-				return;
-			}
-			$output = do_shortcode( '[dayssince date="' . esc_attr( $date ) . '"]' );
-		} elseif ( isset( $shortcode_map[ $type ] ) ) {
-			$output = do_shortcode( $shortcode_map[ $type ] );
-		} else {
-			WP_CLI::error( "Unknown shortcode type: {$type}" );
+		if ( '' === $value ) {
+			WP_CLI::error( 'Unknown date type or missing/invalid date arguments.' );
 			return;
 		}
 
-		WP_CLI::line( $output );
+		WP_CLI::line( $value );
 	}
 
 	/**
-	 * List all available shortcodes.
+	 * List representative shortcodes.
 	 *
 	 * ## OPTIONS
 	 *
 	 * [--format=<format>]
-	 * : Output format.
-	 * ---
-	 * default: table
-	 * options:
-	 *   - table
-	 *   - csv
-	 *   - json
-	 *   - yaml
-	 * ---
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     # List all shortcodes in table format
-	 *     wp dmyip list
-	 *
-	 *     # List all shortcodes as JSON
-	 *     wp dmyip list --format=json
+	 * : table, csv, json, or yaml.
+	+ *
 	 *
 	 * @param array<int, string>   $args       Positional arguments.
 	 * @param array<string, mixed> $assoc_args Associative arguments.
 	 * @return void
 	 */
 	public function list( array $args, array $assoc_args ): void {
-		$format = $assoc_args['format'] ?? 'table';
+		unset( $args );
 
-		$shortcodes = [
+		$format = isset( $assoc_args['format'] ) ? (string) $assoc_args['format'] : 'table';
+		$items  = [
 			[
 				'shortcode'   => '[year]',
 				'category'    => 'Year',
 				'description' => 'Current year',
-				'example'     => do_shortcode( '[year]' ),
 			],
 			[
-				'shortcode'   => '[year n=X]',
+				'shortcode'   => '[year n="5"]',
 				'category'    => 'Year',
 				'description' => 'Year with offset',
-				'example'     => do_shortcode( '[year n=5]' ),
-			],
-			[
-				'shortcode'   => '[nyear]',
-				'category'    => 'Year',
-				'description' => 'Next year',
-				'example'     => do_shortcode( '[nyear]' ),
-			],
-			[
-				'shortcode'   => '[nnyear]',
-				'category'    => 'Year',
-				'description' => 'Year after next',
-				'example'     => do_shortcode( '[nnyear]' ),
-			],
-			[
-				'shortcode'   => '[pyear]',
-				'category'    => 'Year',
-				'description' => 'Previous year',
-				'example'     => do_shortcode( '[pyear]' ),
-			],
-			[
-				'shortcode'   => '[ppyear]',
-				'category'    => 'Year',
-				'description' => 'Year before previous',
-				'example'     => do_shortcode( '[ppyear]' ),
 			],
 			[
 				'shortcode'   => '[month]',
 				'category'    => 'Month',
-				'description' => 'Current month (full)',
-				'example'     => do_shortcode( '[month]' ),
-			],
-			[
-				'shortcode'   => '[cmonth]',
-				'category'    => 'Month',
-				'description' => 'Current month (caps)',
-				'example'     => do_shortcode( '[cmonth]' ),
-			],
-			[
-				'shortcode'   => '[mon]',
-				'category'    => 'Month',
-				'description' => 'Current month (short)',
-				'example'     => do_shortcode( '[mon]' ),
-			],
-			[
-				'shortcode'   => '[mm]',
-				'category'    => 'Month',
-				'description' => 'Month number (01-12)',
-				'example'     => do_shortcode( '[mm]' ),
-			],
-			[
-				'shortcode'   => '[mn]',
-				'category'    => 'Month',
-				'description' => 'Month number (1-12)',
-				'example'     => do_shortcode( '[mn]' ),
-			],
-			[
-				'shortcode'   => '[nmonth]',
-				'category'    => 'Month',
-				'description' => 'Next month',
-				'example'     => do_shortcode( '[nmonth]' ),
-			],
-			[
-				'shortcode'   => '[pmonth]',
-				'category'    => 'Month',
-				'description' => 'Previous month',
-				'example'     => do_shortcode( '[pmonth]' ),
+				'description' => 'Current month',
 			],
 			[
 				'shortcode'   => '[date]',
 				'category'    => 'Date',
-				'description' => 'Full date',
-				'example'     => do_shortcode( '[date]' ),
-			],
-			[
-				'shortcode'   => '[monthyear]',
-				'category'    => 'Date',
-				'description' => 'Month and year',
-				'example'     => do_shortcode( '[monthyear]' ),
-			],
-			[
-				'shortcode'   => '[dt]',
-				'category'    => 'Day',
-				'description' => 'Day of month',
-				'example'     => do_shortcode( '[dt]' ),
-			],
-			[
-				'shortcode'   => '[nd]',
-				'category'    => 'Day',
-				'description' => 'Tomorrow',
-				'example'     => do_shortcode( '[nd]' ),
-			],
-			[
-				'shortcode'   => '[pd]',
-				'category'    => 'Day',
-				'description' => 'Yesterday',
-				'example'     => do_shortcode( '[pd]' ),
-			],
-			[
-				'shortcode'   => '[weekday]',
-				'category'    => 'Day',
-				'description' => 'Day of week (full)',
-				'example'     => do_shortcode( '[weekday]' ),
-			],
-			[
-				'shortcode'   => '[wd]',
-				'category'    => 'Day',
-				'description' => 'Day of week (short)',
-				'example'     => do_shortcode( '[wd]' ),
-			],
-			[
-				'shortcode'   => '[blackfriday]',
-				'category'    => 'Events',
-				'description' => 'Black Friday date',
-				'example'     => do_shortcode( '[blackfriday]' ),
-			],
-			[
-				'shortcode'   => '[cybermonday]',
-				'category'    => 'Events',
-				'description' => 'Cyber Monday date',
-				'example'     => do_shortcode( '[cybermonday]' ),
-			],
-			[
-				'shortcode'   => '[daysuntil date="X"]',
-				'category'    => 'Countdown',
-				'description' => 'Days until date',
-				'example'     => 'Requires date',
-			],
-			[
-				'shortcode'   => '[dayssince date="X"]',
-				'category'    => 'Countdown',
-				'description' => 'Days since date',
-				'example'     => 'Requires date',
+				'description' => 'Current date',
 			],
 			[
 				'shortcode'   => '[datepublished]',
 				'category'    => 'Post',
-				'description' => 'Publication date',
-				'example'     => 'Requires post',
+				'description' => 'Published date',
 			],
 			[
 				'shortcode'   => '[datemodified]',
 				'category'    => 'Post',
 				'description' => 'Modified date',
-				'example'     => 'Requires post',
 			],
 			[
-				'shortcode'   => '[age date="X"]',
-				'category'    => 'Age',
-				'description' => 'Age from date',
-				'example'     => 'Requires date',
+				'shortcode'   => '[daysuntil date="YYYY-MM-DD"]',
+				'category'    => 'Countdown',
+				'description' => 'Days until date',
 			],
 			[
-				'shortcode'   => '[age date="X" ordinal="true"]',
+				'shortcode'   => '[age date="YYYY-MM-DD" format="ymd"]',
 				'category'    => 'Age',
-				'description' => 'Age with suffix',
-				'example'     => 'e.g., 35th',
+				'description' => 'Full age',
+			],
+			[
+				'shortcode'   => '[blackfriday]',
+				'category'    => 'Event',
+				'description' => 'Black Friday date',
+			],
+			[
+				'shortcode'   => '[cybermonday]',
+				'category'    => 'Event',
+				'description' => 'Cyber Monday date',
 			],
 			[
 				'shortcode'   => '[season]',
 				'category'    => 'Season',
 				'description' => 'Current season',
-				'example'     => do_shortcode( '[season]' ),
-			],
-			[
-				'shortcode'   => '[season region="south"]',
-				'category'    => 'Season',
-				'description' => 'Season (south)',
-				'example'     => do_shortcode( '[season region="south"]' ),
 			],
 		];
 
-		Utils\format_items( $format, $shortcodes, [ 'shortcode', 'category', 'description', 'example' ] );
+		Utils\format_items( $format, $items, [ 'shortcode', 'category', 'description' ] );
 	}
 
 	/**
-	 * Test all shortcodes and display their output.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     wp dmyip test
+	 * Test representative registered shortcodes.
 	 *
 	 * @param array<int, string>   $args       Positional arguments.
 	 * @param array<string, mixed> $assoc_args Associative arguments.
@@ -355,58 +165,40 @@ class Commands {
 	public function test( array $args, array $assoc_args ): void {
 		unset( $args, $assoc_args );
 
-		WP_CLI::line( 'Testing all shortcodes...' );
-		WP_CLI::line( '' );
-
-		$tests = [
-			'[year]'                  => 'Current year',
-			'[year n=5]'              => 'Year +5',
-			'[nyear]'                 => 'Next year',
-			'[pyear]'                 => 'Previous year',
-			'[month]'                 => 'Current month',
-			'[mon]'                   => 'Month (short)',
-			'[mm]'                    => 'Month number',
-			'[nmonth]'                => 'Next month',
-			'[pmonth]'                => 'Previous month',
-			'[date]'                  => 'Full date',
-			'[monthyear]'             => 'Month and year',
-			'[dt]'                    => 'Day of month',
-			'[weekday]'               => 'Weekday',
-			'[wd]'                    => 'Weekday (short)',
-			'[blackfriday]'           => 'Black Friday',
-			'[cybermonday]'           => 'Cyber Monday',
-			'[season]'                => 'Season (north)',
-			'[season region="south"]' => 'Season (south)',
+		$next_year = (int) current_time( 'Y' ) + 1;
+		$tests     = [
+			'[year]',
+			'[month]',
+			'[date]',
+			'[weekday]',
+			'[blackfriday]',
+			'[season]',
+			'[daysuntil date="' . $next_year . '-12-31"]',
 		];
+		$failed    = [];
 
-		$all_passed = true;
+		foreach ( $tests as $shortcode ) {
+			$value = do_shortcode( $shortcode );
 
-		foreach ( $tests as $shortcode => $description ) {
-			$output = do_shortcode( $shortcode );
-
-			if ( empty( $output ) ) {
-				WP_CLI::warning( sprintf( '%-15s %-20s => EMPTY', $shortcode, $description ) );
-				$all_passed = false;
-			} else {
-				WP_CLI::line( sprintf( '%-15s %-20s => %s', $shortcode, $description, $output ) );
+			if ( '' === $value ) {
+				$failed[] = $shortcode;
+				WP_CLI::warning( "{$shortcode} returned an empty value." );
+				continue;
 			}
+
+			WP_CLI::line( "{$shortcode} => {$value}" );
 		}
 
-		WP_CLI::line( '' );
-
-		if ( $all_passed ) {
-			WP_CLI::success( 'All shortcodes working correctly!' );
-		} else {
-			WP_CLI::warning( 'Some shortcodes returned empty output.' );
+		if ( ! empty( $failed ) ) {
+			WP_CLI::error( sprintf( '%d shortcode checks failed.', count( $failed ) ) );
+			return;
 		}
+
+		WP_CLI::success( 'All representative shortcode checks passed.' );
 	}
 
 	/**
 	 * Display plugin information.
-	 *
-	 * ## EXAMPLES
-	 *
-	 *     wp dmyip info
 	 *
 	 * @param array<int, string>   $args       Positional arguments.
 	 * @param array<string, mixed> $assoc_args Associative arguments.
@@ -416,16 +208,8 @@ class Commands {
 		unset( $args, $assoc_args );
 
 		WP_CLI::line( 'Dynamic Month & Year into Posts' );
-		WP_CLI::line( '================================' );
-		WP_CLI::line( '' );
-		WP_CLI::line( 'Version: ' . ( defined( 'DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION' ) ? DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION : 'Unknown' ) );
-		WP_CLI::line( 'Author: Gaurav Tiwari' );
+		WP_CLI::line( 'Version: ' . DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION );
+		WP_CLI::line( 'Timezone: ' . wp_timezone()->getName() );
 		WP_CLI::line( 'Documentation: https://gauravtiwari.org/snippet/dynamic-month-year/' );
-		WP_CLI::line( '' );
-		WP_CLI::line( 'Commands:' );
-		WP_CLI::line( '  wp dmyip shortcode <type>  Get a shortcode output' );
-		WP_CLI::line( '  wp dmyip list              List all shortcodes' );
-		WP_CLI::line( '  wp dmyip test              Test all shortcodes' );
-		WP_CLI::line( '  wp dmyip info              Display this information' );
 	}
 }

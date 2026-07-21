@@ -151,8 +151,10 @@ jobs:
             "composer.json" \
             "vendor/autoload.php" \
             "build/index.js" \
-            "includes/shortcodes.php" \
+            "build/blocks/countdown/view.js" \
             "src/Plugin.php" \
+            "src/Date/DateEngine.php" \
+            "src/Date/DateRenderer.php" \
             "src/blocks/dynamic-date/render.php"; do
               if [ ! -f "$DIST/$f" ]; then
                 echo "::error::Missing critical file: $f"

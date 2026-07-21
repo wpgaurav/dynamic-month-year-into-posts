@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DMYIP\Integrations;
 
+use DMYIP\Shortcodes\Registry;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -24,10 +26,10 @@ class Yoast {
 	 * @return void
 	 */
 	public function register(): void {
-		add_filter( 'wpseo_title', 'do_shortcode' );
-		add_filter( 'wpseo_metadesc', 'do_shortcode' );
-		add_filter( 'wpseo_opengraph_title', 'do_shortcode' );
-		add_filter( 'wpseo_opengraph_desc', 'do_shortcode' );
+		add_filter( 'wpseo_title', [ Registry::class, 'render' ] );
+		add_filter( 'wpseo_metadesc', [ Registry::class, 'render' ] );
+		add_filter( 'wpseo_opengraph_title', [ Registry::class, 'render' ] );
+		add_filter( 'wpseo_opengraph_desc', [ Registry::class, 'render' ] );
 		add_filter( 'wpseo_schema_webpage', [ $this, 'process_schema_webpage' ] );
 	}
 
@@ -39,7 +41,7 @@ class Yoast {
 	 */
 	public function process_schema_webpage( array $data ): array {
 		if ( isset( $data['name'] ) && is_string( $data['name'] ) ) {
-			$data['name'] = do_shortcode( $data['name'] );
+			$data['name'] = Registry::render( $data['name'] );
 		}
 		return $data;
 	}

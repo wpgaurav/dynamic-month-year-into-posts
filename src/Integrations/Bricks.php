@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DMYIP\Integrations;
 
+use DMYIP\Shortcodes\Registry;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -45,6 +47,6 @@ class Bricks {
 			return $content;
 		}
 
-		return do_shortcode( $content );
+		return (string) Registry::render( $content );
 	}
 }

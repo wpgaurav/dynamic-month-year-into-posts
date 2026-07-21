@@ -9,10 +9,28 @@ declare(strict_types=1);
 
 namespace DMYIP\Shortcodes;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Post-specific date shortcodes.
  */
 class PostDate {
+
+	/**
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
+	 */
+	private DateRenderer $renderer;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
 
 	/**
 	 * Register shortcodes.
@@ -30,14 +48,7 @@ class PostDate {
 	 * @return string
 	 */
 	public function published(): string {
-		$published_timestamp = get_the_time( 'U' );
-		$date_format         = get_option( 'date_format' );
-
-		if ( ! $published_timestamp ) {
-			return '';
-		}
-
-		return date_i18n( $date_format, (int) $published_timestamp );
+		return esc_html( $this->renderer->render( 'published' ) );
 	}
 
 	/**
@@ -46,13 +57,6 @@ class PostDate {
 	 * @return string
 	 */
 	public function modified(): string {
-		$modified_timestamp = get_the_modified_time( 'U' );
-		$date_format        = get_option( 'date_format' );
-
-		if ( ! $modified_timestamp ) {
-			return '';
-		}
-
-		return date_i18n( $date_format, (int) $modified_timestamp );
+		return esc_html( $this->renderer->render( 'modified' ) );
 	}
 }

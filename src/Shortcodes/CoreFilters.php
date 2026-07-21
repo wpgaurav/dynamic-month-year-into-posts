@@ -19,50 +19,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 class CoreFilters {
 
 	/**
-	 * List of plugin shortcode tags.
-	 *
-	 * @var array<string>
-	 */
-	private const SHORTCODE_TAGS = [
-		'year',
-		'month',
-		'cmonth',
-		'mon',
-		'cmon',
-		'mm',
-		'mn',
-		'nmonth',
-		'cnmonth',
-		'pmonth',
-		'cpmonth',
-		'nmon',
-		'cnmon',
-		'pmon',
-		'cpmon',
-		'date',
-		'monthyear',
-		'nmonthyear',
-		'pmonthyear',
-		'nyear',
-		'nnyear',
-		'pyear',
-		'ppyear',
-		'dt',
-		'nd',
-		'pd',
-		'weekday',
-		'wd',
-		'blackfriday',
-		'cybermonday',
-		'daysuntil',
-		'dayssince',
-		'datepublished',
-		'datemodified',
-		'age',
-		'season',
-	];
-
-	/**
 	 * Register filters.
 	 *
 	 * @return void
@@ -103,16 +59,16 @@ class CoreFilters {
 		}
 
 		if ( ! empty( $enabled_filters['the_title'] ) ) {
-			add_filter( 'the_title', 'do_shortcode' );
+			add_filter( 'the_title', [ Registry::class, 'render' ] );
 		}
 		if ( ! empty( $enabled_filters['single_post_title'] ) ) {
-			add_filter( 'single_post_title', 'do_shortcode' );
+			add_filter( 'single_post_title', [ Registry::class, 'render' ] );
 		}
 		if ( ! empty( $enabled_filters['wp_title'] ) ) {
-			add_filter( 'wp_title', 'do_shortcode' );
+			add_filter( 'wp_title', [ Registry::class, 'render' ] );
 		}
 		if ( ! empty( $enabled_filters['the_excerpt'] ) ) {
-			add_filter( 'the_excerpt', 'do_shortcode' );
+			add_filter( 'the_excerpt', [ Registry::class, 'render' ] );
 		}
 		if ( ! empty( $enabled_filters['get_the_excerpt'] ) ) {
 			add_filter( 'get_the_excerpt', [ $this, 'render_shortcodes_in_excerpt' ] );
@@ -129,7 +85,7 @@ class CoreFilters {
 	 * @return string
 	 */
 	public function render_shortcodes_in_excerpt( string $excerpt ): string {
-		return do_shortcode( $excerpt );
+		return (string) Registry::render( $excerpt );
 	}
 
 	/**
@@ -139,7 +95,7 @@ class CoreFilters {
 	 * @return array<string>
 	 */
 	public function preserve_shortcodes( array $tags_to_remove ): array {
-		return array_diff( $tags_to_remove, self::SHORTCODE_TAGS );
+		return array_diff( $tags_to_remove, Registry::TAGS );
 	}
 
 	/**
@@ -150,7 +106,7 @@ class CoreFilters {
 	 */
 	public function archive_title_shortcodes( string $title ): string {
 		if ( is_archive() ) {
-			return do_shortcode( $title );
+			return (string) Registry::render( $title );
 		}
 		return $title;
 	}

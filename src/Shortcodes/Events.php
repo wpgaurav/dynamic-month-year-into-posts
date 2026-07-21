@@ -9,10 +9,28 @@ declare(strict_types=1);
 
 namespace DMYIP\Shortcodes;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Special event date shortcodes.
  */
 class Events {
+
+	/**
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
+	 */
+	private DateRenderer $renderer;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
 
 	/**
 	 * Register shortcodes.
@@ -30,16 +48,7 @@ class Events {
 	 * @return string
 	 */
 	public function black_friday(): string {
-		$year         = gmdate( 'Y' );
-		$thanksgiving = strtotime( "fourth thursday of november {$year}" );
-
-		if ( ! $thanksgiving ) {
-			return '';
-		}
-
-		$black_friday = strtotime( '+1 day', $thanksgiving );
-
-		return esc_html( date_i18n( 'F j', (int) $black_friday ) );
+		return esc_html( $this->renderer->render( 'blackfriday' ) );
 	}
 
 	/**
@@ -48,15 +57,6 @@ class Events {
 	 * @return string
 	 */
 	public function cyber_monday(): string {
-		$year         = gmdate( 'Y' );
-		$thanksgiving = strtotime( "fourth thursday of november {$year}" );
-
-		if ( ! $thanksgiving ) {
-			return '';
-		}
-
-		$cyber_monday = strtotime( '+4 days', $thanksgiving );
-
-		return esc_html( date_i18n( 'F j', (int) $cyber_monday ) );
+		return esc_html( $this->renderer->render( 'cybermonday' ) );
 	}
 }

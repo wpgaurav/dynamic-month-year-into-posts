@@ -73,8 +73,12 @@ jobs:
         run: composer phpstan
 
   phpunit:
-    name: PHPUnit Tests
+    name: PHPUnit (PHP ${{ matrix.php }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: [ '7.4', '8.2', '8.5' ]
 
     steps:
       - name: Checkout code
@@ -83,7 +87,7 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.2'
+          php-version: ${{ matrix.php }}
 
       - name: Get Composer cache directory
         id: composer-cache
@@ -119,6 +123,12 @@ jobs:
       - name: Install npm dependencies
         run: npm ci
 
+      - name: Audit npm dependencies
+        run: npm audit --audit-level=moderate
+
+      - name: Run JavaScript unit tests
+        run: npm run test:js -- --runInBand
+
       - name: Build JavaScript
         run: npm run build
 
@@ -126,6 +136,8 @@ jobs:
         run: |
           ls -la build/
           test -f build/index.js
+          test -f build/blocks/countdown/view.js
+          grep -q '^import' build/blocks/countdown/view.js
 
   js-lint:
     name: JavaScript Lint
@@ -146,6 +158,73 @@ jobs:
 
       - name: Run ESLint
         run: npm run lint:js
+
+      - name: Run Stylelint
+        run: npm run lint:css
+
+  wordpress-smoke:
+    name: WordPress ${{ matrix.wordpress }} Runtime
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - wordpress: '6.5'
+            core: 'WordPress/WordPress#6.5'
+          - wordpress: 'latest'
+            core: 'WordPress/WordPress#master'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install npm dependencies
+        run: npm ci
+
+      - name: Configure wp-env
+        env:
+          WP_CORE: ${{ matrix.core }}
+        run: |
+          jq -n --arg core "$WP_CORE" \
+            '{core: $core, phpVersion: "8.2", plugins: ["."]}' > .wp-env.json
+
+      - name: Start WordPress
+        run: npx wp-env start
+
+      - name: Exercise plugin runtime
+        run: |
+          npx wp-env run cli wp plugin activate dynamic-month-year-into-posts
+          npx wp-env run cli wp dmyip test
+          npx wp-env run cli wp eval '
+            $rendered = do_shortcode("[year]|[month]|[blackfriday]");
+            if (substr_count($rendered, "|") !== 2) {
+              WP_CLI::error("Unexpected shortcode output");
+            }
+            foreach (["dynamic_date", "nextoccurrence", "daysuntilnext", "occurrenceyear"] as $unexpected) {
+              if (shortcode_exists($unexpected)) {
+                WP_CLI::error("Unexpected public shortcode: " . $unexpected);
+              }
+            }
+            if (!WP_Block_Type_Registry::get_instance()->is_registered("dmyip/countdown")) {
+              WP_CLI::error("Countdown block was not registered");
+            }
+            $blocks = parse_blocks("<!-- wp:dmyip/countdown {\"targetDate\":\"2000-01-01\",\"recurring\":true} /-->");
+            $countdown = render_block($blocks[0]);
+            if (!preg_match("/>\\d+ days<\\/span>/", $countdown)) {
+              WP_CLI::error("Countdown server fallback is empty");
+            }
+            WP_CLI::success($rendered);
+          '
+
+      - name: Stop WordPress
+        if: always()
+        run: npx wp-env stop
 
   release-check:
     name: Release Package Check
@@ -208,8 +287,10 @@ jobs:
             "composer.json" \
             "vendor/autoload.php" \
             "build/index.js" \
-            "includes/shortcodes.php" \
+            "build/blocks/countdown/view.js" \
             "src/Plugin.php" \
+            "src/Date/DateEngine.php" \
+            "src/Date/DateRenderer.php" \
             "src/blocks/dynamic-date/render.php"; do
             if [ ! -f "$DIST/$f" ]; then
               echo "::warning::Missing: $f"

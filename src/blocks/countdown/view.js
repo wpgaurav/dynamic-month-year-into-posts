@@ -1,76 +1,42 @@
 /**
- * Live Countdown - Interactivity API view script.
- *
- * This script handles live updates of the countdown without page refresh.
+ * Live Countdown Interactivity API view module.
  */
 
 import { store, getContext } from '@wordpress/interactivity';
 
-const { actions } = store( 'dmyip/countdown', {
-	state: {
-		get displayText() {
-			const context = getContext();
-			const days = context.days;
-			const label = context.label;
-			const showLabel = context.showLabel;
+import { calculateDays } from './date-utils';
 
-			return showLabel ? `${ days } ${ label }` : String( days );
-		},
-	},
+/**
+ * Schedule the next cache-safe refresh on an aligned minute boundary.
+ *
+ * @param {Object}   context Interactivity context.
+ * @param {Function} update  Update callback.
+ */
+function scheduleRefresh( context, update ) {
+	if ( context.timerId ) {
+		window.clearTimeout( context.timerId );
+	}
 
-	actions: {
-		/**
-		 * Calculate and update the days count.
-		 */
-		updateCountdown() {
-			const context = getContext();
-			const targetDate = context.targetDate;
-			const mode = context.mode;
+	const delay = 60050 - ( Date.now() % 60000 );
+	context.timerId = window.setTimeout( () => {
+		update();
+		scheduleRefresh( context, update );
+	}, delay );
+}
 
-			if ( ! targetDate ) {
-				context.days = 0;
-				return;
-			}
-
-			const target = new Date( targetDate );
-			const today = new Date();
-			today.setHours( 0, 0, 0, 0 );
-			target.setHours( 0, 0, 0, 0 );
-
-			const diffMs = mode === 'until' ? target - today : today - target;
-
-			const diffDays = Math.floor( diffMs / ( 1000 * 60 * 60 * 24 ) );
-			context.days = Math.max( 0, diffDays );
-		},
-	},
-
+store( 'dmyip/countdown', {
 	callbacks: {
-		/**
-		 * Initialize countdown and set up daily updates.
-		 */
 		init() {
-			// Initial calculation
-			actions.updateCountdown();
+			const context = getContext();
+			const update = () => {
+				context.days = calculateDays( context );
+				context.displayText = context.showLabel
+					? `${ context.days } ${ context.label }`
+					: String( context.days );
+			};
 
-			// Calculate ms until midnight for next update
-			const now = new Date();
-			const tomorrow = new Date( now );
-			tomorrow.setDate( tomorrow.getDate() + 1 );
-			tomorrow.setHours( 0, 0, 0, 0 );
-			const msUntilMidnight = tomorrow - now;
-
-			// Update at midnight, then every 24 hours
-			setTimeout( () => {
-				actions.updateCountdown();
-
-				// Set up daily interval
-				setInterval(
-					() => {
-						actions.updateCountdown();
-					},
-					24 * 60 * 60 * 1000
-				);
-			}, msUntilMidnight );
+			update();
+			scheduleRefresh( context, update );
 		},
 	},
 } );

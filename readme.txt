@@ -2,9 +2,9 @@
 Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
-Requires at least: 6.0
+Requires at least: 6.5
 Tested up to: 7.0
-Stable tag: 1.7.4
+Stable tag: 1.8.0-beta
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -52,7 +52,8 @@ Four dedicated blocks for the Block Editor:
 **Live Countdown Block** - Real-time countdown powered by WordPress Interactivity API:
 
 * Count days until or since any date
-* Auto-updates at midnight without page reload
+* Auto-updates without page reload, even when the page HTML is cached
+* Repeat the countdown annually
 * Customizable label text
 * Typography and color styling
 * Perfect for event promotions and milestones
@@ -213,6 +214,15 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 
 == Changelog ==
+
+= 1.8.0-beta =
+* Added: Recurring, cache-aware Live Countdown block with leap-day handling and Block Bindings presets.
+* Improved: All date calculations now use the WordPress site timezone and calendar-day arithmetic across daylight-saving changes.
+* Improved: Searchable shortcode picker, block previews, toolbar accessibility, responsive editor controls and theme-neutral patterns.
+* Improved: Shortcode processing in titles, excerpts and supported integrations is limited to this plugin's tags.
+* Fixed: Countdown Interactivity API code now ships as a JavaScript module.
+* Changed: Minimum supported WordPress version is 6.5.
+* Changed: Removed duplicate legacy runtime files and consolidated rendering around one date engine.
 
 = 1.7.4 =
 * Changed: Tested up to WordPress 7.0.

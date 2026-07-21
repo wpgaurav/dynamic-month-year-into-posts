@@ -1,6 +1,6 @@
 <?php
 /**
- * Live Countdown block server-side render with Interactivity API.
+ * Live Countdown block server-side render.
  *
  * @var array    $attributes Block attributes.
  * @var string   $content    Block default content.
@@ -13,52 +13,44 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-// Wrap in IIFE to avoid global variable pollution.
-call_user_func(
-	static function ( $attributes ) {
-		$dmyip_mode        = $attributes['mode'] ?? 'until';
-		$dmyip_target_date = $attributes['targetDate'] ?? '';
-		$dmyip_label       = $attributes['label'] ?? 'days';
-		$dmyip_show_label  = $attributes['showLabel'] ?? true;
+$dmyip_renderer    = new \DMYIP\Date\DateRenderer();
+$dmyip_mode        = isset( $attributes['mode'] ) && 'since' === $attributes['mode'] ? 'since' : 'until';
+$dmyip_target_date = isset( $attributes['targetDate'] ) ? sanitize_text_field( (string) $attributes['targetDate'] ) : '';
+$dmyip_label       = isset( $attributes['label'] ) ? sanitize_text_field( (string) $attributes['label'] ) : __( 'days', 'dynamic-month-year-into-posts' );
+$dmyip_show_label  = ! isset( $attributes['showLabel'] ) || (bool) $attributes['showLabel'];
+$dmyip_recurring   = ! empty( $attributes['recurring'] );
 
-		// Calculate initial days.
-		$dmyip_days = 0;
-		if ( ! empty( $dmyip_target_date ) ) {
-			$dmyip_target = strtotime( $dmyip_target_date );
-			$dmyip_today  = strtotime( 'today' );
+if ( $dmyip_recurring ) {
+	$dmyip_days = $dmyip_renderer->render(
+		'daysuntilnext',
+		[ 'date' => $dmyip_target_date ]
+	);
+} else {
+	$dmyip_days = $dmyip_renderer->render(
+		'until' === $dmyip_mode ? 'daysuntil' : 'dayssince',
+		[
+			'date'  => $dmyip_target_date,
+			'clamp' => 'true',
+		]
+	);
+}
 
-			if ( $dmyip_target && $dmyip_today ) {
-				$dmyip_diff_seconds = 'until' === $dmyip_mode ? $dmyip_target - $dmyip_today : $dmyip_today - $dmyip_target;
-				$dmyip_days         = max( 0, (int) floor( $dmyip_diff_seconds / DAY_IN_SECONDS ) );
-			}
-		}
+$dmyip_days         = '' === $dmyip_days ? '0' : $dmyip_days;
+$dmyip_display_text = $dmyip_show_label ? $dmyip_days . ' ' . $dmyip_label : $dmyip_days;
+$dmyip_context      = [
+	'mode'        => $dmyip_mode,
+	'targetDate'  => $dmyip_target_date,
+	'label'       => $dmyip_label,
+	'showLabel'   => $dmyip_show_label,
+	'recurring'   => $dmyip_recurring,
+	'timezone'    => wp_timezone()->getName(),
+	'days'        => (int) $dmyip_days,
+	'displayText' => $dmyip_display_text,
+];
 
-		// Prepare display text.
-		$dmyip_display_text = $dmyip_show_label ? $dmyip_days . ' ' . esc_html( $dmyip_label ) : (string) $dmyip_days;
-
-		// Set up interactivity context.
-		$dmyip_context = [
-			'mode'       => $dmyip_mode,
-			'targetDate' => $dmyip_target_date,
-			'label'      => $dmyip_label,
-			'showLabel'  => $dmyip_show_label,
-			'days'       => $dmyip_days,
-		];
-
-		// Initialize the state for server-side rendering.
-		wp_interactivity_state(
-			'dmyip/countdown',
-			[
-				'displayText' => $dmyip_display_text,
-			]
-		);
-
-		printf(
-			'<span %s data-wp-interactive="dmyip/countdown" %s data-wp-init="callbacks.init" data-wp-text="state.displayText">%s</span>',
-			wp_kses_post( get_block_wrapper_attributes() ),
-			wp_kses_data( wp_interactivity_data_wp_context( $dmyip_context ) ),
-			esc_html( $dmyip_display_text )
-		);
-	},
-	$attributes
+printf(
+	'<span %s data-wp-interactive="dmyip/countdown" %s data-wp-init="callbacks.init" data-wp-text="context.displayText">%s</span>',
+	wp_kses_data( get_block_wrapper_attributes() ),
+	wp_kses_data( wp_interactivity_data_wp_context( $dmyip_context ) ),
+	esc_html( $dmyip_display_text )
 );

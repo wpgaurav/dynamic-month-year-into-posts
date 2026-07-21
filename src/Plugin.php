@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DMYIP;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Plugin bootstrap class.
  */
@@ -17,7 +19,7 @@ final class Plugin {
 	/**
 	 * Plugin version.
 	 */
-	public const VERSION = '1.7.4';
+	public const VERSION = '1.8.0-beta';
 
 	/**
 	 * Plugin instance.
@@ -83,14 +85,16 @@ final class Plugin {
 	 * @return void
 	 */
 	private function register_shortcodes(): void {
-		( new Shortcodes\Year() )->register();
-		( new Shortcodes\Month() )->register();
-		( new Shortcodes\Day() )->register();
-		( new Shortcodes\Date() )->register();
-		( new Shortcodes\PostDate() )->register();
-		( new Shortcodes\Events() )->register();
-		( new Shortcodes\Countdown() )->register();
-		( new Shortcodes\Season() )->register();
+		$renderer = new DateRenderer();
+
+		( new Shortcodes\Year( $renderer ) )->register();
+		( new Shortcodes\Month( $renderer ) )->register();
+		( new Shortcodes\Day( $renderer ) )->register();
+		( new Shortcodes\Date( $renderer ) )->register();
+		( new Shortcodes\PostDate( $renderer ) )->register();
+		( new Shortcodes\Events( $renderer ) )->register();
+		( new Shortcodes\Countdown( $renderer ) )->register();
+		( new Shortcodes\Season( $renderer ) )->register();
 		( new Shortcodes\CoreFilters() )->register();
 	}
 

@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DMYIP\Integrations;
 
+use DMYIP\Shortcodes\Registry;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -24,6 +26,6 @@ class Elementor {
 	 * @return void
 	 */
 	public function register(): void {
-		add_filter( 'elementor/widget/render_content', 'do_shortcode' );
+		add_filter( 'elementor/widget/render_content', [ Registry::class, 'render' ] );
 	}
 }

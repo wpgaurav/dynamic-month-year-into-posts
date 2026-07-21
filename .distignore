@@ -10,7 +10,7 @@ coverage/
 
 # Config
 .phpunit.result.cache
-phpunit.xml
+phpunit*.xml
 phpcs.xml
 phpstan.neon
 .eslintrc.js
@@ -43,11 +43,10 @@ PLAN.md
 # Temp
 tmp/
 
-# JS source (compiled to build/)
-src/index.js
-src/blocks/*/edit.js
-src/blocks/*/index.js
-src/blocks/*/view.js
+# Asset source (compiled to build/)
+src/*.js
+src/*.css
+src/blocks/*/*.js
 src/blocks/*/block.json
 
 # Misc

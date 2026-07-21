@@ -2,6 +2,25 @@
 
 All notable changes to the **Dynamic Month & Year into Posts** plugin will be documented in this file.
 
+## [1.8.0-beta] - 2026-07-20
+
+### Added
+- Recurring, cache-aware Live Countdown behavior with leap-day handling.
+- Block Bindings editor presets.
+- Unit coverage for timezone boundaries, daylight-saving changes, recurrence, and rollover.
+
+### Changed
+- Raised the minimum supported WordPress version to 6.5.
+- Consolidated shortcode, REST, CLI, block, and binding output around one site-timezone-aware date engine.
+- Limited integration filters to Dynamic Month & Year into Posts shortcodes.
+- Replaced promotional patterns with theme-neutral examples.
+- Removed duplicate legacy runtime files.
+
+### Fixed
+- Built the Interactivity API countdown view as a JavaScript module.
+- Corrected browser and server calendar-day calculations across timezones and daylight-saving changes.
+- Improved the searchable shortcode picker, editor accessibility, responsive controls, previews, and shortcode highlighting.
+
 ## [1.7.4] - 2026-06-02
 
 ### Changed

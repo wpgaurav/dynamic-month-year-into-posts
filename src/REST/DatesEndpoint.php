@@ -13,23 +13,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use DMYIP\Date\DateRenderer;
+use DMYIP\Shortcodes\Registry;
 use WP_REST_Request;
 use WP_REST_Response;
 use WP_REST_Server;
 
 /**
- * REST API endpoint for dynamic dates.
+ * Public, read-only dynamic date endpoints.
  */
 class DatesEndpoint {
 
-	/**
-	 * Namespace.
-	 */
 	private const NAMESPACE = 'dmyip/v1';
 
-	/**
-	 * REST date types.
-	 */
 	private const VALID_TYPES = [
 		'year',
 		'nyear',
@@ -37,83 +33,53 @@ class DatesEndpoint {
 		'pyear',
 		'ppyear',
 		'month',
-		'cmonth',
-		'mon',
-		'cmon',
-		'mm',
-		'mn',
+		'month_short',
+		'month_number',
+		'month_number_zero',
 		'nmonth',
-		'cnmonth',
-		'nmon',
-		'cnmon',
 		'pmonth',
-		'cpmonth',
-		'pmon',
-		'cpmon',
 		'date',
 		'monthyear',
 		'nmonthyear',
 		'pmonthyear',
-		'dt',
-		'nd',
-		'pd',
+		'day',
 		'weekday',
-		'wd',
+		'weekday_short',
+		'published',
+		'modified',
 		'blackfriday',
 		'cybermonday',
 		'daysuntil',
 		'dayssince',
-		'datepublished',
-		'datemodified',
 		'age',
+		'age_ym',
+		'age_ymd',
+		'age_ordinal',
 		'season',
 		'season_south',
+		'nextoccurrence',
+		'daysuntilnext',
+		'occurrenceyear',
 	];
 
 	/**
-	 * Shortcodes allowed through the public render endpoint.
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
 	 */
-	private const RENDERABLE_SHORTCODES = [
-		'year',
-		'month',
-		'cmonth',
-		'mon',
-		'cmon',
-		'mm',
-		'mn',
-		'nmonth',
-		'cnmonth',
-		'pmonth',
-		'cpmonth',
-		'nmon',
-		'cnmon',
-		'pmon',
-		'cpmon',
-		'date',
-		'monthyear',
-		'nmonthyear',
-		'pmonthyear',
-		'nyear',
-		'nnyear',
-		'pyear',
-		'ppyear',
-		'dt',
-		'nd',
-		'pd',
-		'weekday',
-		'wd',
-		'blackfriday',
-		'cybermonday',
-		'daysuntil',
-		'dayssince',
-		'datepublished',
-		'datemodified',
-		'age',
-		'season',
-	];
+	private DateRenderer $renderer;
 
 	/**
-	 * Register the endpoint.
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
+
+	/**
+	 * Register REST hook.
 	 *
 	 * @return void
 	 */
@@ -122,7 +88,7 @@ class DatesEndpoint {
 	}
 
 	/**
-	 * Register REST routes.
+	 * Register routes.
 	 *
 	 * @return void
 	 */
@@ -145,17 +111,37 @@ class DatesEndpoint {
 				'callback'            => [ $this, 'get_single_date' ],
 				'permission_callback' => '__return_true',
 				'args'                => [
-					'type'   => [
+					'type'         => [
 						'required'          => true,
 						'validate_callback' => [ $this, 'validate_type' ],
 					],
-					'offset' => [
+					'offset'       => [
 						'default'           => 0,
 						'sanitize_callback' => [ $this, 'sanitize_offset' ],
 					],
-					'date'   => [
+					'rollover_day' => [
+						'default'           => 0,
+						'sanitize_callback' => 'absint',
+					],
+					'date'         => [
 						'default'           => '',
 						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'rule'         => [
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'format'       => [
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_text_field',
+					],
+					'case'         => [
+						'default'           => 'none',
+						'sanitize_callback' => 'sanitize_key',
+					],
+					'locale'       => [
+						'default'           => '',
+						'sanitize_callback' => 'sanitize_locale_name',
 					],
 				],
 			]
@@ -190,140 +176,101 @@ class DatesEndpoint {
 	}
 
 	/**
-	 * Get all dates.
+	 * Get commonly used current values.
 	 *
 	 * @return WP_REST_Response
 	 */
 	public function get_all_dates(): WP_REST_Response {
-		$dates = [
+		$values = [
 			'year'        => [
-				'current'  => do_shortcode( '[year]' ),
-				'next'     => do_shortcode( '[nyear]' ),
-				'previous' => do_shortcode( '[pyear]' ),
+				'current'  => $this->renderer->render( 'year' ),
+				'next'     => $this->renderer->render( 'nyear' ),
+				'previous' => $this->renderer->render( 'pyear' ),
 			],
 			'month'       => [
-				'current'       => do_shortcode( '[month]' ),
-				'current_short' => do_shortcode( '[mon]' ),
-				'next'          => do_shortcode( '[nmonth]' ),
-				'previous'      => do_shortcode( '[pmonth]' ),
-				'number'        => do_shortcode( '[mn]' ),
+				'current'       => $this->renderer->render( 'month' ),
+				'current_short' => $this->renderer->render( 'month_short' ),
+				'next'          => $this->renderer->render( 'nmonth' ),
+				'previous'      => $this->renderer->render( 'pmonth' ),
+				'number'        => $this->renderer->render( 'month_number' ),
 			],
 			'day'         => [
-				'current'       => do_shortcode( '[dt]' ),
-				'next'          => do_shortcode( '[nd]' ),
-				'previous'      => do_shortcode( '[pd]' ),
-				'weekday'       => do_shortcode( '[weekday]' ),
-				'weekday_short' => do_shortcode( '[wd]' ),
+				'current'       => $this->renderer->render( 'day' ),
+				'weekday'       => $this->renderer->render( 'weekday' ),
+				'weekday_short' => $this->renderer->render( 'weekday_short' ),
 			],
 			'combined'    => [
-				'date'           => do_shortcode( '[date]' ),
-				'monthyear'      => do_shortcode( '[monthyear]' ),
-				'next_monthyear' => do_shortcode( '[nmonthyear]' ),
-				'prev_monthyear' => do_shortcode( '[pmonthyear]' ),
+				'date'       => $this->renderer->render( 'date' ),
+				'monthyear'  => $this->renderer->render( 'monthyear' ),
+				'next_month' => $this->renderer->render( 'nmonthyear' ),
+				'prev_month' => $this->renderer->render( 'pmonthyear' ),
 			],
 			'events'      => [
-				'blackfriday' => do_shortcode( '[blackfriday]' ),
-				'cybermonday' => do_shortcode( '[cybermonday]' ),
+				'blackfriday' => $this->renderer->render( 'blackfriday' ),
+				'cybermonday' => $this->renderer->render( 'cybermonday' ),
 			],
 			'season'      => [
-				'north' => do_shortcode( '[season]' ),
-				'south' => do_shortcode( '[season region="south"]' ),
+				'north' => $this->renderer->render( 'season' ),
+				'south' => $this->renderer->render( 'season_south' ),
 			],
-			'timezone'    => wp_timezone_string(),
+			'timezone'    => wp_timezone()->getName(),
 			'timestamp'   => time(),
-			'gmt_offset'  => get_option( 'gmt_offset' ),
 			'date_format' => get_option( 'date_format' ),
 			'time_format' => get_option( 'time_format' ),
 		];
 
-		return new WP_REST_Response( $dates, 200 );
+		return new WP_REST_Response( $values, 200 );
 	}
 
 	/**
-	 * Get a single date type.
+	 * Render a single date type.
 	 *
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request Request.
 	 * @return WP_REST_Response
 	 */
 	public function get_single_date( WP_REST_Request $request ): WP_REST_Response {
-		$type   = (string) $request->get_param( 'type' );
-		$offset = (int) $request->get_param( 'offset' );
-		$date   = (string) $request->get_param( 'date' );
-
-		$shortcode_map = [
-			'year'          => '[year]',
-			'nyear'         => '[nyear]',
-			'nnyear'        => '[nnyear]',
-			'pyear'         => '[pyear]',
-			'ppyear'        => '[ppyear]',
-			'month'         => '[month]',
-			'cmonth'        => '[cmonth]',
-			'mon'           => '[mon]',
-			'cmon'          => '[cmon]',
-			'mm'            => '[mm]',
-			'mn'            => '[mn]',
-			'nmonth'        => '[nmonth]',
-			'cnmonth'       => '[cnmonth]',
-			'nmon'          => '[nmon]',
-			'cnmon'         => '[cnmon]',
-			'pmonth'        => '[pmonth]',
-			'cpmonth'       => '[cpmonth]',
-			'pmon'          => '[pmon]',
-			'cpmon'         => '[cpmon]',
-			'date'          => '[date]',
-			'monthyear'     => '[monthyear]',
-			'nmonthyear'    => '[nmonthyear]',
-			'pmonthyear'    => '[pmonthyear]',
-			'dt'            => '[dt]',
-			'nd'            => '[nd]',
-			'pd'            => '[pd]',
-			'weekday'       => '[weekday]',
-			'wd'            => '[wd]',
-			'blackfriday'   => '[blackfriday]',
-			'cybermonday'   => '[cybermonday]',
-			'datepublished' => '[datepublished]',
-			'datemodified'  => '[datemodified]',
-			'season'        => '[season]',
-			'season_south'  => '[season region="south"]',
+		$type  = sanitize_key( (string) $request->get_param( 'type' ) );
+		$args  = [
+			'offset'       => (int) $request->get_param( 'offset' ),
+			'rollover_day' => min( 31, (int) $request->get_param( 'rollover_day' ) ),
+			'date'         => (string) $request->get_param( 'date' ),
+			'rule'         => (string) $request->get_param( 'rule' ),
+			'format'       => (string) $request->get_param( 'format' ),
+			'case'         => (string) $request->get_param( 'case' ),
+			'locale'       => (string) $request->get_param( 'locale' ),
 		];
+		$value = $this->renderer->render( $type, $args );
 
-		// Handle special cases.
-		if ( 'year' === $type && 0 !== $offset ) {
-			$value = do_shortcode( '[year n="' . $offset . '"]' );
-		} elseif ( 'daysuntil' === $type && '' !== $date ) {
-			$value = do_shortcode( '[daysuntil date="' . esc_attr( $date ) . '"]' );
-		} elseif ( 'dayssince' === $type && '' !== $date ) {
-			$value = do_shortcode( '[dayssince date="' . esc_attr( $date ) . '"]' );
-		} elseif ( 'age' === $type && '' !== $date ) {
-			$value = do_shortcode( '[age date="' . esc_attr( $date ) . '"]' );
-		} elseif ( isset( $shortcode_map[ $type ] ) ) {
-			$value = do_shortcode( $shortcode_map[ $type ] );
-		} else {
+		if (
+			'' === $value &&
+			in_array( $type, [ 'daysuntil', 'dayssince', 'age', 'age_ym', 'age_ymd', 'age_ordinal', 'nextoccurrence', 'daysuntilnext', 'occurrenceyear' ], true )
+		) {
 			return new WP_REST_Response(
-				[ 'error' => __( 'Invalid date type or missing required parameter.', 'dynamic-month-year-into-posts' ) ],
+				[ 'error' => __( 'A valid date or recurring rule is required for this type.', 'dynamic-month-year-into-posts' ) ],
 				400
 			);
 		}
 
 		return new WP_REST_Response(
 			[
-				'type'  => $type,
-				'value' => $value,
+				'type'     => $type,
+				'value'    => $value,
+				'timezone' => wp_timezone()->getName(),
 			],
 			200
 		);
 	}
 
 	/**
-	 * Render one plugin shortcode.
+	 * Render exactly one allowlisted plugin shortcode.
 	 *
-	 * @param WP_REST_Request $request Request object.
+	 * @param WP_REST_Request $request Request.
 	 * @return WP_REST_Response
 	 */
 	public function render_shortcode( WP_REST_Request $request ): WP_REST_Response {
 		$shortcode = trim( (string) $request->get_param( 'shortcode' ) );
 
-		if ( '' === $shortcode || ! $this->is_renderable_shortcode( $shortcode ) ) {
+		if ( ! Registry::is_single_shortcode( $shortcode ) ) {
 			return new WP_REST_Response(
 				[ 'error' => __( 'Invalid shortcode.', 'dynamic-month-year-into-posts' ) ],
 				400
@@ -340,157 +287,51 @@ class DatesEndpoint {
 	}
 
 	/**
-	 * Get list of available shortcodes.
+	 * Return the documented shortcode catalog.
 	 *
 	 * @return WP_REST_Response
 	 */
 	public function get_shortcodes_list(): WP_REST_Response {
-		$shortcodes = [
-			'year'       => [
-				[
-					'shortcode'   => '[year]',
-					'description' => 'Current year',
-					'example'     => do_shortcode( '[year]' ),
-				],
-				[
-					'shortcode'   => '[year n=5]',
-					'description' => 'Year with offset',
-					'example'     => do_shortcode( '[year n=5]' ),
-				],
-				[
-					'shortcode'   => '[nyear]',
-					'description' => 'Next year',
-					'example'     => do_shortcode( '[nyear]' ),
-				],
-				[
-					'shortcode'   => '[pyear]',
-					'description' => 'Previous year',
-					'example'     => do_shortcode( '[pyear]' ),
-				],
+		$catalog = [
+			'year'      => [
+				'[year]',
+				'[year n="5"]',
+				'[nyear]',
+				'[pyear]',
 			],
-			'month'      => [
-				[
-					'shortcode'   => '[month]',
-					'description' => 'Current month (full)',
-					'example'     => do_shortcode( '[month]' ),
-				],
-				[
-					'shortcode'   => '[mon]',
-					'description' => 'Current month (short)',
-					'example'     => do_shortcode( '[mon]' ),
-				],
-				[
-					'shortcode'   => '[mm]',
-					'description' => 'Month number (01-12)',
-					'example'     => do_shortcode( '[mm]' ),
-				],
-				[
-					'shortcode'   => '[nmonth]',
-					'description' => 'Next month',
-					'example'     => do_shortcode( '[nmonth]' ),
-				],
-				[
-					'shortcode'   => '[pmonth]',
-					'description' => 'Previous month',
-					'example'     => do_shortcode( '[pmonth]' ),
-				],
+			'month'     => [
+				'[month]',
+				'[mon]',
+				'[nmonth]',
+				'[pmonth]',
 			],
-			'day'        => [
-				[
-					'shortcode'   => '[dt]',
-					'description' => 'Day of month',
-					'example'     => do_shortcode( '[dt]' ),
-				],
-				[
-					'shortcode'   => '[weekday]',
-					'description' => 'Day of week (full)',
-					'example'     => do_shortcode( '[weekday]' ),
-				],
-				[
-					'shortcode'   => '[wd]',
-					'description' => 'Day of week (short)',
-					'example'     => do_shortcode( '[wd]' ),
-				],
+			'date'      => [
+				'[date]',
+				'[monthyear]',
+				'[weekday]',
+				'[datepublished]',
+				'[datemodified]',
 			],
-			'combined'   => [
-				[
-					'shortcode'   => '[date]',
-					'description' => 'Full date',
-					'example'     => do_shortcode( '[date]' ),
-				],
-				[
-					'shortcode'   => '[monthyear]',
-					'description' => 'Month and year',
-					'example'     => do_shortcode( '[monthyear]' ),
-				],
+			'countdown' => [
+				'[daysuntil date="YYYY-MM-DD"]',
+				'[dayssince date="YYYY-MM-DD"]',
+				'[age date="YYYY-MM-DD" format="ymd"]',
 			],
-			'events'     => [
-				[
-					'shortcode'   => '[blackfriday]',
-					'description' => 'Black Friday date',
-					'example'     => do_shortcode( '[blackfriday]' ),
-				],
-				[
-					'shortcode'   => '[cybermonday]',
-					'description' => 'Cyber Monday date',
-					'example'     => do_shortcode( '[cybermonday]' ),
-				],
-			],
-			'countdown'  => [
-				[
-					'shortcode'   => '[daysuntil date="YYYY-MM-DD"]',
-					'description' => 'Days until a date',
-					'example'     => 'Requires date parameter',
-				],
-				[
-					'shortcode'   => '[dayssince date="YYYY-MM-DD"]',
-					'description' => 'Days since a date',
-					'example'     => 'Requires date parameter',
-				],
-				[
-					'shortcode'   => '[age date="YYYY-MM-DD"]',
-					'description' => 'Age from a date (years)',
-					'example'     => 'Requires date parameter',
-				],
-				[
-					'shortcode'   => '[age date="YYYY-MM-DD" ordinal="true"]',
-					'description' => 'Age with ordinal suffix (1st, 2nd, 3rd)',
-					'example'     => 'Requires date parameter',
-				],
-			],
-			'season'     => [
-				[
-					'shortcode'   => '[season]',
-					'description' => 'Current season (Northern hemisphere)',
-					'example'     => do_shortcode( '[season]' ),
-				],
-				[
-					'shortcode'   => '[season region="south"]',
-					'description' => 'Current season (Southern hemisphere)',
-					'example'     => do_shortcode( '[season region="south"]' ),
-				],
-			],
-			'post_dates' => [
-				[
-					'shortcode'   => '[datepublished]',
-					'description' => 'Post publication date',
-					'example'     => 'Requires post context',
-				],
-				[
-					'shortcode'   => '[datemodified]',
-					'description' => 'Post modified date',
-					'example'     => 'Requires post context',
-				],
+			'events'    => [
+				'[blackfriday]',
+				'[cybermonday]',
+				'[season]',
+				'[season region="south"]',
 			],
 		];
 
-		return new WP_REST_Response( $shortcodes, 200 );
+		return new WP_REST_Response( $catalog, 200 );
 	}
 
 	/**
-	 * Validate date type parameter.
+	 * Validate a date type.
 	 *
-	 * @param string $value Type value.
+	 * @param string $value Type.
 	 * @return bool
 	 */
 	public function validate_type( string $value ): bool {
@@ -498,48 +339,22 @@ class DatesEndpoint {
 	}
 
 	/**
-	 * Sanitize a signed year offset.
+	 * Sanitize a signed offset.
 	 *
-	 * @param mixed $value Offset value.
+	 * @param mixed $value Offset.
 	 * @return int
 	 */
 	public function sanitize_offset( $value ): int {
-		return (int) $value;
+		return max( -1000, min( 1000, (int) $value ) );
 	}
 
 	/**
-	 * Validate render endpoint shortcode.
+	 * Validate a render shortcode.
 	 *
-	 * @param mixed $value Shortcode string.
+	 * @param mixed $value Shortcode.
 	 * @return bool
 	 */
 	public function validate_shortcode( $value ): bool {
-		return is_string( $value ) && $this->is_renderable_shortcode( trim( $value ) );
-	}
-
-	/**
-	 * Check whether a shortcode is safe to render through REST.
-	 *
-	 * @param string $shortcode Shortcode string.
-	 * @return bool
-	 */
-	private function is_renderable_shortcode( string $shortcode ): bool {
-		$tag = $this->get_shortcode_tag( $shortcode );
-
-		return null !== $tag && in_array( $tag, self::RENDERABLE_SHORTCODES, true );
-	}
-
-	/**
-	 * Extract a shortcode tag from a single shortcode string.
-	 *
-	 * @param string $shortcode Shortcode string.
-	 * @return string|null
-	 */
-	private function get_shortcode_tag( string $shortcode ): ?string {
-		if ( 1 !== preg_match( '/^\[([A-Za-z0-9_-]+)(?:\s[^\]]*)?\]$/', $shortcode, $matches ) ) {
-			return null;
-		}
-
-		return strtolower( $matches[1] );
+		return is_string( $value ) && Registry::is_single_shortcode( trim( $value ) );
 	}
 }

@@ -21,10 +21,6 @@ parameters:
 		-
 			identifier: function.notFound
 			path: src/CLI/Commands.php
-		# Legacy bootstrap functions
-		-
-			message: '#Function dmyip_.* has no return type specified#'
-			path: dynamic-month-year-into-posts.php
 		# Iterable value types
 		-
 			identifier: missingType.iterableValue

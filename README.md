@@ -9,9 +9,9 @@ Automate SEO and content with dynamic shortcodes for dates, years, months, age c
 **Contributors:** gauravtiwari
 **Donate link:** https://gauravtiwari.org/donate/
 **Tags:** dynamic content, shortcode, seo, dates, year
-**Requires at least:** 6.0
+**Requires at least:** 6.5
 **Tested up to:** 7.0
-**Stable tag:** 1.7.4
+**Stable tag:** 1.8.0-beta
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -382,7 +382,7 @@ This plugin:
 
 ## Requirements
 
-- WordPress 6.0 or higher
+- WordPress 6.5 or higher
 - PHP 7.4 or higher
 
 ## Support
@@ -393,6 +393,15 @@ This plugin:
 - [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ## Changelog
+
+### 1.8.0-beta
+
+- Added recurring, cache-aware countdowns with leap-day handling and Block Bindings presets.
+- Made date calculations site-timezone and daylight-saving safe.
+- Scoped title, excerpt, and supported-plugin processing to this plugin's shortcodes.
+- Fixed the Countdown block's Interactivity API module build.
+- Improved the searchable shortcode picker, editor accessibility, previews, patterns, automated tests, and release checks.
+- Raised the minimum WordPress version to 6.5.
 
 ### 1.7.4
 - Changed: Tested up to WordPress 7.0

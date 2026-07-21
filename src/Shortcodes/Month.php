@@ -9,10 +9,28 @@ declare(strict_types=1);
 
 namespace DMYIP\Shortcodes;
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Month-related shortcodes.
  */
 class Month {
+
+	/**
+	 * Shared renderer.
+	 *
+	 * @var DateRenderer
+	 */
+	private DateRenderer $renderer;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param DateRenderer|null $renderer Shared renderer.
+	 */
+	public function __construct( ?DateRenderer $renderer = null ) {
+		$this->renderer = $renderer ?? new DateRenderer();
+	}
 
 	/**
 	 * Register shortcodes.
@@ -42,7 +60,7 @@ class Month {
 	 * @return string
 	 */
 	public function current_month(): string {
-		return esc_html( date_i18n( 'F' ) );
+		return esc_html( $this->renderer->render( 'month' ) );
 	}
 
 	/**
@@ -51,7 +69,7 @@ class Month {
 	 * @return string
 	 */
 	public function current_month_caps(): string {
-		return esc_html( ucfirst( date_i18n( 'F' ) ) );
+		return esc_html( $this->renderer->render( 'month', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -60,7 +78,7 @@ class Month {
 	 * @return string
 	 */
 	public function current_month_short(): string {
-		return esc_html( date_i18n( 'M' ) );
+		return esc_html( $this->renderer->render( 'month_short' ) );
 	}
 
 	/**
@@ -69,7 +87,7 @@ class Month {
 	 * @return string
 	 */
 	public function current_month_short_caps(): string {
-		return esc_html( ucfirst( date_i18n( 'M' ) ) );
+		return esc_html( $this->renderer->render( 'month_short', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -78,7 +96,7 @@ class Month {
 	 * @return string
 	 */
 	public function current_month_number_zero(): string {
-		return esc_html( date_i18n( 'm' ) );
+		return esc_html( $this->renderer->render( 'month_number_zero' ) );
 	}
 
 	/**
@@ -87,7 +105,7 @@ class Month {
 	 * @return string
 	 */
 	public function current_month_number(): string {
-		return esc_html( date_i18n( 'n' ) );
+		return esc_html( $this->renderer->render( 'month_number' ) );
 	}
 
 	/**
@@ -96,7 +114,7 @@ class Month {
 	 * @return string
 	 */
 	public function next_month(): string {
-		return esc_html( date_i18n( 'F', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) );
+		return esc_html( $this->renderer->render( 'next_month' ) );
 	}
 
 	/**
@@ -105,7 +123,7 @@ class Month {
 	 * @return string
 	 */
 	public function next_month_caps(): string {
-		return esc_html( ucfirst( date_i18n( 'F', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) ) );
+		return esc_html( $this->renderer->render( 'next_month', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -114,7 +132,7 @@ class Month {
 	 * @return string
 	 */
 	public function next_month_short(): string {
-		return esc_html( date_i18n( 'M', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) );
+		return esc_html( $this->renderer->render( 'next_month_short' ) );
 	}
 
 	/**
@@ -123,7 +141,7 @@ class Month {
 	 * @return string
 	 */
 	public function next_month_short_caps(): string {
-		return esc_html( ucfirst( date_i18n( 'M', mktime( 0, 0, 0, (int) gmdate( 'n' ) + 1, 1 ) ) ) );
+		return esc_html( $this->renderer->render( 'next_month_short', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -132,7 +150,7 @@ class Month {
 	 * @return string
 	 */
 	public function prev_month(): string {
-		return esc_html( date_i18n( 'F', strtotime( 'previous month' ) ) );
+		return esc_html( $this->renderer->render( 'previous_month' ) );
 	}
 
 	/**
@@ -141,7 +159,7 @@ class Month {
 	 * @return string
 	 */
 	public function prev_month_caps(): string {
-		return esc_html( ucfirst( date_i18n( 'F', strtotime( 'previous month' ) ) ) );
+		return esc_html( $this->renderer->render( 'previous_month', [ 'case' => 'title' ] ) );
 	}
 
 	/**
@@ -150,7 +168,7 @@ class Month {
 	 * @return string
 	 */
 	public function prev_month_short(): string {
-		return esc_html( date_i18n( 'M', strtotime( 'previous month' ) ) );
+		return esc_html( $this->renderer->render( 'previous_month_short' ) );
 	}
 
 	/**
@@ -159,6 +177,6 @@ class Month {
 	 * @return string
 	 */
 	public function prev_month_short_caps(): string {
-		return esc_html( ucfirst( date_i18n( 'M', strtotime( 'previous month' ) ) ) );
+		return esc_html( $this->renderer->render( 'previous_month_short', [ 'case' => 'title' ] ) );
 	}
 }

@@ -10,32 +10,9 @@ import {
 	TextControl,
 	ToggleControl,
 } from '@wordpress/components';
-import { useState, useEffect } from '@wordpress/element';
+import ServerSideRender from '@wordpress/server-side-render';
 
-/**
- * Calculate days between two dates.
- *
- * @param {string} targetDate Target date string.
- * @param {string} mode       Countdown mode.
- * @return {number} Number of days.
- */
-function calculateDays( targetDate, mode ) {
-	if ( ! targetDate ) {
-		return 0;
-	}
-
-	const target = new Date( targetDate );
-	const today = new Date();
-	today.setHours( 0, 0, 0, 0 );
-	target.setHours( 0, 0, 0, 0 );
-
-	const diff =
-		mode === 'until'
-			? Math.floor( ( target - today ) / ( 1000 * 60 * 60 * 24 ) )
-			: Math.floor( ( today - target ) / ( 1000 * 60 * 60 * 24 ) );
-
-	return Math.max( 0, diff );
-}
+import metadata from './block.json';
 
 /**
  * Edit component.
@@ -46,26 +23,8 @@ function calculateDays( targetDate, mode ) {
  * @return {Element} Edit component.
  */
 export default function Edit( { attributes, setAttributes } ) {
-	const { mode, targetDate, label, showLabel } = attributes;
+	const { mode, targetDate, label, showLabel, recurring } = attributes;
 	const blockProps = useBlockProps();
-
-	const [ days, setDays ] = useState( calculateDays( targetDate, mode ) );
-
-	// Update days when attributes change
-	useEffect( () => {
-		setDays( calculateDays( targetDate, mode ) );
-	}, [ targetDate, mode ] );
-
-	// Set up interval to update countdown in editor
-	useEffect( () => {
-		const interval = setInterval( () => {
-			setDays( calculateDays( targetDate, mode ) );
-		}, 60000 ); // Update every minute
-
-		return () => clearInterval( interval );
-	}, [ targetDate, mode ] );
-
-	const displayText = showLabel ? `${ days } ${ label }` : String( days );
 
 	return (
 		<>
@@ -96,7 +55,11 @@ export default function Edit( { attributes, setAttributes } ) {
 							},
 						] }
 						onChange={ ( newMode ) =>
-							setAttributes( { mode: newMode } )
+							setAttributes( {
+								mode: newMode,
+								recurring:
+									newMode === 'since' ? false : recurring,
+							} )
 						}
 					/>
 
@@ -109,13 +72,29 @@ export default function Edit( { attributes, setAttributes } ) {
 						onChange={ ( newDate ) =>
 							setAttributes( { targetDate: newDate } )
 						}
-						placeholder="YYYY-MM-DD"
 						type="date"
 						help={ __(
-							'Select or enter the target date.',
+							'The site timezone is used on the frontend.',
 							'dynamic-month-year-into-posts'
 						) }
 					/>
+
+					{ mode === 'until' && (
+						<ToggleControl
+							label={ __(
+								'Repeat every year',
+								'dynamic-month-year-into-posts'
+							) }
+							help={ __(
+								'Uses the selected month and day, then rolls over after the event.',
+								'dynamic-month-year-into-posts'
+							) }
+							checked={ recurring }
+							onChange={ ( value ) =>
+								setAttributes( { recurring: value } )
+							}
+						/>
+					) }
 
 					<ToggleControl
 						label={ __(
@@ -123,8 +102,8 @@ export default function Edit( { attributes, setAttributes } ) {
 							'dynamic-month-year-into-posts'
 						) }
 						checked={ showLabel }
-						onChange={ ( newShowLabel ) =>
-							setAttributes( { showLabel: newShowLabel } )
+						onChange={ ( value ) =>
+							setAttributes( { showLabel: value } )
 						}
 					/>
 
@@ -135,46 +114,26 @@ export default function Edit( { attributes, setAttributes } ) {
 								'dynamic-month-year-into-posts'
 							) }
 							value={ label }
-							onChange={ ( newLabel ) =>
-								setAttributes( { label: newLabel } )
+							onChange={ ( value ) =>
+								setAttributes( { label: value } )
 							}
-							placeholder="days"
 						/>
 					) }
 				</PanelBody>
-
-				<PanelBody
-					title={ __( 'Preview', 'dynamic-month-year-into-posts' ) }
-					initialOpen={ false }
-				>
-					<p>
-						<strong>
-							{ __(
-								'Current countdown:',
-								'dynamic-month-year-into-posts'
-							) }
-						</strong>
-					</p>
-					<p style={ { fontSize: '2em', fontWeight: 'bold' } }>
-						{ displayText }
-					</p>
-					<p style={ { fontSize: '0.85em', color: '#757575' } }>
-						{ __(
-							'This countdown will update live on the frontend.',
-							'dynamic-month-year-into-posts'
-						) }
-					</p>
-				</PanelBody>
 			</InspectorControls>
 
-			<span { ...blockProps }>
-				{ targetDate
-					? displayText
-					: __(
-							'Set a target date',
+			<div { ...blockProps }>
+				<ServerSideRender
+					block={ metadata.name }
+					attributes={ attributes }
+					EmptyResponsePlaceholder={ () =>
+						__(
+							'Set a valid target date.',
 							'dynamic-month-year-into-posts'
-					  ) }
-			</span>
+						)
+					}
+				/>
+			</div>
 		</>
 	);
 }

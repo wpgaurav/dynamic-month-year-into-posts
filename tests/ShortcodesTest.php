@@ -16,13 +16,66 @@ use DMYIP\Shortcodes\Date;
 use DMYIP\Shortcodes\Events;
 use DMYIP\Shortcodes\Countdown;
 use DMYIP\Shortcodes\Season;
+use DMYIP\Shortcodes\Registry;
 use DMYIP\REST\DatesEndpoint;
+use DMYIP\Date\DateRenderer;
+use DateTimeImmutable;
+use DateTimeZone;
 use PHPUnit\Framework\TestCase;
 
 /**
  * Test shortcode classes.
  */
 class ShortcodesTest extends TestCase {
+
+	/**
+	 * The public shortcode API remains the original 36-tag set.
+	 */
+	public function test_registry_contains_only_legacy_shortcodes(): void {
+		$legacy_tags = [
+			'age',
+			'blackfriday',
+			'cmon',
+			'cmonth',
+			'cnmon',
+			'cnmonth',
+			'cpmon',
+			'cpmonth',
+			'cybermonday',
+			'date',
+			'datemodified',
+			'datepublished',
+			'dayssince',
+			'daysuntil',
+			'dt',
+			'mm',
+			'mn',
+			'mon',
+			'month',
+			'monthyear',
+			'nd',
+			'nmon',
+			'nmonth',
+			'nmonthyear',
+			'nnyear',
+			'nyear',
+			'pd',
+			'pmon',
+			'pmonth',
+			'pmonthyear',
+			'ppyear',
+			'pyear',
+			'season',
+			'wd',
+			'weekday',
+			'year',
+		];
+
+		$actual_tags = Registry::TAGS;
+		sort( $actual_tags );
+
+		$this->assertSame( $legacy_tags, $actual_tags );
+	}
 
 	/**
 	 * Year shortcode instance.
@@ -92,7 +145,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_year(): void {
 		$result   = $this->year->current_year( [] );
-		$expected = date( 'Y' );
+		$expected = current_datetime()->format( 'Y' );
 		$this->assertEquals( $expected, $result );
 	}
 
@@ -101,7 +154,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_year_positive_offset(): void {
 		$result   = $this->year->current_year( [ 'n' => 5 ] );
-		$expected = (string) ( (int) date( 'Y' ) + 5 );
+		$expected = (string) ( (int) current_datetime()->format( 'Y' ) + 5 );
 		$this->assertEquals( $expected, $result );
 	}
 
@@ -110,7 +163,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_year_negative_offset(): void {
 		$result   = $this->year->current_year( [ 'n' => -3 ] );
-		$expected = (string) ( (int) date( 'Y' ) - 3 );
+		$expected = (string) ( (int) current_datetime()->format( 'Y' ) - 3 );
 		$this->assertEquals( $expected, $result );
 	}
 
@@ -149,7 +202,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_next_year(): void {
 		$result   = $this->year->next_year();
-		$expected = (string) ( (int) date( 'Y' ) + 1 );
+		$expected = (string) ( (int) current_datetime()->format( 'Y' ) + 1 );
 		$this->assertEquals( $expected, $result );
 	}
 
@@ -158,7 +211,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_previous_year(): void {
 		$result   = $this->year->previous_year();
-		$expected = (string) ( (int) date( 'Y' ) - 1 );
+		$expected = (string) ( (int) current_datetime()->format( 'Y' ) - 1 );
 		$this->assertEquals( $expected, $result );
 	}
 
@@ -168,7 +221,7 @@ class ShortcodesTest extends TestCase {
 	public function test_current_month(): void {
 		$result = $this->month->current_month();
 		$this->assertNotEmpty( $result );
-		$this->assertEquals( date( 'F' ), $result );
+		$this->assertEquals( wp_date( 'F' ), $result );
 	}
 
 	/**
@@ -176,7 +229,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_month_short(): void {
 		$result = $this->month->current_month_short();
-		$this->assertEquals( date( 'M' ), $result );
+		$this->assertEquals( wp_date( 'M' ), $result );
 	}
 
 	/**
@@ -184,7 +237,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_month_number_zero(): void {
 		$result = $this->month->current_month_number_zero();
-		$this->assertEquals( date( 'm' ), $result );
+		$this->assertEquals( wp_date( 'm' ), $result );
 	}
 
 	/**
@@ -192,7 +245,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_month_number(): void {
 		$result = $this->month->current_month_number();
-		$this->assertEquals( date( 'n' ), $result );
+		$this->assertEquals( wp_date( 'n' ), $result );
 	}
 
 	/**
@@ -200,7 +253,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_day(): void {
 		$result = $this->day->current_day();
-		$this->assertEquals( date( 'j' ), $result );
+		$this->assertEquals( wp_date( 'j' ), $result );
 	}
 
 	/**
@@ -208,7 +261,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_weekday(): void {
 		$result = $this->day->current_weekday();
-		$this->assertEquals( date( 'l' ), $result );
+		$this->assertEquals( wp_date( 'l' ), $result );
 	}
 
 	/**
@@ -216,7 +269,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_weekday_short(): void {
 		$result = $this->day->current_weekday_short();
-		$this->assertEquals( date( 'D' ), $result );
+		$this->assertEquals( wp_date( 'D' ), $result );
 	}
 
 	/**
@@ -224,7 +277,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_current_date(): void {
 		$result = $this->date->current_date();
-		$this->assertEquals( date( 'F j, Y' ), $result );
+		$this->assertEquals( wp_date( 'F j, Y' ), $result );
 	}
 
 	/**
@@ -232,7 +285,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_month_year(): void {
 		$result = $this->date->month_year();
-		$this->assertEquals( ucfirst( date( 'F Y' ) ), $result );
+		$this->assertEquals( ucfirst( wp_date( 'F Y' ) ), $result );
 	}
 
 	/**
@@ -261,7 +314,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_days_until(): void {
 		// Test with future date (10 days from now).
-		$future_date = date( 'Y-m-d', strtotime( '+10 days' ) );
+		$future_date = current_datetime()->modify( '+10 days' )->format( 'Y-m-d' );
 		$result      = $this->countdown->days_until( [ 'date' => $future_date ] );
 		$this->assertEquals( '10', $result );
 	}
@@ -270,7 +323,7 @@ class ShortcodesTest extends TestCase {
 	 * Test days until with past date returns 0 or negative handled.
 	 */
 	public function test_days_until_past_date(): void {
-		$past_date = date( 'Y-m-d', strtotime( '-5 days' ) );
+		$past_date = current_datetime()->modify( '-5 days' )->format( 'Y-m-d' );
 		$result    = $this->countdown->days_until( [ 'date' => $past_date ] );
 		// Should return negative or the actual negative diff.
 		$this->assertIsNumeric( $result );
@@ -289,7 +342,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_days_since(): void {
 		// Test with past date (10 days ago).
-		$past_date = date( 'Y-m-d', strtotime( '-10 days' ) );
+		$past_date = current_datetime()->modify( '-10 days' )->format( 'Y-m-d' );
 		$result    = $this->countdown->days_since( [ 'date' => $past_date ] );
 		$this->assertEquals( '10', $result );
 	}
@@ -322,7 +375,7 @@ class ShortcodesTest extends TestCase {
 	 */
 	public function test_age_ordinal(): void {
 		// Test with a date that would give age of 35.
-		$birth_date = date( 'Y-m-d', strtotime( '-35 years' ) );
+		$birth_date = current_datetime()->modify( '-35 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
 		$this->assertEquals( '35th', $result );
 	}
@@ -331,7 +384,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age shortcode with rank attribute (alias for ordinal).
 	 */
 	public function test_age_rank(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-21 years' ) );
+		$birth_date = current_datetime()->modify( '-21 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'rank' => 'true' ] );
 		$this->assertEquals( '21st', $result );
 	}
@@ -340,7 +393,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age ordinal with 2nd.
 	 */
 	public function test_age_ordinal_2nd(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-2 years' ) );
+		$birth_date = current_datetime()->modify( '-2 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
 		$this->assertEquals( '2nd', $result );
 	}
@@ -349,7 +402,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age ordinal with 3rd.
 	 */
 	public function test_age_ordinal_3rd(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-3 years' ) );
+		$birth_date = current_datetime()->modify( '-3 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
 		$this->assertEquals( '3rd', $result );
 	}
@@ -358,7 +411,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age ordinal with 11th (special case).
 	 */
 	public function test_age_ordinal_11th(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-11 years' ) );
+		$birth_date = current_datetime()->modify( '-11 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
 		$this->assertEquals( '11th', $result );
 	}
@@ -367,7 +420,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age ordinal with 12th (special case).
 	 */
 	public function test_age_ordinal_12th(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-12 years' ) );
+		$birth_date = current_datetime()->modify( '-12 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
 		$this->assertEquals( '12th', $result );
 	}
@@ -376,7 +429,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age ordinal with 13th (special case).
 	 */
 	public function test_age_ordinal_13th(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-13 years' ) );
+		$birth_date = current_datetime()->modify( '-13 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date, 'ordinal' => 'true' ] );
 		$this->assertEquals( '13th', $result );
 	}
@@ -385,7 +438,7 @@ class ShortcodesTest extends TestCase {
 	 * Test age without ordinal returns number only.
 	 */
 	public function test_age_without_ordinal(): void {
-		$birth_date = date( 'Y-m-d', strtotime( '-25 years' ) );
+		$birth_date = current_datetime()->modify( '-25 years' )->format( 'Y-m-d' );
 		$result     = $this->countdown->age( [ 'date' => $birth_date ] );
 		$this->assertEquals( '25', $result );
 	}
@@ -440,5 +493,74 @@ class ShortcodesTest extends TestCase {
 	public function test_season_is_escaped(): void {
 		$result = $this->season->current_season( [] );
 		$this->assertEquals( htmlspecialchars( $result, ENT_QUOTES, 'UTF-8' ), $result );
+	}
+
+	/**
+	 * Calendar-day differences stay correct across a DST transition.
+	 */
+	public function test_days_until_uses_site_calendar_across_dst(): void {
+		$original_timezone = get_option( 'timezone_string' );
+		update_option( 'timezone_string', 'America/New_York' );
+
+		$clock = static function (): DateTimeImmutable {
+			return new DateTimeImmutable( '2026-03-08 12:00:00', new DateTimeZone( 'America/New_York' ) );
+		};
+		add_filter( 'dmyip_current_datetime', $clock );
+
+		try {
+			$result = ( new DateRenderer() )->render( 'daysuntil', [ 'date' => '2026-03-09' ] );
+			$this->assertSame( '1', $result );
+		} finally {
+			remove_filter( 'dmyip_current_datetime', $clock );
+			update_option( 'timezone_string', $original_timezone );
+		}
+	}
+
+	/**
+	 * Annual dates roll to the next year after the event passes.
+	 */
+	public function test_next_occurrence_rolls_over_after_event(): void {
+		$clock = static function (): DateTimeImmutable {
+			return new DateTimeImmutable( '2026-07-20 08:00:00', new DateTimeZone( 'UTC' ) );
+		};
+		add_filter( 'dmyip_current_datetime', $clock );
+
+		try {
+			$renderer = new DateRenderer();
+			$this->assertSame(
+				'July 19, 2027',
+				$renderer->render( 'nextoccurrence', [ 'date' => '07-19', 'format' => 'F j, Y' ] )
+			);
+			$this->assertSame(
+				'January 31, 2027',
+				$renderer->render(
+					'nextoccurrence',
+					[
+						'rule'   => 'last sunday of january',
+						'format' => 'F j, Y',
+					]
+				)
+			);
+		} finally {
+			remove_filter( 'dmyip_current_datetime', $clock );
+		}
+	}
+
+	/**
+	 * Month cutoffs and case transforms work through the unified renderer.
+	 */
+	public function test_month_rollover_and_case_transform(): void {
+		$clock = static function (): DateTimeImmutable {
+			return new DateTimeImmutable( '2026-07-20 08:00:00', new DateTimeZone( 'UTC' ) );
+		};
+		add_filter( 'dmyip_current_datetime', $clock );
+
+		try {
+			$renderer = new DateRenderer();
+			$this->assertSame( 'August', $renderer->render( 'month', [ 'rollover_day' => 20 ] ) );
+			$this->assertSame( 'JULY', $renderer->render( 'month', [ 'case' => 'upper' ] ) );
+		} finally {
+			remove_filter( 'dmyip_current_datetime', $clock );
+		}
 	}
 }

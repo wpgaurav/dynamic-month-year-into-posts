@@ -14,6 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 use DMYIP\Plugin;
+use DMYIP\Date\DateRenderer;
 
 /**
  * Block editor asset management.
@@ -82,27 +83,19 @@ class Assets {
 			];
 		}
 
-		// Main editor script (built).
-		if ( file_exists( $this->plugin_dir . 'build/index.js' ) ) {
-			wp_enqueue_script(
-				'dmyip-editor',
-				$this->plugin_url . 'build/index.js',
-				$asset['dependencies'],
-				$asset['version'],
-				true
-			);
-
-			wp_set_script_translations( 'dmyip-editor', 'dynamic-month-year-into-posts' );
-		} else {
-			// Fallback to legacy script.
-			wp_enqueue_script(
-				'dmyip-editor',
-				$this->plugin_url . 'assets/js/editor.js',
-				$asset['dependencies'],
-				Plugin::VERSION,
-				true
-			);
+		if ( ! file_exists( $this->plugin_dir . 'build/index.js' ) ) {
+			return;
 		}
+
+		wp_enqueue_script(
+			'dmyip-editor',
+			$this->plugin_url . 'build/index.js',
+			$asset['dependencies'],
+			$asset['version'],
+			true
+		);
+
+		wp_set_script_translations( 'dmyip-editor', 'dynamic-month-year-into-posts' );
 
 		// Editor styles.
 		if ( file_exists( $this->plugin_dir . 'build/index.css' ) ) {
@@ -114,14 +107,21 @@ class Assets {
 			);
 		}
 
-		// Pass data to JavaScript.
+		$renderer = new DateRenderer();
+
+		// Pass current server-rendered values to the Block Bindings editor source.
 		wp_localize_script(
 			'dmyip-editor',
-			'dmyipData',
+			'dmyipEditorData',
 			[
-				'currentYear'  => date_i18n( 'Y' ),
-				'currentMonth' => date_i18n( 'F' ),
-				'currentDate'  => date_i18n( 'F j, Y' ),
+				'bindingValues' => [
+					'year'        => $renderer->render( 'year' ),
+					'month'       => $renderer->render( 'month' ),
+					'date'        => $renderer->render( 'date' ),
+					'monthyear'   => $renderer->render( 'monthyear' ),
+					'weekday'     => $renderer->render( 'weekday' ),
+					'blackfriday' => $renderer->render( 'blackfriday' ),
+				],
 			]
 		);
 	}

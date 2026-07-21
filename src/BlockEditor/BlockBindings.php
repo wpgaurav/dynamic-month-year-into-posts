@@ -13,6 +13,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
+use DMYIP\Date\DateRenderer;
+
 /**
  * Block Bindings API integration for dynamic dates.
  */
@@ -57,46 +59,11 @@ class BlockBindings {
 	 * @return string|null
 	 */
 	public function get_binding_value( array $source_args, $block_instance, string $attribute_name ): ?string {
-		unset( $block_instance, $attribute_name );
+		unset( $attribute_name );
 
-		$type = $source_args['type'] ?? 'year';
+		$type    = isset( $source_args['type'] ) ? sanitize_key( (string) $source_args['type'] ) : 'year';
+		$post_id = isset( $block_instance->context['postId'] ) ? (int) $block_instance->context['postId'] : 0;
 
-		// Map binding types to shortcodes.
-		$shortcode_map = [
-			'year'          => '[year]',
-			'nyear'         => '[nyear]',
-			'pyear'         => '[pyear]',
-			'month'         => '[month]',
-			'month_short'   => '[mon]',
-			'nmonth'        => '[nmonth]',
-			'pmonth'        => '[pmonth]',
-			'date'          => '[date]',
-			'monthyear'     => '[monthyear]',
-			'day'           => '[dt]',
-			'weekday'       => '[weekday]',
-			'weekday_short' => '[wd]',
-			'published'     => '[datepublished]',
-			'modified'      => '[datemodified]',
-			'blackfriday'   => '[blackfriday]',
-			'cybermonday'   => '[cybermonday]',
-		];
-
-		// Handle countdown types with date parameter.
-		if ( 'daysuntil' === $type && ! empty( $source_args['date'] ) ) {
-			return do_shortcode( '[daysuntil date="' . esc_attr( $source_args['date'] ) . '"]' );
-		}
-
-		if ( 'dayssince' === $type && ! empty( $source_args['date'] ) ) {
-			return do_shortcode( '[dayssince date="' . esc_attr( $source_args['date'] ) . '"]' );
-		}
-
-		// Handle year with offset.
-		if ( 'year' === $type && ! empty( $source_args['offset'] ) ) {
-			return do_shortcode( '[year n="' . (int) $source_args['offset'] . '"]' );
-		}
-
-		$shortcode = $shortcode_map[ $type ] ?? '[year]';
-
-		return do_shortcode( $shortcode );
+		return ( new DateRenderer() )->render( $type, $source_args, $post_id );
 	}
 }

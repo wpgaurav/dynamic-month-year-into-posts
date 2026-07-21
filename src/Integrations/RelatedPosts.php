@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace DMYIP\Integrations;
 
+use DMYIP\Shortcodes\Registry;
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
@@ -25,6 +27,6 @@ class RelatedPosts {
 	 */
 	public function register(): void {
 		// Contextual Related Posts.
-		add_filter( 'crp_title', 'do_shortcode' );
+		add_filter( 'crp_title', [ Registry::class, 'render' ] );
 	}
 }
