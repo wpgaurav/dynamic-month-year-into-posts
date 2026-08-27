@@ -69,6 +69,9 @@ jobs:
       - name: Install Composer dependencies
         run: composer install --no-progress --prefer-dist --optimize-autoloader
 
+      - name: Audit Composer dependencies
+        run: composer audit --no-interaction
+
       - name: Run PHPStan
         run: composer phpstan
 
@@ -171,8 +174,10 @@ jobs:
         include:
           - wordpress: '6.5'
             core: 'WordPress/WordPress#6.5'
-          - wordpress: 'latest'
-            core: 'WordPress/WordPress#master'
+          - wordpress: '7.0'
+            core: 'WordPress/WordPress#7.0'
+          - wordpress: '7.1'
+            core: 'WordPress/WordPress#7.1'
 
     steps:
       - name: Checkout code
@@ -201,6 +206,9 @@ jobs:
         run: |
           npx wp-env run cli wp plugin activate dynamic-month-year-into-posts
           npx wp-env run cli wp dmyip test
+          npx wp-env run cli wp dmyip shortcode "[year]"
+          npx wp-env run cli wp dmyip shortcode "[age date='1990-05-15' format='ym']"
+          npx wp-env run cli wp dmyip shortcode daysuntil --date=2027-01-01
           npx wp-env run cli wp eval '
             $rendered = do_shortcode("[year]|[month]|[blackfriday]");
             if (substr_count($rendered, "|") !== 2) {
@@ -214,11 +222,29 @@ jobs:
             if (!WP_Block_Type_Registry::get_instance()->is_registered("dmyip/countdown")) {
               WP_CLI::error("Countdown block was not registered");
             }
+            foreach (["dynamic-date", "countdown", "published-date", "modified-date"] as $block_name) {
+              if (!WP_Block_Type_Registry::get_instance()->is_registered("dmyip/" . $block_name)) {
+                WP_CLI::error("Block was not registered: " . $block_name);
+              }
+            }
             $blocks = parse_blocks("<!-- wp:dmyip/countdown {\"targetDate\":\"2000-01-01\",\"recurring\":true} /-->");
             $countdown = render_block($blocks[0]);
             if (!preg_match("/>\\d+ days<\\/span>/", $countdown)) {
               WP_CLI::error("Countdown server fallback is empty");
             }
+            $invalid = parse_blocks("<!-- wp:dmyip/countdown {\"targetDate\":\"not-a-date\"} /-->");
+            if ("" !== render_block($invalid[0])) {
+              WP_CLI::error("Invalid countdown should render no output");
+            }
+            $clock = static function () {
+              return new DateTimeImmutable("2026-07-20 08:00:00", new DateTimeZone("UTC"));
+            };
+            add_filter("dmyip_current_datetime", $clock);
+            $renderer = new DMYIP\Date\DateRenderer();
+            if ("589" !== $renderer->render("daysuntilnext", ["date" => "02-29"])) {
+              WP_CLI::error("Leap-day recurrence mismatch");
+            }
+            remove_filter("dmyip_current_datetime", $clock);
             WP_CLI::success($rendered);
           '
 

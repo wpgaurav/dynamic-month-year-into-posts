@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace DMYIP\CLI;
 
 use DMYIP\Date\DateRenderer;
+use DMYIP\Shortcodes\Registry;
 use WP_CLI;
 use WP_CLI\Utils;
 
@@ -28,12 +29,13 @@ class Commands {
 	}
 
 	/**
-	 * Render a date type through the same engine used by blocks and shortcodes.
+	 * Render one plugin shortcode or a date type through the shared date engine.
 	 *
 	 * ## OPTIONS
 	 *
-	 * <type>
-	 * : Date type, for example year, month, or daysuntil.
+	 * [<shortcode-or-type>]
+	 * : A complete shortcode such as "[year]", or a date type such as year,
+	 *   month, or daysuntil. Defaults to year.
 	 *
 	 * [--offset=<offset>]
 	 * : Signed year or month offset.
@@ -53,13 +55,43 @@ class Commands {
 	 * [--rollover-day=<day>]
 	 * : Switch month output after this day of the month.
 	 *
+	 * ## EXAMPLES
+	 *
+	 *     wp dmyip shortcode "[year]"
+	 *     wp dmyip shortcode "[age date='1990-05-15' format='ym']"
+	 *     wp dmyip shortcode daysuntil --date=2027-01-01
+	 *
 	 * @param array<int, string>   $args       Positional arguments.
 	 * @param array<string, mixed> $assoc_args Associative arguments.
 	 * @return void
 	 */
 	public function shortcode( array $args, array $assoc_args ): void {
-		$type  = isset( $args[0] ) ? sanitize_key( $args[0] ) : 'year';
-		$data  = [
+		$value = $this->resolve_value( $args, $assoc_args );
+
+		if ( '' === $value ) {
+			WP_CLI::error( 'Unknown date type, invalid shortcode, or missing date arguments.' );
+			return;
+		}
+
+		WP_CLI::line( $value );
+	}
+
+	/**
+	 * Resolve the command input without writing to the terminal.
+	 *
+	 * @param array<int, string>   $args       Positional arguments.
+	 * @param array<string, mixed> $assoc_args Associative arguments.
+	 * @return string
+	 */
+	public function resolve_value( array $args, array $assoc_args ): string {
+		$input = isset( $args[0] ) ? trim( $args[0] ) : 'year';
+
+		if ( 0 === strpos( $input, '[' ) ) {
+			return Registry::is_single_shortcode( $input ) ? do_shortcode( $input ) : '';
+		}
+
+		$type = sanitize_key( $input );
+		$data = [
 			'offset'       => isset( $assoc_args['offset'] ) ? (int) $assoc_args['offset'] : 0,
 			'date'         => isset( $assoc_args['date'] ) ? (string) $assoc_args['date'] : '',
 			'rule'         => isset( $assoc_args['rule'] ) ? (string) $assoc_args['rule'] : '',
@@ -67,14 +99,8 @@ class Commands {
 			'case'         => isset( $assoc_args['case'] ) ? (string) $assoc_args['case'] : 'none',
 			'rollover_day' => isset( $assoc_args['rollover-day'] ) ? (int) $assoc_args['rollover-day'] : 0,
 		];
-		$value = ( new DateRenderer() )->render( $type, $data );
 
-		if ( '' === $value ) {
-			WP_CLI::error( 'Unknown date type or missing/invalid date arguments.' );
-			return;
-		}
-
-		WP_CLI::line( $value );
+		return ( new DateRenderer() )->render( $type, $data );
 	}
 
 	/**
@@ -84,7 +110,6 @@ class Commands {
 	 *
 	 * [--format=<format>]
 	 * : table, csv, json, or yaml.
-	+ *
 	 *
 	 * @param array<int, string>   $args       Positional arguments.
 	 * @param array<string, mixed> $assoc_args Associative arguments.

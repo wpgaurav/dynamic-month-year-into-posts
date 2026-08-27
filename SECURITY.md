@@ -2,16 +2,19 @@
 
 ## Supported Versions
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+Security fixes are applied to the current stable release line.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
+| Version | Supported |
+| ------- | --------- |
+| 1.8.x   | Yes       |
+| <= 1.7  | No        |
 
 ## Reporting a Vulnerability
 
-Please report any vulnerability at https://gauravtiwari.org/contact/
+Please report suspected vulnerabilities privately through
+[gauravtiwari.org/contact](https://gauravtiwari.org/contact/). Do not open a
+public GitHub issue before a fix is available.
+
+Include the affected version, WordPress and PHP versions, reproduction steps,
+and the potential impact. Please exclude credentials, private site data, and
+other secrets from the report.

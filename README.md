@@ -10,8 +10,8 @@ Automate SEO and content with dynamic shortcodes for dates, years, months, age c
 **Donate link:** https://gauravtiwari.org/donate/
 **Tags:** dynamic content, shortcode, seo, dates, year
 **Requires at least:** 6.5
-**Tested up to:** 7.0
-**Stable tag:** 1.8.0
+**Tested up to:** 7.1
+**Stable tag:** 1.8.1
 **License:** GPL-3.0 or later
 **License URI:** http://www.gnu.org/licenses/gpl-3.0.html
 
@@ -160,8 +160,10 @@ Display the post's last modified date dynamically:
 ### Live Countdown Block
 
 Interactive countdown block powered by the WordPress Interactivity API:
-- Real-time countdown display (days, hours, minutes, seconds)
-- Auto-updates at midnight
+- Live calendar-day countdown that stays correct when cached HTML crosses midnight
+- Counts until or since a target date
+- Optional annual recurrence, including February 29
+- Correct singular and plural day labels
 - Customizable target date
 - Style options for colors and typography
 
@@ -170,39 +172,20 @@ Interactive countdown block powered by the WordPress Interactivity API:
 A calendar icon in the Block Editor formatting toolbar provides quick access to all shortcodes:
 - Organized by category (Year, Month, Date, Events, Countdown, Age)
 - Shows usage examples for shortcodes with arguments
-- Inserted shortcodes are highlighted with orange background for visibility
+- Inserted shortcodes are highlighted with a subtle blue background for visibility
 - One-click insertion into any text block
-
-### Sidebar Panel
-
-Access the **Dynamic Dates** sidebar from the editor's settings panel for a complete shortcode reference with one-click copy buttons.
 
 ### Block Patterns
 
-13 pre-built patterns available in the Block Inserter under "Dynamic Dates" category:
+Seven theme-neutral patterns are available in the Block Inserter under "Dynamic Dates":
 
-**Basic Patterns:**
 - **Copyright Footer** - Auto-updating copyright year
-- **Last Updated Notice** - Shows post modified date
-- **Today's Date Header** - Display current date
-
-**Marketing Patterns:**
-- **Affiliate Post Header** - "Updated for [month] [year]" banner
-- **Monthly Sale Banner** - Promotional banner with current month
-- **Promotional Banner with CTA** - Eye-catching promo with button
-
-**Event Patterns:**
-- **Black Friday Banner** - Auto-calculated Black Friday/Cyber Monday dates
-- **New Year Countdown** - Festive countdown to next year
-
-**Countdown Patterns:**
-- **Days Until Countdown** - Countdown to a specific date
-- **Birthday Countdown** - Countdown with celebration styling
-- **Days Since Milestone** - Track days since an important event
-
-**Age Patterns:**
-- **Age Display Card** - Shows age with prominent styling
-- **Experience Badge** - Display years of experience as a badge
+- **Last Updated** - Native Modified Date block with an editable prefix
+- **Current Month Heading** - Current month and year in a heading
+- **Black Friday and Cyber Monday Dates** - Compact event-date list
+- **30-Day Countdown** - Countdown set 30 days from insertion
+- **Recurring Birthday Countdown** - Annual month-and-day countdown
+- **Recurring New Year Countdown** - Annual January 1 countdown
 
 ## Block Bindings API
 
@@ -233,6 +216,9 @@ GET /wp-json/dmyip/v1/render?shortcode=%5Byear%20n%3D-3%5D
 # Render a shortcode
 wp dmyip shortcode "[year]"
 wp dmyip shortcode "[age date='1990-05-15' format='ym']"
+
+# Or render a date type with named options
+wp dmyip shortcode daysuntil --date=2027-01-01
 
 # List all available shortcodes
 wp dmyip list
@@ -280,7 +266,7 @@ Works with all major themes including Twenty Twenty-Five, Twenty Twenty-Four, Tw
 - **Zero Configuration** - Works out of the box, no settings needed
 - **Multi-language Support** - WPML ready, renders in your site's language
 - **Performance Focused** - Minimal CSS/JS, no database queries for shortcodes
-- **Cache Friendly** - Content rendered on-the-fly
+- **Cache Aware** - The Live Countdown corrects cached day counts in the browser
 - **Privacy First** - No analytics, no data collection
 - **Free Forever** - No upsells, no premium version
 - **Modern Codebase** - PSR-4 autoloading, namespaced classes, PHPStan/PHPCS validated
@@ -336,7 +322,7 @@ Yes! Shortcodes work in both editors. In the Block Editor, you also get:
 
 ### Will this plugin work in my language?
 
-Yes. All shortcode outputs use WordPress's `date_i18n()` function and render in your site's configured language.
+Yes. Date output uses WordPress's locale-aware `wp_date()` API and renders in your site's configured language.
 
 ### How can I disable shortcode processing in titles or excerpts?
 
@@ -357,7 +343,7 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 ### Does it affect site performance?
 
-Minimal impact. The plugin loads a small CSS file in the editor for shortcode highlighting. No database queries are made for shortcode rendering - content is generated on-the-fly using PHP's native date functions.
+Minimal impact. Editor CSS and JavaScript load only in the editor. Frontend JavaScript loads only when a Live Countdown block is present. Shortcode rendering makes no plugin database queries. Because ordinary shortcodes are server-rendered, a full-page cache must expire or purge before a cached year, month, date, or age changes; the Live Countdown corrects its visible day count after the page loads.
 
 ## Use Cases
 
@@ -393,6 +379,14 @@ This plugin:
 - [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
 
 ## Changelog
+
+### 1.8.1
+
+- Fixed recurring February 29 countdowns so PHP and browser calculations agree.
+- Invalid countdown dates no longer display as zero days; the default day label now uses singular and plural forms correctly.
+- WP-CLI now accepts both complete plugin shortcodes and renderer types with named options.
+- Added WordPress 7.1 compatibility, content-role metadata for blocks, dependency security updates, and wider runtime checks.
+- Corrected the documented countdown, pattern, editor, cache, and CLI behavior.
 
 ### 1.8.0
 

@@ -1,6 +1,6 @@
 {
 	"name": "dynamic-month-year-into-posts",
-	"version": "1.8.0",
+	"version": "1.8.1",
 	"description": "Insert dynamic year, month, dates into content and meta using shortcodes and blocks.",
 	"author": "Gaurav Tiwari",
 	"license": "GPL-3.0-or-later",
@@ -16,18 +16,18 @@
 	},
 	"devDependencies": {
 		"@babel/runtime": "8.0.0",
-		"@wordpress/block-editor": "16.0.0",
-		"@wordpress/blocks": "15.24.0",
-		"@wordpress/components": "37.0.0",
-		"@wordpress/core-data": "7.51.0",
-		"@wordpress/element": "8.3.0",
-		"@wordpress/i18n": "6.24.0",
-		"@wordpress/icons": "15.2.0",
-		"@wordpress/interactivity": "6.51.0",
-		"@wordpress/primitives": "4.51.0",
-		"@wordpress/rich-text": "7.51.0",
-		"@wordpress/scripts": "33.0.0",
-		"@wordpress/server-side-render": "6.27.0"
+		"@wordpress/block-editor": "16.2.0",
+		"@wordpress/blocks": "15.26.0",
+		"@wordpress/components": "39.0.0",
+		"@wordpress/core-data": "7.53.0",
+		"@wordpress/element": "8.5.0",
+		"@wordpress/i18n": "6.26.0",
+		"@wordpress/icons": "15.4.0",
+		"@wordpress/interactivity": "6.53.0",
+		"@wordpress/primitives": "4.53.0",
+		"@wordpress/rich-text": "7.53.0",
+		"@wordpress/scripts": "34.1.0",
+		"@wordpress/server-side-render": "6.29.0"
 	},
 	"eslintConfig": {
 		"extends": [
@@ -53,14 +53,16 @@
 		}
 	},
 	"overrides": {
+		"@puppeteer/browsers": "3.2.1",
+		"@opentelemetry/core": "2.9.0",
 		"adm-zip": "0.6.0",
 		"linkify-it": "6.0.0",
 		"markdown-it": "14.3.0",
 		"minimatch": "3.1.4",
+		"puppeteer-core": "25.8.0",
 		"serialize-javascript": "7.0.7",
 		"uuid": "11.1.1",
-		"webpack-dev-server": "5.2.6",
-		"@opentelemetry/core": "2.9.0"
+		"webpack-dev-server": "5.2.6"
 	},
 	"files": [
 		"build",

@@ -22,19 +22,29 @@ export function parseCalendarDate( value ) {
 		month: Number( match[ 2 ] ),
 		day: Number( match[ 3 ] ),
 	};
-	const probe = new Date(
-		Date.UTC( parts.year, parts.month - 1, parts.day )
-	);
-
-	if (
-		probe.getUTCFullYear() !== parts.year ||
-		probe.getUTCMonth() + 1 !== parts.month ||
-		probe.getUTCDate() !== parts.day
-	) {
+	if ( ! isValidCalendarDate( parts ) ) {
 		return null;
 	}
 
 	return parts;
+}
+
+/**
+ * Check calendar parts without allowing Date.UTC() to normalize invalid dates.
+ *
+ * @param {{ year: number, month: number, day: number }} parts Date parts.
+ * @return {boolean} Whether the parts identify a real calendar date.
+ */
+export function isValidCalendarDate( parts ) {
+	const probe = new Date(
+		Date.UTC( parts.year, parts.month - 1, parts.day )
+	);
+
+	return (
+		probe.getUTCFullYear() === parts.year &&
+		probe.getUTCMonth() + 1 === parts.month &&
+		probe.getUTCDate() === parts.day
+	);
 }
 
 /**
@@ -99,27 +109,53 @@ export function calendarDayIndex( parts ) {
 }
 
 /**
+ * Find the next valid annual occurrence, including leap-day recurrences.
+ *
+ * Keep this search window aligned with DateEngine::next_occurrence().
+ *
+ * @param {{ year: number, month: number, day: number }} target Target date parts.
+ * @param {{ year: number, month: number, day: number }} today  Current site date.
+ * @return {{ year: number, month: number, day: number }|null} Next occurrence.
+ */
+export function resolveRecurringTarget( target, today ) {
+	const todayIndex = calendarDayIndex( today );
+
+	for ( let yearOffset = 0; yearOffset <= 8; yearOffset++ ) {
+		const candidate = { ...target, year: today.year + yearOffset };
+
+		if (
+			isValidCalendarDate( candidate ) &&
+			calendarDayIndex( candidate ) >= todayIndex
+		) {
+			return candidate;
+		}
+	}
+
+	return null;
+}
+
+/**
  * Calculate countdown days.
  *
  * @param {Object} context Interactivity context.
  * @param {Date}   instant Instant used as "now".
- * @return {number} Non-negative day count.
+ * @return {number|null} Non-negative day count, or null for an invalid target.
  */
 export function calculateDays( context, instant = new Date() ) {
 	const target = parseCalendarDate( context.targetDate );
 
 	if ( ! target ) {
-		return 0;
+		return null;
 	}
 
 	const today = getCalendarDate( context.timezone, instant );
 	let effectiveTarget = target;
 
 	if ( context.recurring ) {
-		effectiveTarget = { ...target, year: today.year };
+		effectiveTarget = resolveRecurringTarget( target, today );
 
-		if ( calendarDayIndex( effectiveTarget ) < calendarDayIndex( today ) ) {
-			effectiveTarget.year += 1;
+		if ( ! effectiveTarget ) {
+			return null;
 		}
 	}
 

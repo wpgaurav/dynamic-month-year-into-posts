@@ -2,6 +2,21 @@
 
 All notable changes to the **Dynamic Month & Year into Posts** plugin will be documented in this file.
 
+## [1.8.1] - 2026-08-24
+
+### Changed
+- Tested through WordPress 7.1 while retaining the WordPress 6.5 and PHP 7.4 minimums.
+- Added content-role metadata so block attributes remain editable in WordPress 7.0+ content-only patterns.
+- Updated WordPress Scripts and PHP development dependencies, including all available security fixes.
+- Expanded CI runtime checks across WordPress 6.5, 7.0, and 7.1.
+- Corrected documentation for countdown precision, editor UI, block patterns, cache behavior, and WP-CLI syntax.
+
+### Fixed
+- Kept recurring February 29 countdowns aligned between the server-rendered fallback and browser updates.
+- Stopped invalid countdown targets from rendering a misleading `0 days` value.
+- Used singular `day` and plural `days` labels for the default countdown label.
+- Accepted complete plugin shortcodes in `wp dmyip shortcode` while preserving date-type arguments.
+
 ## [1.8.0] - 2026-07-21
 
 ### Added

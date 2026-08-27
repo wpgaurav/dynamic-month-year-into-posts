@@ -29,10 +29,28 @@ store( 'dmyip/countdown', {
 		init() {
 			const context = getContext();
 			const update = () => {
-				context.days = calculateDays( context );
-				context.displayText = context.showLabel
-					? `${ context.days } ${ context.label }`
-					: String( context.days );
+				const days = calculateDays( context );
+
+				if ( days === null ) {
+					context.displayText = '';
+					return;
+				}
+
+				context.days = days;
+
+				let label = context.label;
+
+				if ( context.autoLabel ) {
+					label =
+						days === 1
+							? context.singularLabel
+							: context.pluralLabel;
+				}
+
+				context.displayText =
+					context.showLabel && label
+						? `${ context.days } ${ label }`
+						: String( context.days );
 			};
 
 			update();

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace DMYIP\Tests;
 
+use DMYIP\CLI\Commands;
 use DMYIP\Shortcodes\Registry;
 
 if ( ! class_exists( '\WP_UnitTestCase' ) ) {
@@ -77,5 +78,39 @@ class IntegrationTest extends \WP_UnitTestCase {
 
 		$this->assertStringContainsString( 'data-wp-text="context.displayText"', $output );
 		$this->assertMatchesRegularExpression( '/>\d+ days<\/span>/', $output );
+	}
+
+	/**
+	 * Invalid countdown dates do not claim that zero days remain.
+	 */
+	public function test_invalid_countdown_date_renders_nothing(): void {
+		$blocks = parse_blocks(
+			'<!-- wp:dmyip/countdown {"targetDate":"not-a-date"} /-->'
+		);
+
+		$this->assertSame( '', render_block( $blocks[0] ) );
+	}
+
+	/**
+	 * The default countdown label uses singular grammar when one day remains.
+	 */
+	public function test_countdown_uses_singular_default_label(): void {
+		$tomorrow = current_datetime()->modify( '+1 day' )->format( 'Y-m-d' );
+		$blocks   = parse_blocks(
+			sprintf( '<!-- wp:dmyip/countdown {"targetDate":"%s"} /-->', $tomorrow )
+		);
+
+		$this->assertStringContainsString( '>1 day</span>', render_block( $blocks[0] ) );
+	}
+
+	/**
+	 * WP-CLI accepts both documented shortcode input and renderer types.
+	 */
+	public function test_cli_accepts_shortcode_and_type_input(): void {
+		$commands = new Commands();
+
+		$this->assertSame( (string) current_time( 'Y' ), $commands->resolve_value( [ '[year]' ], [] ) );
+		$this->assertSame( (string) current_time( 'Y' ), $commands->resolve_value( [ 'year' ], [] ) );
+		$this->assertSame( '', $commands->resolve_value( [ '[gallery]' ], [] ) );
 	}
 }

@@ -2,7 +2,7 @@
 	"$schema": "https://schemas.wp.org/trunk/block.json",
 	"apiVersion": 3,
 	"name": "dmyip/dynamic-date",
-	"version": "1.8.0",
+	"version": "1.8.1",
 	"title": "Dynamic Date",
 	"category": "widgets",
 	"icon": "calendar-alt",
@@ -12,32 +12,39 @@
 	"attributes": {
 		"type": {
 			"type": "string",
-			"default": "year"
+			"default": "year",
+			"role": "content"
 		},
 		"format": {
 			"type": "string",
-			"default": ""
+			"default": "",
+			"role": "content"
 		},
 		"offset": {
 			"type": "number",
-			"default": 0
+			"default": 0,
+			"role": "content"
 		},
 		"date": {
 			"type": "string",
-			"default": ""
+			"default": "",
+			"role": "content"
 		},
 		"rule": {
 			"type": "string",
-			"default": ""
+			"default": "",
+			"role": "content"
 		},
 		"case": {
 			"type": "string",
 			"default": "none",
-			"enum": [ "none", "title", "upper", "lower" ]
+			"enum": [ "none", "title", "upper", "lower" ],
+			"role": "content"
 		},
 		"rolloverDay": {
 			"type": "number",
-			"default": 0
+			"default": 0,
+			"role": "content"
 		}
 	},
 	"usesContext": [ "postId" ],

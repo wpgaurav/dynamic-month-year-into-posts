@@ -3,8 +3,8 @@ Contributors: gauravtiwari
 Donate link: https://gauravtiwari.org/donate/
 Tags: dynamic content, shortcode, seo, dates, year
 Requires at least: 6.5
-Tested up to: 7.0
-Stable tag: 1.8.0
+Tested up to: 7.1
+Stable tag: 1.8.1
 License: GPL-3.0-or-later
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -55,6 +55,7 @@ Four dedicated blocks for the Block Editor:
 * Auto-updates without page reload, even when the page HTML is cached
 * Repeat the countdown annually
 * Customizable label text
+* Correct singular and plural day labels
 * Typography and color styling
 * Perfect for event promotions and milestones
 
@@ -115,7 +116,7 @@ Note: Since August 2021, Google has started showing h1 titles in search results,
 * Jetpack Related Posts Support.
 * Totally native. Doesn't write anything to the database.
 * No configuration required.
-* Cache friendly.
+* The Live Countdown corrects cached day counts in the browser.
 
 ### Easy to use
 
@@ -123,7 +124,7 @@ Just install the plugin (see Installation tab) and activate it. Add [year] to re
 
 As the months & years change, these shortcodes get updated into the content and title automatically on the shortcode locations.
 
-Zero bloat. No CSS/JS files loaded. No database queries are made and the content is rendered on-the-fly. I am a performance geek and digital marketer myself, so I understand what you need. Please use a [WordPress cache plugin](https://gauravtiwari.org/best-wordpress-caching-plugin/) to cache the rendered content.
+Zero bloat. Editor assets load only in the editor, and frontend JavaScript loads only for the Live Countdown block. Shortcode rendering makes no plugin database queries. Ordinary shortcodes are server-rendered, so configure your page cache to expire or purge when a cached year, month, date or age should change.
 
 Also, Dynamic Month & Year into Posts is a totally free plugin. There are no upsells and will never be.
 
@@ -206,14 +207,20 @@ Available keys: `the_title`, `single_post_title`, `wp_title`, `the_excerpt`, `ge
 
 == Screenshots ==
 
-1. Backend Editing
-2. Front end preview (without Rank Math)
-3. With RM Breadcrumb
-4. Admin Post list demo
-5. Multi Language Support
+1. Real-world evergreen content examples on the Ollie theme and WordPress 7.1
+2. Literal date shortcodes in the visual Block Editor using the Ollie page layout
+3. The same shortcode page rendered on the Ollie frontend
+4. WordPress Posts list with dynamic month, year, event date and age titles already rendered
 
 
 == Changelog ==
+
+= 1.8.1 =
+* Fixed: Recurring February 29 countdowns now produce the same valid leap-day result in PHP and the browser.
+* Fixed: Invalid countdown dates no longer display as zero days, and the default day label is plural-aware.
+* Fixed: WP-CLI accepts both complete plugin shortcodes and date types with named options.
+* Improved: Added WordPress 7.1 compatibility, content-role block metadata, current dependency security fixes and wider runtime checks.
+* Improved: Corrected countdown, editor, cache, pattern and WP-CLI documentation.
 
 = 1.8.0 =
 * Added: Recurring, cache-aware Live Countdown block with leap-day handling and Block Bindings presets.

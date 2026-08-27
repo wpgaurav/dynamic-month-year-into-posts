@@ -43,14 +43,27 @@ if [ "$SKIP_CHECKS" = false ]; then
 	ERRORS=0
 
 	V_PLUGIN=$(sed -n "s/.*VERSION = '\([^']*\)'.*/\1/p" src/Plugin.php | head -1)
+	V_BOOTSTRAP=$(sed -n "s/.*DYNAMIC_MONTH_YEAR_INTO_POSTS_VERSION', '\([^']*\)'.*/\1/p" "${PLUGIN_SLUG}.php" | head -1)
 	V_PKG=$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' package.json | head -1)
 	V_README=$(sed -n 's/Stable tag: *\([^[:space:]]*\).*/\1/p' readme.txt | head -1)
 
-	for pair in "src/Plugin.php:${V_PLUGIN}" "package.json:${V_PKG}" "readme.txt:${V_README}"; do
+	for pair in \
+		"src/Plugin.php:${V_PLUGIN}" \
+		"${PLUGIN_SLUG}.php constant:${V_BOOTSTRAP}" \
+		"package.json:${V_PKG}" \
+		"readme.txt:${V_README}"; do
 		label="${pair%%:*}"
 		found="${pair#*:}"
-		if [ -n "$found" ] && [ "$found" != "$VERSION" ]; then
-			echo "  ✗ ${label}: ${found} (expected ${VERSION})"
+		if [ -z "$found" ] || [ "$found" != "$VERSION" ]; then
+			echo "  ✗ ${label}: ${found:-missing} (expected ${VERSION})"
+			ERRORS=$((ERRORS + 1))
+		fi
+	done
+
+	for block_json in src/blocks/*/block.json; do
+		block_version=$(sed -n 's/.*"version": "\([^"]*\)".*/\1/p' "${block_json}" | head -1)
+		if [ -z "${block_version}" ] || [ "${block_version}" != "${VERSION}" ]; then
+			echo "  ✗ ${block_json}: ${block_version:-missing} (expected ${VERSION})"
 			ERRORS=$((ERRORS + 1))
 		fi
 	done

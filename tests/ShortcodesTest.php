@@ -547,6 +547,27 @@ class ShortcodesTest extends TestCase {
 	}
 
 	/**
+	 * Leap-day recurrences skip invalid calendar years.
+	 */
+	public function test_next_occurrence_skips_to_the_next_leap_day(): void {
+		$clock = static function (): DateTimeImmutable {
+			return new DateTimeImmutable( '2026-07-20 08:00:00', new DateTimeZone( 'UTC' ) );
+		};
+		add_filter( 'dmyip_current_datetime', $clock );
+
+		try {
+			$renderer = new DateRenderer();
+			$this->assertSame(
+				'February 29, 2028',
+				$renderer->render( 'nextoccurrence', [ 'date' => '02-29', 'format' => 'F j, Y' ] )
+			);
+			$this->assertSame( '589', $renderer->render( 'daysuntilnext', [ 'date' => '02-29' ] ) );
+		} finally {
+			remove_filter( 'dmyip_current_datetime', $clock );
+		}
+	}
+
+	/**
 	 * Month cutoffs and case transforms work through the unified renderer.
 	 */
 	public function test_month_rollover_and_case_transform(): void {
