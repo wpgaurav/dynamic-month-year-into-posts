@@ -2,7 +2,7 @@
 
 [![WordPress Plugin Version](https://img.shields.io/wordpress/plugin/v/dynamic-month-year-into-posts)](https://wordpress.org/plugins/dynamic-month-year-into-posts/)
 [![WordPress Plugin: Tested WP Version](https://img.shields.io/wordpress/plugin/tested/dynamic-month-year-into-posts)](https://wordpress.org/plugins/dynamic-month-year-into-posts/)
-[![License](https://img.shields.io/badge/license-GPL--3.0%2B-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html)
+[![License](https://img.shields.io/badge/license-GPL--3.0%2B-blue.svg)](http://www.gnu.org/licenses/gpl-3.0.html) [![Buy me a coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-FFDD00?style=flat&logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/gauravtiwari)
 
 Automate SEO and content with dynamic shortcodes for dates, years, months, age calculations, and countdowns in content, titles, and meta descriptions.
 
@@ -377,6 +377,14 @@ This plugin:
 - [Support Forum](https://wordpress.org/support/plugin/dynamic-month-year-into-posts/)
 - [Request a Feature](https://gauravtiwari.org/contact/)
 - [GitHub Repository](https://github.com/wpgaurav/dynamic-month-year-into-posts)
+
+This free and open source WordPress plugin gives you shortcodes like `[year]`, `[monthyear]` and `[age]` that keep dates, ages and countdowns current in your posts, titles and SEO meta. I keep adding shortcodes and plugin integrations and the current release is tested up to WordPress 7.1.
+
+If the plugin keeps the year in your post titles current and you no longer edit them by hand every January, you can buy me a coffee.
+
+<a href="https://buymeacoffee.com/gauravtiwari"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy me a coffee" height="50"></a>
+
+A wrong date from any shortcode is worth an issue with your WordPress and PHP versions and the steps to reproduce it, and a GitHub star is appreciated as well.
 
 ## Changelog
 
